@@ -1,4 +1,6 @@
 
+¿Por qué no funciona Git?
+
 - Dos días de echar a andar una página con Flask que sea un formulario muy sencillo o una pregunta de sí o no. Eso: pregunta sí o no, tipo árbol de posibilidades.
 	^^Dos días.
 

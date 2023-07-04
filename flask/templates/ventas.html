@@ -1,0 +1,37 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Ventas Page</title>
+</head>
+<body>
+    <h1>Ventas Page</h1>
+    <p>Enter the details for the second row:</p>
+
+    <form action="{{ url_for('ventas') }}" method="POST">
+        <table>
+            <tr>
+                <th>Producto</th>
+                <th>Cantidad vendida</th>
+                <th>Unidad</th>
+                <th>Precio de venta por unidad</th>
+                <th>Ingreso total por producto</th>
+            </tr>
+            <tr>
+                <td><input type="text" name="producto" value="{{ producto }}"></td>
+                <td><input type="number" name="cantidad_vendida" step="any" value="{{ cantidad_vendida }}"></td>
+                <td><input type="text" name="unidad" value="{{ unidad }}"></td>
+                <td><input type="number" name="precio_venta" step="any" value="{{ precio_venta }}"></td>
+                <td><input type="text" name="ingreso_ventas" value="{{ ingreso_ventas }}" readonly></td>
+            </tr>
+        </table>
+        <br>
+        <button type="submit">Enter</button>
+    </form>
+
+    {% if producto and cantidad_vendida and unidad and precio_venta and ingreso_ventas %}
+        <br>
+        <a href="{{ url_for('next_page') }}"><button>Next</button></a>
+    {% endif %}
+</body>
+</html>
