@@ -1,0 +1,14 @@
+<html>
+<head>
+    <title>Question about Primera Actividad</title>
+
+</head>
+<body>
+    <h1>Question about Primera Actividad</h1>
+    <p>¿Cuál es la primera actividad en el proceso de producción del producto {{ producto }}?</p>
+    <form action="{{ url_for('pregunta_primera_actividad') }}" method="post">
+        <input type="text" name="actividad" maxlength="23" required>
+        <button type="submit" class="button">Enter</button>
+    </form>
+</body>
+</html> 

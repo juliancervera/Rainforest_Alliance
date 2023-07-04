@@ -1,0 +1,143 @@
+**PREGUNTA:
+
+Let's say that, in the page correspoding to the following code, people are not required to fill out all the cells in the form. Let's say someone, for example, did not write anything for "producto". What would happen to the producto session variable?
+
+@app.route("/ventas", methods=["GET", "POST"])
+def ventas():
+    if request.method == "POST":
+        producto = request.form["producto"]
+        cantidad_vendida = float(request.form["cantidad_vendida"])
+        unidad = request.form["unidad"]
+        precio_venta = float(request.form["precio_venta"])
+
+        ingreso_ventas = cantidad_vendida * precio_venta
+
+        session['producto'] = producto
+        session['cantidad_vendida'] = cantidad_vendida
+        session['unidad'] = unidad
+        session['precio_venta'] = precio_venta
+        session['ingreso_ventas'] = ingreso_ventas
+
+        return render_template("ventas.html", producto=producto, cantidad_vendida=cantidad_vendida,
+                               unidad=unidad, precio_venta=precio_venta, ingreso_ventas=ingreso_ventas)
+    else:
+        return render_template("ventas.html")
+
+**RESPUESTA (básicamente añadir el .get al asignar variables de sesión. Luego habrá que checar si la variable está asignada y si su valor es distinto de None):
+
+In the given code, if someone does not write anything for the "producto" field in the form and submits the form, the "producto" session variable will not be set. This means that accessing session['producto'] later in the code or in subsequent requests may result in a KeyError since the key 'producto' does not exist in the session dictionary.
+
+To handle this situation and avoid potential errors, you can use the get method of the session dictionary with a default value. By providing a default value, if the key does not exist, it will return the default value instead of raising an error. Here's an updated version of the code with the get method for the "producto" session variable:
+
+@app.route("/ventas", methods=["GET", "POST"])
+def ventas():
+    if request.method == "POST":
+        producto = request.form.get("producto")
+        cantidad_vendida = float(request.form["cantidad_vendida"])
+        unidad = request.form["unidad"]
+        precio_venta = float(request.form["precio_venta"])
+
+        ingreso_ventas = cantidad_vendida * precio_venta
+
+        session['producto'] = producto
+        session['cantidad_vendida'] = cantidad_vendida
+        session['unidad'] = unidad
+        session['precio_venta'] = precio_venta
+        session['ingreso_ventas'] = ingreso_ventas
+
+        return render_template("ventas.html", producto=producto, cantidad_vendida=cantidad_vendida,
+                               unidad=unidad, precio_venta=precio_venta, ingreso_ventas=ingreso_ventas)
+    else:
+        return render_template("ventas.html")
+
+By using request.form.get("producto"), if the "producto" field is not filled out, it will return None instead of raising a KeyError. You can handle the case of an empty "producto" separately in your code if needed, such as displaying a validation message to the user or applying any other desired logic.
+
+
+
+
+
+User
+Is it possible to create a page that displays the content of session variables only if it is different from None?
+ChatGPT
+Yes, it is possible to create a page that displays the content of session variables only if they are different from None. You can achieve this by adding conditional statements in your template to check the values of the session variables before displaying them.
+
+Here's an example of how you can modify your template to display session variables only if they are not None:
+
+html
+Copy code
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Session Variables</title>
+</head>
+<body>
+    <h1>Session Variables</h1>
+    
+    {% if producto is not none %}
+    <p>Producto: {{ producto }}</p>
+    {% endif %}
+    
+    {% if cantidad_vendida is not none %}
+    <p>Cantidad Vendida: {{ cantidad_vendida }}</p>
+    {% endif %}
+    
+    {% if unidad is not none %}
+    <p>Unidad: {{ unidad }}</p>
+    {% endif %}
+    
+    {% if precio_venta is not none %}
+    <p>Precio Venta: {{ precio_venta }}</p>
+    {% endif %}
+    
+    {% if ingreso_ventas is not none %}
+    <p>Ingreso Ventas: {{ ingreso_ventas }}</p>
+    {% endif %}
+</body>
+</html>
+In this example, each session variable is wrapped in an {% if %} statement that checks if the value is not None. If the condition is true, the corresponding session variable and its value will be displayed in the HTML. If the condition is false (i.e., the session variable is None), that section will be skipped, and the value will not be displayed.
+
+By using this approach, only the session variables that are not None will be shown on the page, while the others will be omitted.
+
+
+
+
+User
+Can I add, to that if statement, the condition that the variable must exist?
+ChatGPT
+Yes, you can add an additional condition to check if the session variable exists before displaying its value. To do this, you can use the is defined test in Jinja template.
+
+Here's an updated example that includes the check for both existence and non-None value:
+
+html
+Copy code
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Session Variables</title>
+</head>
+<body>
+    <h1>Session Variables</h1>
+    
+    {% if producto is defined and producto is not none %}
+    <p>Producto: {{ producto }}</p>
+    {% endif %}
+    
+    {% if cantidad_vendida is defined and cantidad_vendida is not none %}
+    <p>Cantidad Vendida: {{ cantidad_vendida }}</p>
+    {% endif %}
+    
+    {% if unidad is defined and unidad is not none %}
+    <p>Unidad: {{ unidad }}</p>
+    {% endif %}
+    
+    {% if precio_venta is defined and precio_venta is not none %}
+    <p>Precio Venta: {{ precio_venta }}</p>
+    {% endif %}
+    
+    {% if ingreso_ventas is defined and ingreso_ventas is not none %}
+    <p>Ingreso Ventas: {{ ingreso_ventas }}</p>
+    {% endif %}
+</body>
+</html>
+In this updated version, the {% if %} statement includes two conditions: is defined to check if the session variable exists, and is not none to check if the session variable has a non-None value. Only if both conditions are true, the session variable and its value will be displayed.
+
