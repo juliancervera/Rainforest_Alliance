@@ -1,14 +1,135 @@
 <html>
 <head>
     <title>Question about Primera Actividad</title>
-
 </head>
 <body>
-    <h1>Question about Primera Actividad</h1>
-    <p>¿Cuál es la primera actividad en el proceso de producción del producto {{ producto }}?</p>
+    <h1>Apunte los costos que involucra cada una de las actividades del proceso productivo del producto {{producto}}</h1>
+    <p>Actividades registradas hasta ahora:</p>
+    {% if costos_actividades %}
+        {% for actividad in costos_actividades %}
+            <p>{{ actividad[0][0] }}</p>
+        {% endfor %}
+    {% else %}
+        <p>Ninguna. Por favor registre la primera actividad.</p>
+    {% endif %}
     <form action="{{ url_for('pregunta_primera_actividad') }}" method="post">
         <input type="text" name="actividad" maxlength="23" required>
-        <button type="submit" class="button">Enter</button>
-    </form>
+        <p>A continuación, registre los insumos:</p>
+            <table>
+                <tr>
+                    <th>Insumo</th>
+                    <th>Cantidad</th>
+                    <th>Unidad</th>
+                    <th>Costo por unidad</th>
+                    <th>Costo total por insumo</th>
+                </tr>
+                <tr>
+                    <td><input type="text" name="insumo_1" value="{{ insumo_1 }}" maxlength="23"></td>
+                    <td><input type="number" name="cantidad_1" value="{{ cantidad_1 }}" maxlength="23"></td>
+                    <td><input type="text" name="unidad_1" value="{{ unidad_1 }}" maxlength="23"></td>
+                    <td><input type="number" name="costo_unidad_1" step="0.01" value="{{ costo_unidad_1 }}" maxlength="23"></td>
+                    <td><input type="number" name="costo_total_1" step="0.01" value="{{ costo_total_1 }}" readonly></td>
+                </tr>
+                <tr>
+                    <td><input type="text" name="insumo_2" value="{{ insumo_2 }}" maxlength="23"></td>
+                    <td><input type="number" name="cantidad_2" value="{{ cantidad_2 }}" maxlength="23"></td>
+                    <td><input type="text" name="unidad_2" value="{{ unidad_2 }}" maxlength="23"></td>
+                    <td><input type="number" name="costo_unidad_2" step="0.01" value="{{ costo_unidad_2 }}" maxlength="23"></td>
+                    <td><input type="number" name="costo_total_2" step="0.01" value="{{ costo_total_2 }}" readonly></td>
+                </tr>
+                <tr>
+                    <td><input type="text" name="insumo_3" value="{{ insumo_3 }}" maxlength="23"></td>
+                    <td><input type="number" name="cantidad_3" value="{{ cantidad_3 }}" maxlength="23"></td>
+                    <td><input type="text" name="unidad_3" value="{{ unidad_3 }}" maxlength="23"></td>
+                    <td><input type="number" name="costo_unidad_3" step="0.01" value="{{ costo_unidad_3 }}" maxlength="23"></td>
+                    <td><input type="number" name="costo_total_3" step="0.01" value="{{ costo_total_3 }}" readonly></td>
+                </tr>
+                <tr>
+                    <td><input type="text" name="insumo_4" value="{{ insumo_4 }}" maxlength="23"></td>
+                    <td><input type="number" name="cantidad_4" value="{{ cantidad_4 }}" maxlength="23"></td>
+                    <td><input type="text" name="unidad_4" value="{{ unidad_4 }}" maxlength="23"></td>
+                    <td><input type="number" name="costo_unidad_4" step="0.01" value="{{ costo_unidad_4 }}" maxlength="23"></td>
+                    <td><input type="number" name="costo_total_4" step="0.01" value="{{ costo_total_4 }}" readonly></td>
+                </tr>
+                <tr>
+                    <td><input type="text" name="insumo_5" value="{{ insumo_5 }}" maxlength="23"></td>
+                    <td><input type="number" name="cantidad_5" value="{{ cantidad_5 }}" maxlength="23"></td>
+                    <td><input type="text" name="unidad_5" value="{{ unidad_5 }}" maxlength="23"></td>
+                    <td><input type="number" name="costo_unidad_5" step="0.01" value="{{ costo_unidad_5 }}" maxlength="23"></td>
+                    <td><input type="number" name="costo_total_5" step="0.01" value="{{ costo_total_5 }}" readonly></td>
+                </tr>
+                <tr>
+                    <td><input type="text" name="insumo_6" value="{{ insumo_6 }}" maxlength="23"></td>
+                    <td><input type="number" name="cantidad_6" value="{{ cantidad_6 }}" maxlength="23"></td>
+                    <td><input type="text" name="unidad_6" value="{{ unidad_6 }}" maxlength="23"></td>
+                    <td><input type="number" name="costo_unidad_6" step="0.01" value="{{ costo_unidad_6 }}" maxlength="23"></td>
+                    <td><input type="number" name="costo_total_6" step="0.01" value="{{ costo_total_6 }}" readonly></td>
+                </tr>
+                <tr>
+                    <td><input type="text" name="insumo_7" value="{{ insumo_7 }}" maxlength="23"></td>
+                    <td><input type="number" name="cantidad_7" value="{{ cantidad_7 }}" maxlength="23"></td>
+                    <td><input type="text" name="unidad_7" value="{{ unidad_7 }}" maxlength="23"></td>
+                    <td><input type="number" name="costo_unidad_7" step="0.01" value="{{ costo_unidad_7 }}" maxlength="23"></td>
+                    <td><input type="number" name="costo_total_7" step="0.01" value="{{ costo_total_7 }}" readonly></td>
+                </tr>
+                <tr>
+                    <td><input type="text" name="insumo_8" value="{{ insumo_8 }}" maxlength="23"></td>
+                    <td><input type="number" name="cantidad_8" value="{{ cantidad_8 }}" maxlength="23"></td>
+                    <td><input type="text" name="unidad_8" value="{{ unidad_8 }}" maxlength="23"></td>
+                    <td><input type="number" name="costo_unidad_8" step="0.01" value="{{ costo_unidad_8 }}" maxlength="23"></td>
+                    <td><input type="number" name="costo_total_8" step="0.01" value="{{ costo_total_8 }}" readonly></td>
+                </tr>
+                <tr>
+                    <td><input type="text" name="insumo_9" value="{{ insumo_9 }}" maxlength="23"></td>
+                    <td><input type="number" name="cantidad_9" value="{{ cantidad_9 }}" maxlength="23"></td>
+                    <td><input type="text" name="unidad_9" value="{{ unidad_9 }}" maxlength="23"></td>
+                    <td><input type="number" name="costo_unidad_9" step="0.01" value="{{ costo_unidad_9 }}" maxlength="23"></td>
+                    <td><input type="number" name="costo_total_9" step="0.01" value="{{ costo_total_9 }}" readonly></td>
+                </tr>
+                <tr>
+                    <td><input type="text" name="insumo_10" value="{{ insumo_10 }}" maxlength="23"></td>
+                    <td><input type="number" name="cantidad_10" value="{{ cantidad_10 }}" maxlength="23"></td>
+                    <td><input type="text" name="unidad_10" value="{{ unidad_10 }}" maxlength="23"></td>
+                    <td><input type="number" name="costo_unidad_10" step="0.01" value="{{ costo_unidad_10 }}" maxlength="23"></td>
+                    <td><input type="number" name="costo_total_10" step="0.01" value="{{ costo_total_10 }}" readonly></td>
+                </tr>
+                <tr>
+                    <td><input type="text" name="insumo_11" value="{{ insumo_11 }}" maxlength="23"></td>
+                    <td><input type="number" name="cantidad_11" value="{{ cantidad_11 }}" maxlength="23"></td>
+                    <td><input type="text" name="unidad_11" value="{{ unidad_11 }}" maxlength="23"></td>
+                    <td><input type="number" name="costo_unidad_11" step="0.01" value="{{ costo_unidad_11 }}" maxlength="23"></td>
+                    <td><input type="number" name="costo_total_11" step="0.01" value="{{ costo_total_11 }}" readonly></td>
+                </tr>
+                <tr>
+                    <td><input type="text" name="insumo_12" value="{{ insumo_12 }}" maxlength="23"></td>
+                    <td><input type="number" name="cantidad_12" value="{{ cantidad_12 }}" maxlength="23"></td>
+                    <td><input type="text" name="unidad_12" value="{{ unidad_12 }}" maxlength="23"></td>
+                    <td><input type="number" name="costo_unidad_12" step="0.01" value="{{ costo_unidad_12 }}" maxlength="23"></td>
+                    <td><input type="number" name="costo_total_12" step="0.01" value="{{ costo_total_12 }}" readonly></td>
+                </tr>
+                <tr>
+                    <td><input type="text" name="insumo_13" value="{{ insumo_13 }}" maxlength="23"></td>
+                    <td><input type="number" name="cantidad_13" value="{{ cantidad_13 }}" maxlength="23"></td>
+                    <td><input type="text" name="unidad_13" value="{{ unidad_13 }}" maxlength="23"></td>
+                    <td><input type="number" name="costo_unidad_13" step="0.01" value="{{ costo_unidad_13 }}" maxlength="23"></td>
+                    <td><input type="number" name="costo_total_13" step="0.01" value="{{ costo_total_13 }}" readonly></td>
+                </tr>
+                <tr>
+                    <td><input type="text" name="insumo_14" value="{{ insumo_14 }}" maxlength="23"></td>
+                    <td><input type="number" name="cantidad_14" value="{{ cantidad_14 }}" maxlength="23"></td>
+                    <td><input type="text" name="unidad_14" value="{{ unidad_14 }}" maxlength="23"></td>
+                    <td><input type="number" name="costo_unidad_14" step="0.01" value="{{ costo_unidad_14 }}" maxlength="23"></td>
+                    <td><input type="number" name="costo_total_14" step="0.01" value="{{ costo_total_14 }}" readonly></td>
+                </tr>
+                <tr>
+                    <td><input type="text" name="insumo_15" value="{{ insumo_15 }}" maxlength="23"></td>
+                    <td><input type="number" name="cantidad_15" value="{{ cantidad_15 }}" maxlength="23"></td>
+                    <td><input type="text" name="unidad_15" value="{{ unidad_15 }}" maxlength="23"></td>
+                    <td><input type="number" name="costo_unidad_15" step="0.01" value="{{ costo_unidad_15 }}" maxlength="23"></td>
+                    <td><input type="number" name="costo_total_15" step="0.01" value="{{ costo_total_15 }}" readonly></td>
+                </tr>
+            </table>
+            <button type="submit" class="button">Enter</button>
+        </form>
 </body>
-</html> 
+</html>
