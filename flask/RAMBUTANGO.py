@@ -64,7 +64,7 @@ def info_donativos():
     # Process the request or perform any other necessary actions
     return "You chose 'Yes' for receiving donativos."
 
-#ToDo: Hacer que el botón de "go back" borre la última sublista añadida a costos_actividades
+#ToDo: Hacer que el botón de "go back" borre la última sublista añadida a insumos_actividades y trabajo_actividades
 #ToDo: Cambiar nombre de la siguiente función y adaptar todo alrededor de eso.
 #ToDo: Añadir un if al template del formulario de actividades.
 # Este if detecta si ya hay contenido numérico en al menos uno de las casillas de costos totales.
@@ -77,6 +77,7 @@ def pregunta_primera_actividad():
 
         insumos_actividades = session.get('insumos_actividades', [])
         trabajo_actividades = session.get('trabajo_actividades', [])
+        producto = session.get("producto")
 
         lista_insumos = []
         lista_trabajo = []
@@ -84,6 +85,26 @@ def pregunta_primera_actividad():
         lista_insumos.append(actividad)
         lista_trabajo.append(actividad)
 
+        for i in range(1, 16):
+            locals()[f"insumo_{i}"] = request.form.get(f"insumo_{i}")
+            locals()[f"cantidad_{i}"] = request.form.get(f"cantidad_{i}")
+            locals()[f"unidad_{i}"] = request.form.get(f"unidad_{i}")
+            locals()[f"costo_unidad_{i}"] = request.form.get(f"costo_unidad_{i}")
+            locals()[f"costo_total_{i}"] = ""
+
+            try:
+                locals()[f"cantidad_{i}"] = float(locals()[f"cantidad_{i}"])
+                locals()[f"costo_unidad_{i}"] = float(locals()[f"costo_unidad_{i}"])
+                locals()[f"costo_total_{i}"] = locals()[f"cantidad_{i}"] * locals()[f"costo_unidad_{i}"]
+            except ValueError:
+                # Handle the case where either cantidad or costo_unidad is not a valid number
+                pass
+
+            sublist = [locals()[f"insumo_{i}"], locals()[f"cantidad_{i}"], locals()[f"unidad_{i}"],
+                       locals()[f"costo_unidad_{i}"], locals()[f"costo_total_{i}"]]
+            lista_insumos.append(sublist)
+
+        """
         for i in range(1, 16):
             insumo = request.form.get(f"insumo_{i}")
             cantidad = request.form.get(f"cantidad_{i}")
@@ -101,21 +122,7 @@ def pregunta_primera_actividad():
 
             sublist = [insumo, cantidad, unidad, costo_unidad, costo_total]
             lista_insumos.append(sublist)
-
-        """
-        insumo_1 = request.form["insumo_1"]
-        cantidad_1 = request.form["cantidad_1"]
-        unidad_1 = request.form["unidad_1"]
-        costo_unidad_1 = request.form["costo_unidad_1"]
-        costo_total_1 = ""
-        try:
-            cantidad_1 = float(request.form.get("cantidad_1"))
-            costo_unidad_1 = float(request.form.get("costo_unidad_1"))
-            costo_total_1 = cantidad_1 * costo_unidad_1
-        except ValueError:
-            # Handle the case where either cantidad_1 or costo_unidad_1 is not a valid number
-            pass
-        """
+            """
 
         insumos_actividades.append([lista_insumos])
         trabajo_actividades.append([lista_trabajo])
@@ -123,14 +130,32 @@ def pregunta_primera_actividad():
         session['insumos_actividades'] = insumos_actividades
         session['trabajo_actividades'] = trabajo_actividades
 
-        return redirect("/info_actividades")
+        # Create a dictionary to store the variables and their values
+        variables = {}
+
+        # Generate the variable names and assign their default values
+        for i in range(1, 16):
+            variables[f"insumo_{i}"] = locals()[f"insumo_{i}"]
+            variables[f"cantidad_{i}"] = locals()[f"cantidad_{i}"]
+            variables[f"unidad_{i}"] = locals()[f"unidad_{i}"]
+            variables[f"costo_unidad_{i}"] = locals()[f"costo_unidad_{i}"]
+            variables[f"costo_total_{i}"] = locals()[f"costo_total_{i}"]
+
+        return render_template(
+            "pregunta_primera_actividad.html",
+            producto=producto,
+            actividad=actividad,
+            insumos_actividades=insumos_actividades,
+            **variables
+        )
+
     else:
         producto = session.get("producto")
         insumos_actividades = session.get("insumos_actividades")
         return render_template(
             "pregunta_primera_actividad.html",
             producto=producto,
-            costos_actividades=insumos_actividades
+            insumos_actividades=insumos_actividades
         )
 
 

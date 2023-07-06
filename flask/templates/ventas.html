@@ -18,10 +18,10 @@
                 <th>Ingreso total por producto</th>
             </tr>
             <tr>
-                <td><input type="text" name="producto" value="{{ producto }}"></td>
-                <td><input type="number" name="cantidad_vendida" step="any" value="{{ cantidad_vendida }}"></td>
-                <td><input type="text" name="unidad" value="{{ unidad }}"></td>
-                <td><input type="number" name="precio_venta" step="any" value="{{ precio_venta }}"></td>
+                <td><input type="text" name="producto" value="{{ producto }}" required></td>
+                <td><input type="number" name="cantidad_vendida" step="any" value="{{ cantidad_vendida }}" required></td>
+                <td><input type="text" name="unidad" value="{{ unidad }}" required></td>
+                <td><input type="number" name="precio_venta" step="any" value="{{ precio_venta }}" required></td>
                 <td><input type="text" name="ingreso_ventas" value="{{ ingreso_ventas }}" readonly></td>
             </tr>
         </table>

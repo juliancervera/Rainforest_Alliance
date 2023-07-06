@@ -5,15 +5,15 @@
 <body>
     <h1>Apunte los costos que involucra cada una de las actividades del proceso productivo del producto {{producto}}</h1>
     <p>Actividades registradas hasta ahora:</p>
-    {% if costos_actividades %}
-        {% for actividad in costos_actividades %}
+    {% if insumos_actividades %}
+        {% for actividad in insumos_actividades %}
             <p>{{ actividad[0][0] }}</p>
         {% endfor %}
     {% else %}
         <p>Ninguna. Por favor registre la primera actividad.</p>
     {% endif %}
     <form action="{{ url_for('pregunta_primera_actividad') }}" method="post">
-        <input type="text" name="actividad" maxlength="23" required>
+        <input type="text" name="actividad" value = "{{ actividad }}" maxlength="23" required>
         <p>A continuación, registre los insumos:</p>
             <table>
                 <tr>
@@ -129,7 +129,15 @@
                     <td><input type="number" name="costo_total_15" step="0.01" value="{{ costo_total_15 }}" readonly></td>
                 </tr>
             </table>
-            <button type="submit" class="button">Enter</button>
-        </form>
+            {% if actividad %}
+                <button type="submit" class="button" disabled>Enter</button>
+    </form>
+            <br>
+        <a href="{{ url_for('pregunta_primera_actividad') }}"><button class="button">Ingresar siguiente actividad</button></a>
+        <a href="{{ url_for('info_actividades') }}"><button class="button">Apuntar costos fijos</button></a>
+            {% else %}
+                <button type="submit" class="button">Enter</button>
+    </form>
+            {% endif %}
 </body>
 </html>
