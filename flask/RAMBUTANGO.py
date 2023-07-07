@@ -1,5 +1,6 @@
 # ToDo: Mantener separadas las variables de costos por categoría hasta sumarlas al último
 # ToDo: Add a character limit to every input cell.
+# ToDo: Find a more elegant way to write all the table rows in the HTML templates
 
 # Subdominio cálculo de costos.
 
@@ -65,13 +66,9 @@ def info_donativos():
     return "You chose 'Yes' for receiving donativos."
 
 #ToDo: Hacer que el botón de "go back" borre la última sublista añadida a insumos_actividades y trabajo_actividades
-#ToDo: Cambiar nombre de la siguiente función y adaptar todo alrededor de eso.
-#ToDo: Añadir un if al template del formulario de actividades.
-# Este if detecta si ya hay contenido numérico en al menos uno de las casillas de costos totales.
-# Si ya está ese contenido, saca los botones de regitrar nueva actividad o pasar a otros costos.
-# NO OLVIDAR QUE EL FORMULARIO PARA TRABAJO TENGA LA OPCIÓN DE AUTOEMPLEO
-@app.route("/pregunta_primera_actividad", methods=["GET", "POST"])
-def pregunta_primera_actividad():
+
+@app.route("/cuestionario_actividades", methods=["GET", "POST"])
+def cuestionario_actividades():
     if request.method == "POST":
         actividad = request.form.get("actividad")
 
@@ -92,6 +89,13 @@ def pregunta_primera_actividad():
             locals()[f"costo_unidad_{i}"] = request.form.get(f"costo_unidad_{i}")
             locals()[f"costo_total_{i}"] = ""
 
+            locals()[f"trabajo_{i}"] = request.form.get(f"trabajo_{i}")
+            locals()[f"cantidad_trabajo_{i}"] = request.form.get(f"cantidad_trabajo_{i}")
+            locals()[f"unidad_trabajo_{i}"] = request.form.get(f"unidad_trabajo_{i}")
+            locals()[f"costo_trabajo_unidad_{i}"] = request.form.get(f"costo_trabajo_unidad_{i}")
+            locals()[f"autoempleo_{i}"] = request.form.get(f"autoempleo_{i}")
+            locals()[f"costo_total_trabajo_{i}"] = ""
+
             try:
                 locals()[f"cantidad_{i}"] = float(locals()[f"cantidad_{i}"])
                 locals()[f"costo_unidad_{i}"] = float(locals()[f"costo_unidad_{i}"])
@@ -100,29 +104,33 @@ def pregunta_primera_actividad():
                 # Handle the case where either cantidad or costo_unidad is not a valid number
                 pass
 
-            sublist = [locals()[f"insumo_{i}"], locals()[f"cantidad_{i}"], locals()[f"unidad_{i}"],
-                       locals()[f"costo_unidad_{i}"], locals()[f"costo_total_{i}"]]
-            lista_insumos.append(sublist)
-
-        """
-        for i in range(1, 16):
-            insumo = request.form.get(f"insumo_{i}")
-            cantidad = request.form.get(f"cantidad_{i}")
-            unidad = request.form.get(f"unidad_{i}")
-            costo_unidad = request.form.get(f"costo_unidad_{i}")
-            costo_total = ""
-
             try:
-                cantidad = float(cantidad)
-                costo_unidad = float(costo_unidad)
-                costo_total = cantidad * costo_unidad
+                locals()[f"cantidad_trabajo_{i}"] = float(locals()[f"cantidad_trabajo_{i}"])
+                locals()[f"costo_trabajo_unidad_{i}"] = float(locals()[f"costo_trabajo_unidad_{i}"])
+                locals()[f"costo_total_trabajo_{i}"] = locals()[f"cantidad_trabajo_{i}"] * locals()[f"costo_trabajo_unidad_{i}"]
             except ValueError:
                 # Handle the case where either cantidad or costo_unidad is not a valid number
                 pass
 
-            sublist = [insumo, cantidad, unidad, costo_unidad, costo_total]
-            lista_insumos.append(sublist)
-            """
+            sublista_insumos = [
+                locals()[f"insumo_{i}"],
+                locals()[f"cantidad_{i}"],
+                locals()[f"unidad_{i}"],
+                locals()[f"costo_unidad_{i}"],
+                locals()[f"costo_total_{i}"]
+            ]
+
+            sublista_trabajo = [
+                locals()[f"trabajo_{i}"],
+                locals()[f"cantidad_trabajo_{i}"],
+                locals()[f"unidad_trabajo_{i}"],
+                locals()[f"costo_trabajo_unidad_{i}"],
+                locals()[f"autoempleo_{i}"],
+                locals()[f"costo_total_trabajo_{i}"]
+            ]
+
+            lista_insumos.append(sublista_insumos)
+            lista_trabajo.append(sublista_trabajo)
 
         insumos_actividades.append([lista_insumos])
         trabajo_actividades.append([lista_trabajo])
@@ -141,8 +149,15 @@ def pregunta_primera_actividad():
             variables[f"costo_unidad_{i}"] = locals()[f"costo_unidad_{i}"]
             variables[f"costo_total_{i}"] = locals()[f"costo_total_{i}"]
 
+            variables[f"trabajo_{i}"] = locals()[f"trabajo_{i}"]
+            variables[f"cantidad_trabajo_{i}"] = locals()[f"cantidad_trabajo_{i}"]
+            variables[f"unidad_trabajo_{i}"] = locals()[f"unidad_trabajo_{i}"]
+            variables[f"costo_trabajo_unidad_{i}"] = locals()[f"costo_trabajo_unidad_{i}"]
+            variables[f"costo_total_trabajo_{i}"] = locals()[f"costo_total_trabajo_{i}"]
+            variables[f"autoempleo_{i}"] = locals()[f"autoempleo_{i}"]
+
         return render_template(
-            "pregunta_primera_actividad.html",
+            "cuestionario_actividades.html",
             producto=producto,
             actividad=actividad,
             insumos_actividades=insumos_actividades,
@@ -153,22 +168,22 @@ def pregunta_primera_actividad():
         producto = session.get("producto")
         insumos_actividades = session.get("insumos_actividades")
         return render_template(
-            "pregunta_primera_actividad.html",
+            "cuestionario_actividades.html",
             producto=producto,
             insumos_actividades=insumos_actividades
         )
 
 
 """ RESPALDO DE CUANDO FUNCIONABA
-@app.route("/pregunta_primera_actividad", methods=["GET", "POST"])
-def pregunta_primera_actividad():
+@app.route("/cuestionario_actividades", methods=["GET", "POST"])
+def cuestionario_actividades():
     if request.method == "POST":
         actividad = request.form.get("actividad")
         session["actividad_1"] = actividad
         return redirect("/info_actividades")
     else:
         producto = session.get("producto")
-        return render_template("pregunta_primera_actividad.html", producto=producto)
+        return render_template("cuestionario_actividades.html", producto=producto)
 """
 
 

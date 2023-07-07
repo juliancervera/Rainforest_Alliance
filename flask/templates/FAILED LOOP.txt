@@ -1,0 +1,17 @@
+                <!-- FAILED ATTEMPT AT ELEGANT SOLUTION TO AVOID THE COPY PASTA
+                {% for i in range(9, 16) %}
+                <tr>
+                    <td><input type="text" name="trabajo_{{ i }}" value="{{ locals().get(f'trabajo_{i}', '') }}" maxlength="23"></td>
+                    <td><input type="number" name="cantidad_trabajo_{{ i }}" value="{{ locals().get(f'cantidad_trabajo_{i}', '') }}" maxlength="23"></td>
+                    <td><input type="text" name="unidad_trabajo_{{ i }}" value="{{ locals().get(f'unidad_trabajo_{i}', '') }}" maxlength="23"></td>
+                    <td><input type="number" name="costo_trabajo_unidad_{{ i }}" step="0.01" value="{{ locals().get(f'costo_trabajo_unidad_{i}', '') }}" maxlength="23"></td>
+                    <td>
+                        <select name="autoempleo_{{ i }}">
+                            <option value="Sí" {% if locals().get(f"autoempleo_{i}", "") == "Sí" %}selected{% endif %}>Sí</option>
+                            <option value="No" {% if locals().get(f"autoempleo_{i}", "") != "Sí" %}selected{% endif %}>No</option>
+                        </select>
+                    </td>
+                    <td><input type="number" name="costo_total_trabajo_{{ i }}" step="0.01" value="{{ locals().get(f'costo_total_trabajo_{i}', '') }}" readonly></td>
+                </tr>
+                {% endfor %}
+                -->
