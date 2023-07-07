@@ -1,6 +1,7 @@
 # ToDo: Mantener separadas las variables de costos por categoría hasta sumarlas al último
 # ToDo: Add a character limit to every input cell.
 # ToDo: Find a more elegant way to write all the table rows in the HTML templates
+# ToDo: Añadir un botón de DESHACER, que elimine el elemento más recientemente guardado en las listas
 
 # Subdominio cálculo de costos.
 
@@ -55,6 +56,10 @@ def ventas():
 
 
 # ToDo: Costos fijos: Dos tablas: Sueldos fijos y costos fijos, con base en el Excel
+# ToDo: Vaciar las listas correspondientes si el usuario vuelve al formulario vacío (get request?)
+# ToDo: la variable de porcentaje debe guardarse tal cual para reaparecer en la página, pero...
+# ...debe transformarse en número y dividirse entre cien para ser multiplicada y guardarse en la lista
+
 @app.route("/cuestionario_costos_fijos", methods=["GET", "POST"])
 def cuestionario_costos_fijos():
     if request.method == "POST":
