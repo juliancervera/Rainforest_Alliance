@@ -54,16 +54,113 @@ def ventas():
         return render_template("ventas.html")
 
 
-@app.route("/pregunta_donativos")
-def pregunta_donativos():
-    producto = session.get('producto')
-    return render_template('pregunta_donativos.html', producto=producto)
+# ToDo: Costos fijos: Dos tablas: Sueldos fijos y costos fijos, con base en el Excel
+@app.route("/cuestionario_costos_fijos", methods=["GET", "POST"])
+def cuestionario_costos_fijos():
+    if request.method == "POST":
+        actividad = request.form.get("actividad")
 
-# ToDo: Añadir pregunta otros ingresos.
-@app.route("/info_donativos")
-def info_donativos():
-    # Process the request or perform any other necessary actions
-    return "You chose 'Yes' for receiving donativos."
+        insumos_actividades = session.get('insumos_actividades', [])
+        trabajo_actividades = session.get('trabajo_actividades', [])
+        producto = session.get("producto")
+
+        lista_insumos = []
+        lista_trabajo = []
+
+        lista_insumos.append(actividad)
+        lista_trabajo.append(actividad)
+
+        for i in range(1, 16):
+            locals()[f"insumo_{i}"] = request.form.get(f"insumo_{i}")
+            locals()[f"cantidad_{i}"] = request.form.get(f"cantidad_{i}")
+            locals()[f"unidad_{i}"] = request.form.get(f"unidad_{i}")
+            locals()[f"costo_unidad_{i}"] = request.form.get(f"costo_unidad_{i}")
+            locals()[f"costo_total_{i}"] = ""
+
+            locals()[f"trabajo_{i}"] = request.form.get(f"trabajo_{i}")
+            locals()[f"cantidad_trabajo_{i}"] = request.form.get(f"cantidad_trabajo_{i}")
+            locals()[f"unidad_trabajo_{i}"] = request.form.get(f"unidad_trabajo_{i}")
+            locals()[f"costo_trabajo_unidad_{i}"] = request.form.get(f"costo_trabajo_unidad_{i}")
+            locals()[f"autoempleo_{i}"] = request.form.get(f"autoempleo_{i}")
+            locals()[f"costo_total_trabajo_{i}"] = ""
+
+            try:
+                locals()[f"cantidad_{i}"] = float(locals()[f"cantidad_{i}"])
+                locals()[f"costo_unidad_{i}"] = float(locals()[f"costo_unidad_{i}"])
+                locals()[f"costo_total_{i}"] = locals()[f"cantidad_{i}"] * locals()[f"costo_unidad_{i}"]
+            except ValueError:
+                # Handle the case where either cantidad or costo_unidad is not a valid number
+                pass
+
+            try:
+                locals()[f"cantidad_trabajo_{i}"] = float(locals()[f"cantidad_trabajo_{i}"])
+                locals()[f"costo_trabajo_unidad_{i}"] = float(locals()[f"costo_trabajo_unidad_{i}"])
+                locals()[f"costo_total_trabajo_{i}"] = locals()[f"cantidad_trabajo_{i}"] * locals()[f"costo_trabajo_unidad_{i}"]
+            except ValueError:
+                # Handle the case where either cantidad or costo_unidad is not a valid number
+                pass
+
+            sublista_insumos = [
+                locals()[f"insumo_{i}"],
+                locals()[f"cantidad_{i}"],
+                locals()[f"unidad_{i}"],
+                locals()[f"costo_unidad_{i}"],
+                locals()[f"costo_total_{i}"]
+            ]
+
+            sublista_trabajo = [
+                locals()[f"trabajo_{i}"],
+                locals()[f"cantidad_trabajo_{i}"],
+                locals()[f"unidad_trabajo_{i}"],
+                locals()[f"costo_trabajo_unidad_{i}"],
+                locals()[f"autoempleo_{i}"],
+                locals()[f"costo_total_trabajo_{i}"]
+            ]
+
+            lista_insumos.append(sublista_insumos)
+            lista_trabajo.append(sublista_trabajo)
+
+        insumos_actividades.append([lista_insumos])
+        trabajo_actividades.append([lista_trabajo])
+
+        session['insumos_actividades'] = insumos_actividades
+        session['trabajo_actividades'] = trabajo_actividades
+
+        # Create a dictionary to store the variables and their values
+        variables = {}
+
+        # Generate the variable names and assign their default values
+        for i in range(1, 16):
+            variables[f"insumo_{i}"] = locals()[f"insumo_{i}"]
+            variables[f"cantidad_{i}"] = locals()[f"cantidad_{i}"]
+            variables[f"unidad_{i}"] = locals()[f"unidad_{i}"]
+            variables[f"costo_unidad_{i}"] = locals()[f"costo_unidad_{i}"]
+            variables[f"costo_total_{i}"] = locals()[f"costo_total_{i}"]
+
+            variables[f"trabajo_{i}"] = locals()[f"trabajo_{i}"]
+            variables[f"cantidad_trabajo_{i}"] = locals()[f"cantidad_trabajo_{i}"]
+            variables[f"unidad_trabajo_{i}"] = locals()[f"unidad_trabajo_{i}"]
+            variables[f"costo_trabajo_unidad_{i}"] = locals()[f"costo_trabajo_unidad_{i}"]
+            variables[f"costo_total_trabajo_{i}"] = locals()[f"costo_total_trabajo_{i}"]
+            variables[f"autoempleo_{i}"] = locals()[f"autoempleo_{i}"]
+
+        return render_template(
+            "cuestionario_actividades.html",
+            producto=producto,
+            actividad=actividad,
+            insumos_actividades=insumos_actividades,
+            **variables
+        )
+
+    else:
+        producto = session.get("producto")
+        insumos_actividades = session.get("insumos_actividades")
+        return render_template(
+            "cuestionario_actividades.html",
+            producto=producto,
+            insumos_actividades=insumos_actividades
+        )
+
 
 #ToDo: Hacer que el botón de "go back" borre la última sublista añadida a insumos_actividades y trabajo_actividades
 
@@ -172,19 +269,6 @@ def cuestionario_actividades():
             producto=producto,
             insumos_actividades=insumos_actividades
         )
-
-
-""" RESPALDO DE CUANDO FUNCIONABA
-@app.route("/cuestionario_actividades", methods=["GET", "POST"])
-def cuestionario_actividades():
-    if request.method == "POST":
-        actividad = request.form.get("actividad")
-        session["actividad_1"] = actividad
-        return redirect("/info_actividades")
-    else:
-        producto = session.get("producto")
-        return render_template("cuestionario_actividades.html", producto=producto)
-"""
 
 
 @app.route("/info_actividades")
