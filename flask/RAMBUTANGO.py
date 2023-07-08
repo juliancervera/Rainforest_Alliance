@@ -2,6 +2,7 @@
 # ToDo: Add a character limit to every input cell.
 # ToDo: Find a more elegant way to write all the table rows in the HTML templates
 # ToDo: Añadir un botón de DESHACER, que elimine el elemento más recientemente guardado en las listas
+# ToDo: Hacer que las formas sólo puedan submit al dar clic en el botón Enter del final
 
 # Subdominio cálculo de costos.
 
@@ -55,120 +56,8 @@ def ventas():
         return render_template("ventas.html")
 
 
-# ToDo: Costos fijos: Dos tablas: Sueldos fijos y costos fijos, con base en el Excel
-# ToDo: Vaciar las listas correspondientes si el usuario vuelve al formulario vacío (get request?)
-# ToDo: la variable de porcentaje debe guardarse tal cual para reaparecer en la página, pero...
-# ...debe transformarse en número y dividirse entre cien para ser multiplicada y guardarse en la lista
-
-@app.route("/cuestionario_costos_fijos", methods=["GET", "POST"])
-def cuestionario_costos_fijos():
-    if request.method == "POST":
-        actividad = request.form.get("actividad")
-
-        insumos_actividades = session.get('insumos_actividades', [])
-        trabajo_actividades = session.get('trabajo_actividades', [])
-        producto = session.get("producto")
-
-        lista_insumos = []
-        lista_trabajo = []
-
-        lista_insumos.append(actividad)
-        lista_trabajo.append(actividad)
-
-        for i in range(1, 16):
-            locals()[f"insumo_{i}"] = request.form.get(f"insumo_{i}")
-            locals()[f"cantidad_{i}"] = request.form.get(f"cantidad_{i}")
-            locals()[f"unidad_{i}"] = request.form.get(f"unidad_{i}")
-            locals()[f"costo_unidad_{i}"] = request.form.get(f"costo_unidad_{i}")
-            locals()[f"costo_total_{i}"] = ""
-
-            locals()[f"trabajo_{i}"] = request.form.get(f"trabajo_{i}")
-            locals()[f"cantidad_trabajo_{i}"] = request.form.get(f"cantidad_trabajo_{i}")
-            locals()[f"unidad_trabajo_{i}"] = request.form.get(f"unidad_trabajo_{i}")
-            locals()[f"costo_trabajo_unidad_{i}"] = request.form.get(f"costo_trabajo_unidad_{i}")
-            locals()[f"autoempleo_{i}"] = request.form.get(f"autoempleo_{i}")
-            locals()[f"costo_total_trabajo_{i}"] = ""
-
-            try:
-                locals()[f"cantidad_{i}"] = float(locals()[f"cantidad_{i}"])
-                locals()[f"costo_unidad_{i}"] = float(locals()[f"costo_unidad_{i}"])
-                locals()[f"costo_total_{i}"] = locals()[f"cantidad_{i}"] * locals()[f"costo_unidad_{i}"]
-            except ValueError:
-                # Handle the case where either cantidad or costo_unidad is not a valid number
-                pass
-
-            try:
-                locals()[f"cantidad_trabajo_{i}"] = float(locals()[f"cantidad_trabajo_{i}"])
-                locals()[f"costo_trabajo_unidad_{i}"] = float(locals()[f"costo_trabajo_unidad_{i}"])
-                locals()[f"costo_total_trabajo_{i}"] = locals()[f"cantidad_trabajo_{i}"] * locals()[f"costo_trabajo_unidad_{i}"]
-            except ValueError:
-                # Handle the case where either cantidad or costo_unidad is not a valid number
-                pass
-
-            sublista_insumos = [
-                locals()[f"insumo_{i}"],
-                locals()[f"cantidad_{i}"],
-                locals()[f"unidad_{i}"],
-                locals()[f"costo_unidad_{i}"],
-                locals()[f"costo_total_{i}"]
-            ]
-
-            sublista_trabajo = [
-                locals()[f"trabajo_{i}"],
-                locals()[f"cantidad_trabajo_{i}"],
-                locals()[f"unidad_trabajo_{i}"],
-                locals()[f"costo_trabajo_unidad_{i}"],
-                locals()[f"autoempleo_{i}"],
-                locals()[f"costo_total_trabajo_{i}"]
-            ]
-
-            lista_insumos.append(sublista_insumos)
-            lista_trabajo.append(sublista_trabajo)
-
-        insumos_actividades.append([lista_insumos])
-        trabajo_actividades.append([lista_trabajo])
-
-        session['insumos_actividades'] = insumos_actividades
-        session['trabajo_actividades'] = trabajo_actividades
-
-        # Create a dictionary to store the variables and their values
-        variables = {}
-
-        # Generate the variable names and assign their default values
-        for i in range(1, 16):
-            variables[f"insumo_{i}"] = locals()[f"insumo_{i}"]
-            variables[f"cantidad_{i}"] = locals()[f"cantidad_{i}"]
-            variables[f"unidad_{i}"] = locals()[f"unidad_{i}"]
-            variables[f"costo_unidad_{i}"] = locals()[f"costo_unidad_{i}"]
-            variables[f"costo_total_{i}"] = locals()[f"costo_total_{i}"]
-
-            variables[f"trabajo_{i}"] = locals()[f"trabajo_{i}"]
-            variables[f"cantidad_trabajo_{i}"] = locals()[f"cantidad_trabajo_{i}"]
-            variables[f"unidad_trabajo_{i}"] = locals()[f"unidad_trabajo_{i}"]
-            variables[f"costo_trabajo_unidad_{i}"] = locals()[f"costo_trabajo_unidad_{i}"]
-            variables[f"costo_total_trabajo_{i}"] = locals()[f"costo_total_trabajo_{i}"]
-            variables[f"autoempleo_{i}"] = locals()[f"autoempleo_{i}"]
-
-        return render_template(
-            "cuestionario_actividades.html",
-            producto=producto,
-            actividad=actividad,
-            insumos_actividades=insumos_actividades,
-            **variables
-        )
-
-    else:
-        producto = session.get("producto")
-        insumos_actividades = session.get("insumos_actividades")
-        return render_template(
-            "cuestionario_actividades.html",
-            producto=producto,
-            insumos_actividades=insumos_actividades
-        )
-
-
 #ToDo: Hacer que el botón de "go back" borre la última sublista añadida a insumos_actividades y trabajo_actividades
-
+#ToDo: Poner primero trabajo y luego insumos
 @app.route("/cuestionario_actividades", methods=["GET", "POST"])
 def cuestionario_actividades():
     if request.method == "POST":
@@ -275,10 +164,136 @@ def cuestionario_actividades():
             insumos_actividades=insumos_actividades
         )
 
+# ToDo: Costos fijos: Dos tablas: Sueldos fijos y costos fijos, con base en el Excel
+# ToDo: Vaciar las listas correspondientes si el usuario vuelve al formulario vacío (get request?)
+# ToDo: la variable de porcentaje debe guardarse tal cual para reaparecer en la página, pero...
+# ...debe transformarse en número y dividirse entre cien para ser multiplicada y guardarse en la lista
 
-@app.route("/info_actividades")
-def info_actividades():
-    return "Hola, Mundo"
+@app.route("/cuestionario_costos_fijos", methods=["GET", "POST"])
+def cuestionario_costos_fijos():
+    if request.method == "POST":
+
+        producto = session.get("producto")
+
+        sueldos_fijos = []
+        costos_fijos = []
+
+        for i in range(1, 16):
+            locals()[f"trabajo_fijo_{i}"] = request.form.get(f"trabajo_fijo_{i}")
+            locals()[f"cantidad_trabajo_fijo_{i}"] = request.form.get(f"cantidad_trabajo_fijo_{i}")
+            locals()[f"sueldo_trabajo_fijo_{i}"] = request.form.get(f"sueldo_trabajo_fijo_{i}")
+            locals()[f"autoempleo_fijo_{i}"] = request.form.get(f"autoempleo_fijo_{i}")
+            locals()[f"porcentaje_trabajo_fijo_{i}"] = request.form.get(f"porcentaje_trabajo_fijo_{i}")
+            locals()[f"costo_total_trabajo_fijo_{i}"] = ""
+
+            locals()[f"costo_fijo_{i}"] = request.form.get(f"costo_fijo_{i}")
+            locals()[f"monto_fijo_{i}"] = request.form.get(f"monto_fijo_{i}")
+            locals()[f"porcentaje_costo_fijo_{i}"] = request.form.get(f"porcentaje_costo_fijo_{i}")
+            locals()[f"costo_fijo_total_{i}"] = ""
+
+            try:
+                locals()[f"cantidad_trabajo_fijo_{i}"] = float(locals()[f"cantidad_trabajo_fijo_{i}"])
+                locals()[f"sueldo_trabajo_fijo_{i}"] = float(locals()[f"sueldo_trabajo_fijo_{i}"])
+                locals()[f"porcentaje_trabajo_fijo_{i}"] = float(locals()[f"porcentaje_trabajo_fijo_{i}"])
+                locals()[f"costo_total_trabajo_fijo_{i}"] = locals()[f"cantidad_trabajo_fijo_{i}"] * locals()[f"sueldo_trabajo_fijo_{i}"] * (locals()[f"porcentaje_trabajo_fijo_{i}"] / 100)
+            except ValueError:
+                # Handle the case where either cantidad or costo_unidad is not a valid number
+                pass
+
+            try:
+                locals()[f"monto_fijo_{i}"] = float(locals()[f"monto_fijo_{i}"])
+                locals()[f"porcentaje_costo_fijo_{i}"] = float(locals()[f"porcentaje_costo_fijo_{i}"])
+                locals()[f"costo_fijo_total_{i}"] = locals()[f"monto_fijo_{i}"] * (locals()[f"porcentaje_costo_fijo_{i}"] / 100)
+            except ValueError:
+                # Handle the case where either cantidad or costo_unidad is not a valid number
+                pass
+
+            sublista_trabajo = [
+                locals()[f"trabajo_fijo_{i}"],
+                locals()[f"cantidad_trabajo_fijo_{i}"],
+                locals()[f"sueldo_trabajo_fijo_{i}"],
+                locals()[f"porcentaje_trabajo_fijo_{i}"],
+                locals()[f"autoempleo_fijo_{i}"],
+                locals()[f"costo_total_trabajo_fijo_{i}"]
+            ]
+
+            sublista_insumos = [
+                locals()[f"costo_fijo_{i}"],
+                locals()[f"monto_fijo_{i}"],
+                locals()[f"porcentaje_costo_fijo_{i}"],
+                locals()[f"costo_fijo_total_{i}"]
+            ]
+
+            sueldos_fijos.append(sublista_insumos)
+            costos_fijos.append(sublista_trabajo)
+
+        session['sueldos_fijos'] = sueldos_fijos
+        session['costos_fijos'] = costos_fijos
+
+        # Create a dictionary to store the variables and their values
+        variables = {}
+
+        # Generate the variable names and assign their default values
+        for i in range(1, 16):
+            variables[f"trabajo_fijo_{i}"] = locals()[f"trabajo_fijo_{i}"]
+            variables[f"cantidad_trabajo_fijo_{i}"] = locals()[f"cantidad_trabajo_fijo_{i}"]
+            variables[f"sueldo_trabajo_fijo_{i}"] = locals()[f"sueldo_trabajo_fijo_{i}"]
+            variables[f"porcentaje_trabajo_fijo_{i}"] = locals()[f"porcentaje_trabajo_fijo_{i}"]
+            variables[f"autoempleo_fijo_{i}"] = locals()[f"autoempleo_fijo_{i}"]
+            variables[f"costo_total_trabajo_fijo_{i}"] = locals()[f"costo_total_trabajo_fijo_{i}"]
+
+            variables[f"costo_fijo_{i}"] = locals()[f"costo_fijo_{i}"]
+            variables[f"monto_fijo_{i}"] = locals()[f"monto_fijo_{i}"]
+            variables[f"porcentaje_costo_fijo_{i}"] = locals()[f"porcentaje_costo_fijo_{i}"]
+            variables[f"costo_fijo_total_{i}"] = locals()[f"costo_fijo_total_{i}"]
+
+        return render_template(
+            "cuestionario_costos_fijos.html",
+            producto=producto,
+            sueldos_fijos=sueldos_fijos,
+            costos_fijos=costos_fijos,
+            **variables
+        )
+
+    else:
+        producto = session.get("producto")
+
+        costos_fijos = []
+        sueldos_fijos = []
+
+        session["costos_fijos"] = costos_fijos
+        session["sueldos_fijos"] = sueldos_fijos
+
+        porcentajes_default = {}
+
+        # Generate the variable names and assign their default values
+        for i in range(1, 16):
+            locals()[f"porcentaje_costo_fijo_{i}"] = 100
+            locals()[f"porcentaje_trabajo_fijo_{i}"] = 100
+            porcentajes_default[f"porcentaje_costo_fijo_{i}"] = locals()[f"porcentaje_costo_fijo_{i}"]
+            porcentajes_default[f"porcentaje_trabajo_fijo_{i}"] = locals()[f"porcentaje_trabajo_fijo_{i}"]
+
+
+        return render_template(
+            "cuestionario_costos_fijos.html",
+            producto=producto,
+            costos_fijos=costos_fijos,
+            sueldos_fijos=sueldos_fijos,
+            **porcentajes_default
+        )
+
+
+@app.route("/pregunta_impuestos_venta")
+def pregunta_impuestos_venta():
+    sueldos_fijos = session.get("producto")
+    costos_fijos = session.get("costos_fijos")
+    insumos_actividades = session.get("insumos_actividades")
+
+    print("Sueldos Fijos:", sueldos_fijos)
+    print("Costos Fijos:", costos_fijos)
+    print("Insumos Actividades:", insumos_actividades)
+
+    return "Lists printed successfully."
 
 
 if __name__ == "__main__":

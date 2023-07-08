@@ -40,7 +40,7 @@
                     <td><input type="number" name="cantidad_1" value="{{ cantidad_1 }}" maxlength="23" {% if actividad %}readonly{% endif %}></td>
                     <td><input type="text" name="unidad_1" value="{{ unidad_1 }}" maxlength="23" {% if actividad %}readonly{% endif %}></td>
                     <td><input type="number" name="costo_unidad_1" step="0.01" value="{{ costo_unidad_1 }}" maxlength="23" {% if actividad %}readonly{% endif %}></td>
-                    <td><input type="number" name="costo_total_1" step="0.01" value="{{ costo_total_1 }}" {% if actividad %}readonly{% endif %}></td>
+                    <td><input type="number" name="costo_total_1" step="0.01" value="{{ costo_total_1 }}" readonly></td>
                 </tr>
                 <tr>
                     <td><input type="text" name="insumo_2" value="{{ insumo_2 }}" maxlength="23" {% if actividad %}readonly{% endif %}></td>
@@ -359,7 +359,7 @@
     </form>
             <br>
         <a href="{{ url_for('cuestionario_actividades') }}"><button class="button">Ingresar siguiente actividad</button></a>
-        <a href="{{ url_for('info_actividades') }}"><button class="button">Apuntar costos fijos</button></a>
+        <a href="{{ url_for('cuestionario_costos_fijos') }}"><button class="button">Apuntar costos fijos</button></a>
             {% else %}
                 <button type="submit" class="button">Enter</button>
     </form>

@@ -5,12 +5,12 @@
 <body>
     <h1>Apunte los costos fijos que implica el proceso productivo del producto {{producto}}</h1>
     <p>INSERTAR AQUÍ EXPLICACIÓN E INSTRUCCIONES</p>
-    {% if not costos_fijos %}
+    {% if costos_fijos|length == 0 %}
     <p>Si su producción no implica costos ni sueldos fijos, haga clic en el botón "omitir":</p>
             <br>
-        <a href="{{ url_for('impuestos_sobre_venta') }}"><button class="button">Omitir</button></a>
+        <a href="{{ url_for('pregunta_impuestos_venta') }}"><button class="button">Omitir</button></a>
             <br>
-    <p>Si su producción implica costos o sueldos fijos, regístrelos a continuación:</p>  
+    <p>Si su producción implica sueldos fijos, regístrelos a continuación:</p>  
 
     {% else %}
                 <br>
@@ -19,6 +19,7 @@
             <br>
         <p>Estos son los sueldos fijos que usted registró:</p>
     {% endif %}
+    <form action="{{ url_for('cuestionario_costos_fijos') }}" method="post">
             <table>
                 <tr>
                     <th>Trabajo realizado</th>
@@ -33,7 +34,7 @@
                     <td><input type="number" name="cantidad_trabajo_fijo_1" value="{{ cantidad_trabajo_fijo_1 }}" maxlength="23" {% if sueldos_fijos %}readonly{% endif %}></td>
                     <td><input type="number" name="sueldo_trabajo_fijo_1" value="{{ sueldo_trabajo_fijo_1 }}" maxlength="23" {% if sueldos_fijos %}readonly{% endif %}></td>
                     <td>
-                    <input type="number" name="porcentaje_trabajo_fijo_1" step="0.01" value="{{ porcentaje_trabajo_fijo_1 }}" min="0" max="100" {% if sueldos_fijos %}readonly{% endif %} oninput="this.value = this.value.replace(/[^0-9.]/g, '') + '%';">
+                    <input type="number" name="porcentaje_trabajo_fijo_1" step="0.01" value="{{ porcentaje_trabajo_fijo_1 }}" min="0" max="100" {% if sueldos_fijos %}readonly{% endif %}>
                     </td>
                     <td>
                         <select name="autoempleo_fijo_1" {% if sueldos_fijos %}disabled{% endif %}>
@@ -48,7 +49,7 @@
                     <td><input type="number" name="cantidad_trabajo_fijo_2" value="{{ cantidad_trabajo_fijo_2 }}" maxlength="23" {% if sueldos_fijos %}readonly{% endif %}></td>
                     <td><input type="number" name="sueldo_trabajo_fijo_2" value="{{ sueldo_trabajo_fijo_2 }}" maxlength="23" {% if sueldos_fijos %}readonly{% endif %}></td>
                     <td>
-                        <input type="number" name="porcentaje_trabajo_fijo_2" step="0.01" value="{{ porcentaje_trabajo_fijo_2 }}" min="0" max="100" {% if sueldos_fijos %}readonly{% endif %} oninput="this.value = this.value.replace(/[^0-9.]/g, '') + '%';">
+                        <input type="number" name="porcentaje_trabajo_fijo_2" step="0.01" value="{{ porcentaje_trabajo_fijo_2 }}" min="0" max="100" {% if sueldos_fijos %}readonly{% endif %}>
                     </td>
                     <td>
                         <select name="autoempleo_fijo_2" {% if sueldos_fijos %}disabled{% endif %}>
@@ -64,7 +65,7 @@
                     <td><input type="number" name="cantidad_trabajo_fijo_3" value="{{ cantidad_trabajo_fijo_3 }}" maxlength="23" {% if sueldos_fijos %}readonly{% endif %}></td>
                     <td><input type="number" name="sueldo_trabajo_fijo_3" value="{{ sueldo_trabajo_fijo_3 }}" maxlength="23" {% if sueldos_fijos %}readonly{% endif %}></td>
                     <td>
-                        <input type="number" name="porcentaje_trabajo_fijo_3" step="0.01" value="{{ porcentaje_trabajo_fijo_3 }}" min="0" max="100" {% if sueldos_fijos %}readonly{% endif %} oninput="this.value = this.value.replace(/[^0-9.]/g, '') + '%';">
+                        <input type="number" name="porcentaje_trabajo_fijo_3" step="0.01" value="{{ porcentaje_trabajo_fijo_3 }}" min="0" max="100" {% if sueldos_fijos %}readonly{% endif %}>
                     </td>
                     <td>
                         <select name="autoempleo_fijo_3" {% if sueldos_fijos %}disabled{% endif %}>
@@ -80,7 +81,7 @@
                     <td><input type="number" name="cantidad_trabajo_fijo_4" value="{{ cantidad_trabajo_fijo_4 }}" maxlength="23" {% if sueldos_fijos %}readonly{% endif %}></td>
                     <td><input type="number" name="sueldo_trabajo_fijo_4" value="{{ sueldo_trabajo_fijo_4 }}" maxlength="23" {% if sueldos_fijos %}readonly{% endif %}></td>
                     <td>
-                        <input type="number" name="porcentaje_trabajo_fijo_4" step="0.01" value="{{ porcentaje_trabajo_fijo_4 }}" min="0" max="100" {% if sueldos_fijos %}readonly{% endif %} oninput="this.value = this.value.replace(/[^0-9.]/g, '') + '%';">
+                        <input type="number" name="porcentaje_trabajo_fijo_4" step="0.01" value="{{ porcentaje_trabajo_fijo_4 }}" min="0" max="100" {% if sueldos_fijos %}readonly{% endif %}>
                     </td>
                     <td>
                         <select name="autoempleo_fijo_4" {% if sueldos_fijos %}disabled{% endif %}>
@@ -95,7 +96,7 @@
                     <td><input type="number" name="cantidad_trabajo_fijo_5" value="{{ cantidad_trabajo_fijo_5 }}" maxlength="23" {% if sueldos_fijos %}readonly{% endif %}></td>
                     <td><input type="number" name="sueldo_trabajo_fijo_5" value="{{ sueldo_trabajo_fijo_5 }}" maxlength="23" {% if sueldos_fijos %}readonly{% endif %}></td>
                     <td>
-                        <input type="number" name="porcentaje_trabajo_fijo_5" step="0.01" value="{{ porcentaje_trabajo_fijo_5 }}" min="0" max="100" {% if sueldos_fijos %}readonly{% endif %} oninput="this.value = this.value.replace(/[^0-9.]/g, '') + '%';">
+                        <input type="number" name="porcentaje_trabajo_fijo_5" step="0.01" value="{{ porcentaje_trabajo_fijo_5 }}" min="0" max="100" {% if sueldos_fijos %}readonly{% endif %}>
                     </td>
                     <td>
                         <select name="autoempleo_fijo_5" {% if sueldos_fijos %}disabled{% endif %}>
@@ -110,7 +111,7 @@
                     <td><input type="number" name="cantidad_trabajo_fijo_6" value="{{ cantidad_trabajo_fijo_6 }}" maxlength="23" {% if sueldos_fijos %}readonly{% endif %}></td>
                     <td><input type="number" name="sueldo_trabajo_fijo_6" value="{{ sueldo_trabajo_fijo_6 }}" maxlength="23" {% if sueldos_fijos %}readonly{% endif %}></td>
                     <td>
-                        <input type="number" name="porcentaje_trabajo_fijo_6" step="0.01" value="{{ porcentaje_trabajo_fijo_6 }}" min="0" max="100" {% if sueldos_fijos %}readonly{% endif %} oninput="this.value = this.value.replace(/[^0-9.]/g, '') + '%';">
+                        <input type="number" name="porcentaje_trabajo_fijo_6" step="0.01" value="{{ porcentaje_trabajo_fijo_6 }}" min="0" max="100" {% if sueldos_fijos %}readonly{% endif %}>
                     </td>
                     <td>
                         <select name="autoempleo_fijo_6" {% if sueldos_fijos %}disabled{% endif %}>
@@ -125,7 +126,7 @@
                     <td><input type="number" name="cantidad_trabajo_fijo_7" value="{{ cantidad_trabajo_fijo_7 }}" maxlength="23" {% if sueldos_fijos %}readonly{% endif %}></td>
                     <td><input type="number" name="sueldo_trabajo_fijo_7" value="{{ sueldo_trabajo_fijo_7 }}" maxlength="23" {% if sueldos_fijos %}readonly{% endif %}></td>
                     <td>
-                        <input type="number" name="porcentaje_trabajo_fijo_7" step="0.01" value="{{ porcentaje_trabajo_fijo_7 }}" min="0" max="100" {% if sueldos_fijos %}readonly{% endif %} oninput="this.value = this.value.replace(/[^0-9.]/g, '') + '%';">
+                        <input type="number" name="porcentaje_trabajo_fijo_7" step="0.01" value="{{ porcentaje_trabajo_fijo_7 }}" min="0" max="100" {% if sueldos_fijos %}readonly{% endif %}>
                     </td>
                     <td>
                         <select name="autoempleo_fijo_7" {% if sueldos_fijos %}disabled{% endif %}>
@@ -140,7 +141,7 @@
                     <td><input type="number" name="cantidad_trabajo_fijo_8" value="{{ cantidad_trabajo_fijo_8 }}" maxlength="23" {% if sueldos_fijos %}readonly{% endif %}></td>
                     <td><input type="number" name="sueldo_trabajo_fijo_8" value="{{ sueldo_trabajo_fijo_8 }}" maxlength="23" {% if sueldos_fijos %}readonly{% endif %}></td>
                     <td>
-                        <input type="number" name="porcentaje_trabajo_fijo_8" step="0.01" value="{{ porcentaje_trabajo_fijo_8 }}" min="0" max="100" {% if sueldos_fijos %}readonly{% endif %} oninput="this.value = this.value.replace(/[^0-9.]/g, '') + '%';">
+                        <input type="number" name="porcentaje_trabajo_fijo_8" step="0.01" value="{{ porcentaje_trabajo_fijo_8 }}" min="0" max="100" {% if sueldos_fijos %}readonly{% endif %}>
                     </td>
                     <td>
                         <select name="autoempleo_fijo_8" {% if sueldos_fijos %}disabled{% endif %}>
@@ -156,7 +157,7 @@
                     <td><input type="number" name="cantidad_trabajo_fijo_9" value="{{ cantidad_trabajo_fijo_9 }}" maxlength="23" {% if sueldos_fijos %}readonly{% endif %}></td>
                     <td><input type="number" name="sueldo_trabajo_fijo_9" value="{{ sueldo_trabajo_fijo_9 }}" maxlength="23" {% if sueldos_fijos %}readonly{% endif %}></td>
                     <td>
-                        <input type="number" name="porcentaje_trabajo_fijo_9" step="0.01" value="{{ porcentaje_trabajo_fijo_9 }}" min="0" max="100" {% if sueldos_fijos %}readonly{% endif %} oninput="this.value = this.value.replace(/[^0-9.]/g, '') + '%';">
+                        <input type="number" name="porcentaje_trabajo_fijo_9" step="0.01" value="{{ porcentaje_trabajo_fijo_9 }}" min="0" max="100" {% if sueldos_fijos %}readonly{% endif %}>
                     </td>
                     <td>
                         <select name="autoempleo_fijo_9" {% if sueldos_fijos %}disabled{% endif %}>
@@ -172,7 +173,7 @@
                     <td><input type="number" name="cantidad_trabajo_fijo_10" value="{{ cantidad_trabajo_fijo_10 }}" maxlength="23" {% if sueldos_fijos %}readonly{% endif %}></td>
                     <td><input type="number" name="sueldo_trabajo_fijo_10" value="{{ sueldo_trabajo_fijo_10 }}" maxlength="23" {% if sueldos_fijos %}readonly{% endif %}></td>
                     <td>
-                        <input type="number" name="porcentaje_trabajo_fijo_10" step="0.01" value="{{ porcentaje_trabajo_fijo_10 }}" min="0" max="100" {% if sueldos_fijos %}readonly{% endif %} oninput="this.value = this.value.replace(/[^0-9.]/g, '') + '%';">
+                        <input type="number" name="porcentaje_trabajo_fijo_10" step="0.01" value="{{ porcentaje_trabajo_fijo_10 }}" min="0" max="100" {% if sueldos_fijos %}readonly{% endif %}>
                     </td>
                     <td>
                         <select name="autoempleo_fijo_10" {% if sueldos_fijos %}disabled{% endif %}>
@@ -187,7 +188,7 @@
                     <td><input type="number" name="cantidad_trabajo_fijo_11" value="{{ cantidad_trabajo_fijo_11 }}" maxlength="23" {% if sueldos_fijos %}readonly{% endif %}></td>
                     <td><input type="number" name="sueldo_trabajo_fijo_11" value="{{ sueldo_trabajo_fijo_11 }}" maxlength="23" {% if sueldos_fijos %}readonly{% endif %}></td>
                     <td>
-                        <input type="number" name="porcentaje_trabajo_fijo_11" step="0.01" value="{{ porcentaje_trabajo_fijo_11 }}" min="0" max="100" {% if sueldos_fijos %}readonly{% endif %} oninput="this.value = this.value.replace(/[^0-9.]/g, '') + '%';">
+                        <input type="number" name="porcentaje_trabajo_fijo_11" step="0.01" value="{{ porcentaje_trabajo_fijo_11 }}" min="0" max="100" {% if sueldos_fijos %}readonly{% endif %}>
                     </td>
                     <td>
                         <select name="autoempleo_fijo_11" {% if sueldos_fijos %}disabled{% endif %}>
@@ -203,7 +204,7 @@
                     <td><input type="number" name="cantidad_trabajo_fijo_12" value="{{ cantidad_trabajo_fijo_12 }}" maxlength="23" {% if sueldos_fijos %}readonly{% endif %}></td>
                     <td><input type="number" name="sueldo_trabajo_fijo_12" value="{{ sueldo_trabajo_fijo_12 }}" maxlength="23" {% if sueldos_fijos %}readonly{% endif %}></td>
                     <td>
-                        <input type="number" name="porcentaje_trabajo_fijo_12" step="0.01" value="{{ porcentaje_trabajo_fijo_12 }}" min="0" max="100" {% if sueldos_fijos %}readonly{% endif %} oninput="this.value = this.value.replace(/[^0-9.]/g, '') + '%';">
+                        <input type="number" name="porcentaje_trabajo_fijo_12" step="0.01" value="{{ porcentaje_trabajo_fijo_12 }}" min="0" max="100" {% if sueldos_fijos %}readonly{% endif %}>
                     </td>
                     <td>
                         <select name="autoempleo_fijo_12" {% if sueldos_fijos %}disabled{% endif %}>
@@ -218,7 +219,7 @@
                     <td><input type="number" name="cantidad_trabajo_fijo_13" value="{{ cantidad_trabajo_fijo_13 }}" maxlength="23" {% if sueldos_fijos %}readonly{% endif %}></td>
                     <td><input type="number" name="sueldo_trabajo_fijo_13" value="{{ sueldo_trabajo_fijo_13 }}" maxlength="23" {% if sueldos_fijos %}readonly{% endif %}></td>
                     <td>
-                        <input type="number" name="porcentaje_trabajo_fijo_13" step="0.01" value="{{ porcentaje_trabajo_fijo_13 }}" min="0" max="100" {% if sueldos_fijos %}readonly{% endif %} oninput="this.value = this.value.replace(/[^0-9.]/g, '') + '%';">
+                        <input type="number" name="porcentaje_trabajo_fijo_13" step="0.01" value="{{ porcentaje_trabajo_fijo_13 }}" min="0" max="100" {% if sueldos_fijos %}readonly{% endif %}>
                     </td>
                     <td>
                         <select name="autoempleo_fijo_13" {% if sueldos_fijos %}disabled{% endif %}>
@@ -233,7 +234,7 @@
                     <td><input type="number" name="cantidad_trabajo_fijo_14" value="{{ cantidad_trabajo_fijo_14 }}" maxlength="23" {% if sueldos_fijos %}readonly{% endif %}></td>
                     <td><input type="number" name="sueldo_trabajo_fijo_14" value="{{ sueldo_trabajo_fijo_14 }}" maxlength="23" {% if sueldos_fijos %}readonly{% endif %}></td>
                     <td>
-                        <input type="number" name="porcentaje_trabajo_fijo_14" step="0.01" value="{{ porcentaje_trabajo_fijo_14 }}" min="0" max="100" {% if sueldos_fijos %}readonly{% endif %} oninput="this.value = this.value.replace(/[^0-9.]/g, '') + '%';">
+                        <input type="number" name="porcentaje_trabajo_fijo_14" step="0.01" value="{{ porcentaje_trabajo_fijo_14 }}" min="0" max="100" {% if sueldos_fijos %}readonly{% endif %}>
                     </td>
                     <td>
                         <select name="autoempleo_fijo_14" {% if sueldos_fijos %}disabled{% endif %}>
@@ -249,7 +250,7 @@
                     <td><input type="number" name="cantidad_trabajo_fijo_15" value="{{ cantidad_trabajo_fijo_15 }}" maxlength="23" {% if sueldos_fijos %}readonly{% endif %}></td>
                     <td><input type="number" name="sueldo_trabajo_fijo_15" value="{{ sueldo_trabajo_fijo_15 }}" maxlength="23" {% if sueldos_fijos %}readonly{% endif %}></td>
                     <td>
-                        <input type="number" name="porcentaje_trabajo_fijo_15" step="0.01" value="{{ porcentaje_trabajo_fijo_15 }}" min="0" max="100" {% if sueldos_fijos %}readonly{% endif %} oninput="this.value = this.value.replace(/[^0-9.]/g, '') + '%';">
+                        <input type="number" name="porcentaje_trabajo_fijo_15" step="0.01" value="{{ porcentaje_trabajo_fijo_15 }}" min="0" max="100" {% if sueldos_fijos %}readonly{% endif %}>
                     </td>
                     <td>
                         <select name="autoempleo_fijo_15" {% if sueldos_fijos %}disabled{% endif %}>
@@ -259,11 +260,12 @@
                     </td>
                     <td><input type="number" name="costo_total_trabajo_fijo_15" step="0.01" value="{{ costo_total_trabajo_fijo_15 }}" readonly></td>
                 </tr>
+            </table>
             <br>
-            {% if costos_fijos %}
-            <p>Éstos son los costos de mano de obra que usted registró para la actividad de {{actividad}}</p>
+            {% if costos_fijos|length > 0 %}
+            <p>Éstos son los costos fijos que usted registró: </p>
             {% else %}
-            <p>A continuación, registre los costos de mano de obra</p>
+            <p>Si su producción implica costos fijos, regístrelos a continuación:</p>
             {% endif %}
             <br>
             <table> 
@@ -276,105 +278,108 @@
                 <tr>
                     <td><input type="text" name="costo_fijo_1" value="{{ costo_fijo_1 }}" maxlength="23" {% if costos_fijos %}readonly{% endif %}></td>
                     <td><input type="number" name="monto_fijo_1" value="{{ monto_fijo_1 }}" maxlength="23" {% if costos_fijos %}readonly{% endif %}></td>
-                    <td><input type="number" name="porcentaje_costo_fijo_1" value="{{ porcentaje_costo_fijo_1 }}" maxlength="23" {% if costos_fijos %}readonly{% endif %} oninput="this.value = this.value.replace(/[^0-9.]/g, '') + '%';"></td>
+                    <td><input type="number" name="porcentaje_costo_fijo_1" value="{{ porcentaje_costo_fijo_1 }}" maxlength="23" {% if costos_fijos %}readonly{% endif %}></td>
                     <td><input type="number" name="costo_fijo_total_1" step="0.01" value="{{ costo_fijo_total_1 }}" readonly></td>
                 <tr>
                     <td><input type="text" name="costo_fijo_2" value="{{ costo_fijo_2 }}" maxlength="23" {% if costos_fijos %}readonly{% endif %}></td>
                     <td><input type="number" name="monto_fijo_2" value="{{ monto_fijo_2 }}" maxlength="23" {% if costos_fijos %}readonly{% endif %}></td>
-                    <td><input type="number" name="porcentaje_costo_fijo_2" value="{{ porcentaje_costo_fijo_2 }}" maxlength="23" {% if costos_fijos %}readonly{% endif %} oninput="this.value = this.value.replace(/[^0-9.]/g, '') + '%';"></td>
+                    <td><input type="number" name="porcentaje_costo_fijo_2" value="{{ porcentaje_costo_fijo_2 }}" maxlength="23" {% if costos_fijos %}readonly{% endif %}></td>
                     <td><input type="number" name="costo_fijo_total_2" step="0.01" value="{{ costo_fijo_total_2 }}" readonly></td>
                 </tr>
                 <tr>
                     <td><input type="text" name="costo_fijo_3" value="{{ costo_fijo_3 }}" maxlength="23" {% if costos_fijos %}readonly{% endif %}></td>
                     <td><input type="number" name="monto_fijo_3" value="{{ monto_fijo_3 }}" maxlength="23" {% if costos_fijos %}readonly{% endif %}></td>
-                    <td><input type="number" name="porcentaje_costo_fijo_3" value="{{ porcentaje_costo_fijo_3 }}" maxlength="23" {% if costos_fijos %}readonly{% endif %} oninput="this.value = this.value.replace(/[^0-9.]/g, '') + '%';"></td>
+                    <td><input type="number" name="porcentaje_costo_fijo_3" value="{{ porcentaje_costo_fijo_3 }}" maxlength="23" {% if costos_fijos %}readonly{% endif %}></td>
                     <td><input type="number" name="costo_fijo_total_3" step="0.01" value="{{ costo_fijo_total_3 }}" readonly></td>
                 </tr>
                 <tr>
                     <td><input type="text" name="costo_fijo_4" value="{{ costo_fijo_4 }}" maxlength="23" {% if costos_fijos %}readonly{% endif %}></td>
                     <td><input type="number" name="monto_fijo_4" value="{{ monto_fijo_4 }}" maxlength="23" {% if costos_fijos %}readonly{% endif %}></td>
-                    <td><input type="number" name="porcentaje_costo_fijo_4" value="{{ porcentaje_costo_fijo_4 }}" maxlength="23" {% if costos_fijos %}readonly{% endif %} oninput="this.value = this.value.replace(/[^0-9.]/g, '') + '%';"></td>
+                    <td><input type="number" name="porcentaje_costo_fijo_4" value="{{ porcentaje_costo_fijo_4 }}" maxlength="23" {% if costos_fijos %}readonly{% endif %}></td>
                     <td><input type="number" name="costo_fijo_total_4" step="0.01" value="{{ costo_fijo_total_4 }}" readonly></td>
                 </tr>
                 <tr>
                     <td><input type="text" name="costo_fijo_5" value="{{ costo_fijo_5 }}" maxlength="23" {% if costos_fijos %}readonly{% endif %}></td>
                     <td><input type="number" name="monto_fijo_5" value="{{ monto_fijo_5 }}" maxlength="23" {% if costos_fijos %}readonly{% endif %}></td>
-                    <td><input type="number" name="porcentaje_costo_fijo_5" value="{{ porcentaje_costo_fijo_5 }}" maxlength="23" {% if costos_fijos %}readonly{% endif %} oninput="this.value = this.value.replace(/[^0-9.]/g, '') + '%';"></td>
+                    <td><input type="number" name="porcentaje_costo_fijo_5" value="{{ porcentaje_costo_fijo_5 }}" maxlength="23" {% if costos_fijos %}readonly{% endif %}></td>
                     <td><input type="number" name="costo_fijo_total_5" step="0.01" value="{{ costo_fijo_total_5 }}" readonly></td>
                 </tr>
                 <tr>
                     <td><input type="text" name="costo_fijo_6" value="{{ costo_fijo_6 }}" maxlength="23" {% if costos_fijos %}readonly{% endif %}></td>
                     <td><input type="number" name="monto_fijo_6" value="{{ monto_fijo_6 }}" maxlength="23" {% if costos_fijos %}readonly{% endif %}></td>
-                    <td><input type="number" name="porcentaje_costo_fijo_6" value="{{ porcentaje_costo_fijo_6 }}" maxlength="23" {% if costos_fijos %}readonly{% endif %} oninput="this.value = this.value.replace(/[^0-9.]/g, '') + '%';"></td>
+                    <td><input type="number" name="porcentaje_costo_fijo_6" value="{{ porcentaje_costo_fijo_6 }}" maxlength="23" {% if costos_fijos %}readonly{% endif %}></td>
                     <td><input type="number" name="costo_fijo_total_6" step="0.01" value="{{ costo_fijo_total_6 }}" readonly></td>
                 </tr>
                 <tr>
                     <td><input type="text" name="costo_fijo_7" value="{{ costo_fijo_7 }}" maxlength="23" {% if costos_fijos %}readonly{% endif %}></td>
                     <td><input type="number" name="monto_fijo_7" value="{{ monto_fijo_7 }}" maxlength="23" {% if costos_fijos %}readonly{% endif %}></td>
-                    <td><input type="number" name="porcentaje_costo_fijo_7" value="{{ porcentaje_costo_fijo_7 }}" maxlength="23" {% if costos_fijos %}readonly{% endif %} oninput="this.value = this.value.replace(/[^0-9.]/g, '') + '%';"></td>
+                    <td><input type="number" name="porcentaje_costo_fijo_7" value="{{ porcentaje_costo_fijo_7 }}" maxlength="23" {% if costos_fijos %}readonly{% endif %}></td>
                     <td><input type="number" name="costo_fijo_total_7" step="0.01" value="{{ costo_fijo_total_7 }}" readonly></td>
                 </tr>
                 <tr>
                     <td><input type="text" name="costo_fijo_8" value="{{ costo_fijo_8 }}" maxlength="23" {% if costos_fijos %}readonly{% endif %}></td>
                     <td><input type="number" name="monto_fijo_8" value="{{ monto_fijo_8 }}" maxlength="23" {% if costos_fijos %}readonly{% endif %}></td>
-                    <td><input type="number" name="porcentaje_costo_fijo_8" value="{{ porcentaje_costo_fijo_8 }}" maxlength="23" {% if costos_fijos %}readonly{% endif %} oninput="this.value = this.value.replace(/[^0-9.]/g, '') + '%';"></td>
+                    <td><input type="number" name="porcentaje_costo_fijo_8" value="{{ porcentaje_costo_fijo_8 }}" maxlength="23" {% if costos_fijos %}readonly{% endif %}></td>
                     <td><input type="number" name="costo_fijo_total_8" step="0.01" value="{{ costo_fijo_total_8 }}" readonly></td>
                 </tr>
                 <tr>
                     <td><input type="text" name="costo_fijo_9" value="{{ costo_fijo_9 }}" maxlength="23" {% if costos_fijos %}readonly{% endif %}></td>
                     <td><input type="number" name="monto_fijo_9" value="{{ monto_fijo_9 }}" maxlength="23" {% if costos_fijos %}readonly{% endif %}></td>
-                    <td><input type="number" name="porcentaje_costo_fijo_9" value="{{ porcentaje_costo_fijo_9 }}" maxlength="23" {% if costos_fijos %}readonly{% endif %} oninput="this.value = this.value.replace(/[^0-9.]/g, '') + '%';"></td>
+                    <td><input type="number" name="porcentaje_costo_fijo_9" value="{{ porcentaje_costo_fijo_9 }}" maxlength="23" {% if costos_fijos %}readonly{% endif %}></td>
                     <td><input type="number" name="costo_fijo_total_9" step="0.01" value="{{ costo_fijo_total_9 }}" readonly></td>
                 </tr>
                 <tr>
                     <td><input type="text" name="costo_fijo_10" value="{{ costo_fijo_10 }}" maxlength="23" {% if costos_fijos %}readonly{% endif %}></td>
                     <td><input type="number" name="monto_fijo_10" value="{{ monto_fijo_10 }}" maxlength="23" {% if costos_fijos %}readonly{% endif %}></td>
-                    <td><input type="number" name="porcentaje_costo_fijo_10" value="{{ porcentaje_costo_fijo_10 }}" maxlength="23" {% if costos_fijos %}readonly{% endif %} oninput="this.value = this.value.replace(/[^0-9.]/g, '') + '%';"></td>
+                    <td><input type="number" name="porcentaje_costo_fijo_10" value="{{ porcentaje_costo_fijo_10 }}" maxlength="23" {% if costos_fijos %}readonly{% endif %}></td>
                     <td><input type="number" name="costo_fijo_total_10" step="0.01" value="{{ costo_fijo_total_10 }}" readonly></td>
                 </tr>
                 <tr>
                     <td><input type="text" name="costo_fijo_11" value="{{ costo_fijo_11 }}" maxlength="23" {% if costos_fijos %}readonly{% endif %}></td>
                     <td><input type="number" name="monto_fijo_11" value="{{ monto_fijo_11 }}" maxlength="23" {% if costos_fijos %}readonly{% endif %}></td>
-                    <td><input type="number" name="porcentaje_costo_fijo_11" value="{{ porcentaje_costo_fijo_11 }}" maxlength="23" {% if costos_fijos %}readonly{% endif %} oninput="this.value = this.value.replace(/[^0-9.]/g, '') + '%';"></td>
+                    <td><input type="number" name="porcentaje_costo_fijo_11" value="{{ porcentaje_costo_fijo_11 }}" maxlength="23" {% if costos_fijos %}readonly{% endif %}></td>
                     <td><input type="number" name="costo_fijo_total_11" step="0.01" value="{{ costo_fijo_total_11 }}" readonly></td>
                 </tr>
                 <tr>
                     <td><input type="text" name="costo_fijo_12" value="{{ costo_fijo_12 }}" maxlength="23" {% if costos_fijos %}readonly{% endif %}></td>
                     <td><input type="number" name="monto_fijo_12" value="{{ monto_fijo_12 }}" maxlength="23" {% if costos_fijos %}readonly{% endif %}></td>
-                    <td><input type="number" name="porcentaje_costo_fijo_12" value="{{ porcentaje_costo_fijo_12 }}" maxlength="23" {% if costos_fijos %}readonly{% endif %} oninput="this.value = this.value.replace(/[^0-9.]/g, '') + '%';"></td>
+                    <td><input type="number" name="porcentaje_costo_fijo_12" value="{{ porcentaje_costo_fijo_12 }}" maxlength="23" {% if costos_fijos %}readonly{% endif %}></td>
                     <td><input type="number" name="costo_fijo_total_12" step="0.01" value="{{ costo_fijo_total_12 }}" readonly></td>
                 </tr>
                 <tr>
                     <td><input type="text" name="costo_fijo_13" value="{{ costo_fijo_13 }}" maxlength="23" {% if costos_fijos %}readonly{% endif %}></td>
                     <td><input type="number" name="monto_fijo_13" value="{{ monto_fijo_13 }}" maxlength="23" {% if costos_fijos %}readonly{% endif %}></td>
-                    <td><input type="number" name="porcentaje_costo_fijo_13" value="{{ porcentaje_costo_fijo_13 }}" maxlength="23" {% if costos_fijos %}readonly{% endif %} oninput="this.value = this.value.replace(/[^0-9.]/g, '') + '%';"></td>
+                    <td><input type="number" name="porcentaje_costo_fijo_13" value="{{ porcentaje_costo_fijo_13 }}" maxlength="23" {% if costos_fijos %}readonly{% endif %}></td>
                     <td><input type="number" name="costo_fijo_total_13" step="0.01" value="{{ costo_fijo_total_13 }}" readonly></td>
                 </tr>
                 <tr>
                     <td><input type="text" name="costo_fijo_14" value="{{ costo_fijo_14 }}" maxlength="23" {% if costos_fijos %}readonly{% endif %}></td>
                     <td><input type="number" name="monto_fijo_14" value="{{ monto_fijo_14 }}" maxlength="23" {% if costos_fijos %}readonly{% endif %}></td>
-                    <td><input type="number" name="porcentaje_costo_fijo_14" value="{{ porcentaje_costo_fijo_14 }}" maxlength="23" {% if costos_fijos %}readonly{% endif %} oninput="this.value = this.value.replace(/[^0-9.]/g, '') + '%';"></td>
+                    <td><input type="number" name="porcentaje_costo_fijo_14" value="{{ porcentaje_costo_fijo_14 }}" maxlength="23" {% if costos_fijos %}readonly{% endif %}></td>
                     <td><input type="number" name="costo_fijo_total_14" step="0.01" value="{{ costo_fijo_total_14 }}" readonly></td>
                 </tr>
                 <tr>
                     <td><input type="text" name="costo_fijo_15" value="{{ costo_fijo_15 }}" maxlength="23" {% if costos_fijos %}readonly{% endif %}></td>
                     <td><input type="number" name="monto_fijo_15" value="{{ monto_fijo_15 }}" maxlength="23" {% if costos_fijos %}readonly{% endif %}></td>
-                    <td><input type="number" name="porcentaje_costo_fijo_15" value="{{ porcentaje_costo_fijo_15 }}" maxlength="23" {% if costos_fijos %}readonly{% endif %} oninput="this.value = this.value.replace(/[^0-9.]/g, '') + '%';"></td>
+                    <td><input type="number" name="porcentaje_costo_fijo_15" value="{{ porcentaje_costo_fijo_15 }}" maxlength="23" {% if costos_fijos %}readonly{% endif %}></td>
                     <td><input type="number" name="costo_fijo_total_15" step="0.01" value="{{ costo_fijo_total_15 }}" readonly></td>
                 </tr>
             </table>
 
-            
-
-            {% if actividad %}
-                <button type="submit" class="button" disabled>Enter</button>
-    </form>
+            {% if costos_fijos|length == 0 %}
             <br>
-        <a href="{{ url_for('cuestionario_actividades') }}"><button class="button">Ingresar siguiente actividad</button></a>
-        <a href="{{ url_for('info_actividades') }}"><button class="button">Apuntar costos fijos</button></a>
+            <button type="submit" class="button">Enter</button>
+            </form>
+
+
             {% else %}
-                <button type="submit" class="button">Enter</button>
-    </form>
+            <br>
+            <button type="submit" class="button" disabled>Enter</button>
+            </form>
+                <br>
+        <a href="{{ url_for('cuestionario_costos_fijos') }}"><button class="button">Deshacer y repetir registro</button></a>
+        <a href="{{ url_for('pregunta_impuestos_venta') }}"><button class="button">Continuar</button></a>
+            <br>
             {% endif %}
 </body>
 </html>
