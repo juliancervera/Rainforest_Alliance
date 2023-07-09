@@ -1,18 +1,67 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Considerar Impuestos</title>
+    <title>Cuestionario costos exportación</title>
 </head>
 <body>
-    <h1>¿Quiere incluir costos de exportación en el cálculo de costos?</h1>
-    <form>
-        <label>
-            <button type="button" onclick="window.location.href='/cuestionario_costos_exportacion'">Sí</button>
-        </label>
-        <label>
-            <button type="button" onclick="window.location.href='/analisis_final'">No</button>
-        </label>
-        <br><br>
+    <h1>Apunte los costos de exportación del producto {{producto}}</h1>
+    <p>INSERTAR AQUÍ EXPLICACIÓN E INSTRUCCIONES</p>
+    {% if costos_exportacion|length > 0 %}
+                <br>
+        <a href="{{ url_for('cuestionario_costos_exportacion') }}"><button class="button">Deshacer y repetir registro</button></a>
+        <a href="{{ url_for('analisis_final') }}"><button class="button">Continuar</button></a>
+            <br>
+        <p>Estos son los costos de exportación que usted registró:</p>
+    {% else %}
+        <p>Registre los costos de exportación a continuación:</p>
+    {% endif %}
+    <form action="{{ url_for('cuestionario_costos_exportacion') }}" method="post">
+            <table> 
+                <tr>
+                    <th>Descripción del costo o impuesto</th>
+                    <th>Monto por unidad o cargamento</th>
+                    <th>Número de unidades o cargamentos</th>
+                </tr>
+                <tr>
+                    <td><input type="text" name="costo_exportacion_1" value="{{ costo_exportacion_1 }}" maxlength="23" {% if costos_exportacion %}readonly{% endif %}></td>
+                    <td><input type="number" name="costo_unidad_1" value="{{ costo_unidad_1 }}" {% if costos_exportacion %}readonly{% endif %}></td>
+                    <td><input type="number" name="unidades_consideradas_1" value="{{ unidades_consideradas_1 }}" {% if costos_exportacion %}readonly{% endif %}></td>
+                </tr>
+                <tr>
+                    <td><input type="text" name="costo_exportacion_2" value="{{ costo_exportacion_2 }}" maxlength="23" {% if costos_exportacion %}readonly{% endif %}></td>
+                    <td><input type="number" name="costo_unidad_2" value="{{ costo_unidad_2 }}" {% if costos_exportacion %}readonly{% endif %}></td>
+                    <td><input type="number" name="unidades_consideradas_2" value="{{ unidades_consideradas_2 }}" {% if costos_exportacion %}readonly{% endif %}></td>
+                </tr>
+                <tr>
+                    <td><input type="text" name="costo_exportacion_3" value="{{ costo_exportacion_3 }}" maxlength="23" {% if costos_exportacion %}readonly{% endif %}></td>
+                    <td><input type="number" name="costo_unidad_3" value="{{ costo_unidad_3 }}" {% if costos_exportacion %}readonly{% endif %}></td>
+                    <td><input type="number" name="unidades_consideradas_3" value="{{ unidades_consideradas_3 }}" {% if costos_exportacion %}readonly{% endif %}></td>
+                </tr>
+                <tr>
+                    <td><input type="text" name="costo_exportacion_4" value="{{ costo_exportacion_4 }}" maxlength="23" {% if costos_exportacion %}readonly{% endif %}></td>
+                    <td><input type="number" name="costo_unidad_4" value="{{ costo_unidad_4 }}" {% if costos_exportacion %}readonly{% endif %}></td>
+                    <td><input type="number" name="unidades_consideradas_4" value="{{ unidades_consideradas_4 }}" {% if costos_exportacion %}readonly{% endif %}></td>
+                </tr>
+                <tr>
+                    <td><input type="text" name="costo_exportacion_5" value="{{ costo_exportacion_5 }}" maxlength="23" {% if costos_exportacion %}readonly{% endif %}></td>
+                    <td><input type="number" name="costo_unidad_5" value="{{ costo_unidad_5 }}" {% if costos_exportacion %}readonly{% endif %}></td>
+                    <td><input type="number" name="unidades_consideradas_5" value="{{ unidades_consideradas_5 }}" {% if costos_exportacion %}readonly{% endif %}></td>
+                </tr>
+            </table>
+
+            {% if costos_exportacion|length == 0 %}
+            <br>
+            <button type="submit" class="button">Enter</button>
     </form>
+
+            {% else %}
+            <br>
+            <button type="submit" class="button" disabled>Enter</button>
+    </form>
+                <br>
+        <a href="{{ url_for('cuestionario_costos_exportacion') }}"><button class="button">Deshacer y repetir registro</button></a>
+        <a href="{{ url_for('analisis_final') }}"><button class="button">Continuar</button></a>
+            <br>
+            {% endif %}
 </body>
 </html>
