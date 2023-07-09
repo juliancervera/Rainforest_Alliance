@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Cuestionario impuestos venta</title>
+</head>
+<body>
+    <h1>Apunte los impuestos sobre la venta del producto {{producto}}</h1>
+    <p>INSERTAR AQUÍ EXPLICACIÓN E INSTRUCCIONES</p>
+    {% if impuestos_venta|length > 0 %}
+                <br>
+        <a href="{{ url_for('cuestionario_impuestos_venta') }}"><button class="button">Deshacer y repetir registro</button></a>
+        <a href="{{ url_for('pregunta_impuestos_fijos') }}"><button class="button">Continuar</button></a>
+            <br>
+        <p>Estos son los impuestos que usted registró:</p>
+    {% else %}
+        <p>Registre los impuestos a continuación:</p>
+    {% endif %}
+    <form action="{{ url_for('cuestionario_impuestos_venta') }}" method="post">
+            <table> 
+                <tr>
+                    <th>Nombre del impuesto</th>
+                    <th>Porcentaje</th>
+                    <th>Unidades consideradas</th>
+                </tr>
+                <tr>
+                    <td><input type="text" name="impuesto_venta_1" value="{{ impuesto_venta_1 }}" maxlength="23" {% if impuestos_venta %}readonly{% endif %}></td>
+                    <td><input type="number" name="porcentaje_1" value="{{ porcentaje_1 }}" min="0" max="100" {% if impuestos_venta %}readonly{% endif %}></td>
+                    <td><input type="number" name="unidades_consideradas_1" value="{{ unidades_consideradas_1 }}" {% if impuestos_venta %}readonly{% endif %}></td>
+                <tr>
+                    <td><input type="text" name="impuesto_venta_2" value="{{ impuesto_venta_2 }}" maxlength="23" {% if impuestos_venta %}readonly{% endif %}></td>
+                    <td><input type="number" name="porcentaje_2" value="{{ porcentaje_2 }}" min="0" max="100" {% if impuestos_venta %}readonly{% endif %}></td>
+                    <td><input type="number" name="unidades_consideradas_2" value="{{ unidades_consideradas_2 }}" {% if impuestos_venta %}readonly{% endif %}></td>
+                </tr>
+                <tr>
+                    <td><input type="text" name="impuesto_venta_3" value="{{ impuesto_venta_3 }}" maxlength="23" {% if impuestos_venta %}readonly{% endif %}></td>
+                    <td><input type="number" name="porcentaje_3" value="{{ porcentaje_3 }}" min="0" max="100" {% if impuestos_venta %}readonly{% endif %}></td>
+                    <td><input type="number" name="unidades_consideradas_3" value="{{ unidades_consideradas_3 }}" {% if impuestos_venta %}readonly{% endif %}></td>
+                </tr>
+                <tr>
+                    <td><input type="text" name="impuesto_venta_4" value="{{ impuesto_venta_4 }}" maxlength="23" {% if impuestos_venta %}readonly{% endif %}></td>
+                    <td><input type="number" name="porcentaje_4" value="{{ porcentaje_4 }}" min="0" max="100" {% if impuestos_venta %}readonly{% endif %}></td>
+                    <td><input type="number" name="unidades_consideradas_4" value="{{ unidades_consideradas_4 }}" {% if impuestos_venta %}readonly{% endif %}></td>
+                </tr>
+                <tr>
+                    <td><input type="text" name="impuesto_venta_5" value="{{ impuesto_venta_5 }}" maxlength="23" {% if impuestos_venta %}readonly{% endif %}></td>
+                    <td><input type="number" name="porcentaje_5" value="{{ porcentaje_5 }}" min="0" max="100" {% if impuestos_venta %}readonly{% endif %}></td>
+                    <td><input type="number" name="unidades_consideradas_5" value="{{ unidades_consideradas_5 }}" {% if impuestos_venta %}readonly{% endif %}></td>
+                </tr>
+            </table>
+
+            {% if impuestos_venta|length == 0 %}
+            <br>
+            <button type="submit" class="button">Enter</button>
+    </form>
+
+            {% else %}
+            <br>
+            <button type="submit" class="button" disabled>Enter</button>
+    </form>
+                <br>
+        <a href="{{ url_for('cuestionario_impuestos_venta') }}"><button class="button">Deshacer y repetir registro</button></a>
+        <a href="{{ url_for('pregunta_impuestos_fijos') }}"><button class="button">Continuar</button></a>
+            <br>
+            {% endif %}
+</body>
+</html>

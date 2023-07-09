@@ -3,6 +3,8 @@
 # ToDo: Find a more elegant way to write all the table rows in the HTML templates
 # ToDo: Añadir un botón de DESHACER, que elimine el elemento más recientemente guardado en las listas
 # ToDo: Hacer que las formas sólo puedan submit al dar clic en el botón Enter del final
+# ToDo: en los valores numéricos, más que maxlength, debo poner un valor minimo y valor máximo. Maxlength es para texto
+# ToDo: añadir columna adicional con un signo de porcentaje pegado a la celda de porcentaje donde aplique
 
 # Subdominio cálculo de costos.
 
@@ -224,8 +226,8 @@ def cuestionario_costos_fijos():
                 locals()[f"costo_fijo_total_{i}"]
             ]
 
-            sueldos_fijos.append(sublista_insumos)
-            costos_fijos.append(sublista_trabajo)
+            sueldos_fijos.append(sublista_trabajo)
+            costos_fijos.append(sublista_insumos)
 
         session['sueldos_fijos'] = sueldos_fijos
         session['costos_fijos'] = costos_fijos
@@ -273,7 +275,6 @@ def cuestionario_costos_fijos():
             porcentajes_default[f"porcentaje_costo_fijo_{i}"] = locals()[f"porcentaje_costo_fijo_{i}"]
             porcentajes_default[f"porcentaje_trabajo_fijo_{i}"] = locals()[f"porcentaje_trabajo_fijo_{i}"]
 
-
         return render_template(
             "cuestionario_costos_fijos.html",
             producto=producto,
@@ -282,19 +283,237 @@ def cuestionario_costos_fijos():
             **porcentajes_default
         )
 
-
 @app.route("/pregunta_impuestos_venta")
 def pregunta_impuestos_venta():
-    sueldos_fijos = session.get("producto")
-    costos_fijos = session.get("costos_fijos")
-    insumos_actividades = session.get("insumos_actividades")
+    return render_template("pregunta_impuestos_venta.html")
 
-    print("Sueldos Fijos:", sueldos_fijos)
-    print("Costos Fijos:", costos_fijos)
-    print("Insumos Actividades:", insumos_actividades)
+@app.route("/pregunta_impuestos_fijos")
+def pregunta_impuestos_fijos():
+    return render_template("pregunta_impuestos_fijos.html")
 
-    return "Lists printed successfully."
+@app.route("/pregunta_costos_certificacion")
+def pregunta_costos_certificacion():
+    return render_template("pregunta_costos_certificacion.html")
 
+@app.route("/pregunta_costos_exportacion")
+def pregunta_costos_exportacion():
+    return render_template("pregunta_costos_exportacion.html")
+
+@app.route("/cuestionario_impuestos_venta", methods=["GET", "POST"])
+def cuestionario_impuestos_venta():
+    if request.method == "POST":
+
+        producto = session.get("producto")
+
+        impuestos_venta = []
+
+        for i in range(1, 6):
+            locals()[f"impuesto_venta_{i}"] = request.form.get(f"impuesto_venta_{i}")
+            try:
+                locals()[f"porcentaje_{i}"] = float(request.form.get(f"porcentaje_{i}"))
+            except ValueError:
+                locals()[f"porcentaje_{i}"] = request.form.get(f"porcentaje_{i}")
+
+            try:
+                locals()[f"unidades_consideradas_{i}"] = float(request.form.get(f"unidades_consideradas_{i}"))
+            except ValueError:
+                locals()[f"unidades_consideradas_{i}"] = request.form.get(f"unidades_consideradas_{i}")
+
+            sublista_impuestos = [
+                locals()[f"impuesto_venta_{i}"],
+                locals()[f"porcentaje_{i}"],
+                locals()[f"unidades_consideradas_{i}"],
+            ]
+
+            impuestos_venta.append(sublista_impuestos)
+
+        session['impuestos_venta'] = impuestos_venta
+
+        # Create a dictionary to store the variables and their values
+        variables = {}
+
+        # Generate the variable names and assign their default values
+        for i in range(1, 6):
+            variables[f"impuesto_venta_{i}"] = locals()[f"impuesto_venta_{i}"]
+            variables[f"porcentaje_{i}"] = locals()[f"porcentaje_{i}"]
+            variables[f"unidades_consideradas_{i}"] = locals()[f"unidades_consideradas_{i}"]
+        print(impuestos_venta)
+        return render_template(
+            "cuestionario_impuestos_venta.html",
+            producto=producto,
+            impuestos_venta=impuestos_venta,
+            **variables
+        )
+
+    else:
+        producto = session.get("producto")
+        cantidad_vendida = session.get("cantidad_vendida")
+
+        impuestos_venta = []
+
+        session["impuestos_venta"] = impuestos_venta
+
+        unidades_consideradas_default = {}
+
+        # Generate the variable names and assign their default values
+        for i in range(1, 6):
+            locals()[f"unidades_consideradas_{i}"] = cantidad_vendida
+            unidades_consideradas_default[f"unidades_consideradas_{i}"] = locals()[f"unidades_consideradas_{i}"]
+
+        return render_template(
+            "cuestionario_impuestos_venta.html",
+            producto=producto,
+            impuestos_venta=impuestos_venta,
+            **unidades_consideradas_default
+        )
+
+@app.route("/cuestionario_impuestos_fijos", methods=["GET", "POST"])
+def cuestionario_impuestos_fijos():
+    if request.method == "POST":
+
+        producto = session.get("producto")
+
+        impuestos_fijos = []
+
+        for i in range(1, 6):
+            locals()[f"impuesto_fijo_{i}"] = request.form.get(f"impuesto_fijo_{i}")
+            locals()[f"monto_{i}"] = request.form.get(f"monto_{i}")
+            locals()[f"porcentaje_{i}"] = request.form.get(f"porcentaje_{i}")
+            locals()[f"monto_total_{i}"] = ""
+
+            try:
+                locals()[f"monto_{i}"] = float(request.form.get(f"monto_{i}"))
+                locals()[f"porcentaje_{i}"] = float(request.form.get(f"porcentaje_{i}"))
+                locals()[f"monto_total_{i}"] = locals()[f"monto_{i}"] * (locals()[f"porcentaje_{i}"] / 100)
+            except ValueError:
+                pass
+
+            sublista_impuestos = [
+                locals()[f"impuesto_fijo_{i}"],
+                locals()[f"monto_{i}"],
+                locals()[f"porcentaje_{i}"],
+                locals()[f"monto_total_{i}"]
+            ]
+
+            impuestos_fijos.append(sublista_impuestos)
+
+        session['impuestos_fijos'] = impuestos_fijos
+
+        # Create a dictionary to store the variables and their values
+        variables = {}
+
+        # Generate the variable names and assign their default values
+        for i in range(1, 6):
+            variables[f"impuesto_fijo_{i}"] = locals()[f"impuesto_fijo_{i}"]
+            variables[f"monto_{i}"] = locals()[f"monto_{i}"]
+            variables[f"porcentaje_{i}"] = locals()[f"porcentaje_{i}"]
+            variables[f"monto_total_{i}"] = locals()[f"monto_total_{i}"]
+        print(impuestos_fijos)
+        return render_template(
+            "cuestionario_impuestos_fijos.html",
+            producto=producto,
+            impuestos_fijos=impuestos_fijos,
+            **variables
+        )
+
+    else:
+        producto = session.get("producto")
+
+        impuestos_fijos = []
+
+        session["impuestos_fijos"] = impuestos_fijos
+
+        porcentaje_default = {}
+
+        # Generate the variable names and assign their default values
+        for i in range(1, 6):
+            locals()[f"porcentaje_{i}"] = 100
+            porcentaje_default[f"porcentaje_{i}"] = locals()[f"porcentaje_{i}"]
+
+        return render_template(
+            "cuestionario_impuestos_fijos.html",
+            producto=producto,
+            impuestos_fijos=impuestos_fijos,
+            **porcentaje_default
+        )
+
+@app.route("/cuestionario_costos_certificacion")
+def cuestionario_costos_certificacion():
+    if request.method == "POST":
+
+        producto = session.get("producto")
+
+        impuestos_fijos = []
+
+        for i in range(1, 6):
+            locals()[f"impuesto_fijo_{i}"] = request.form.get(f"impuesto_fijo_{i}")
+            locals()[f"monto_{i}"] = request.form.get(f"monto_{i}")
+            locals()[f"porcentaje_{i}"] = request.form.get(f"porcentaje_{i}")
+            locals()[f"monto_total_{i}"] = ""
+
+            try:
+                locals()[f"monto_{i}"] = float(request.form.get(f"monto_{i}"))
+                locals()[f"porcentaje_{i}"] = float(request.form.get(f"porcentaje_{i}"))
+                locals()[f"monto_total_{i}"] = locals()[f"monto_{i}"] * (locals()[f"porcentaje_{i}"] / 100)
+            except ValueError:
+                pass
+
+            sublista_impuestos = [
+                locals()[f"impuesto_fijo_{i}"],
+                locals()[f"monto_{i}"],
+                locals()[f"porcentaje_{i}"],
+                locals()[f"monto_total_{i}"]
+            ]
+
+            impuestos_fijos.append(sublista_impuestos)
+
+        session['impuestos_fijos'] = impuestos_fijos
+
+        # Create a dictionary to store the variables and their values
+        variables = {}
+
+        # Generate the variable names and assign their default values
+        for i in range(1, 6):
+            variables[f"impuesto_fijo_{i}"] = locals()[f"impuesto_fijo_{i}"]
+            variables[f"monto_{i}"] = locals()[f"monto_{i}"]
+            variables[f"porcentaje_{i}"] = locals()[f"porcentaje_{i}"]
+            variables[f"monto_total_{i}"] = locals()[f"monto_total_{i}"]
+        print(impuestos_fijos)
+        return render_template(
+            "cuestionario_impuestos_fijos.html",
+            producto=producto,
+            impuestos_fijos=impuestos_fijos,
+            **variables
+        )
+
+    else:
+        producto = session.get("producto")
+
+        impuestos_fijos = []
+
+        session["impuestos_fijos"] = impuestos_fijos
+
+        porcentaje_default = {}
+
+        # Generate the variable names and assign their default values
+        for i in range(1, 6):
+            locals()[f"porcentaje_{i}"] = 100
+            porcentaje_default[f"porcentaje_{i}"] = locals()[f"porcentaje_{i}"]
+
+        return render_template(
+            "cuestionario_impuestos_fijos.html",
+            producto=producto,
+            impuestos_fijos=impuestos_fijos,
+            **porcentaje_default
+        )
+
+@app.route("/cuestionario_costos_exportacion")
+def cuestionario_costos_exportacion():
+    return render_template("cuestionario_costos_exportacion.html")
+
+@app.route("/analisis_final")
+def analisis_final():
+    return render_template("analisis_final.html")
 
 if __name__ == "__main__":
     app.run(port=5000, debug=True)
