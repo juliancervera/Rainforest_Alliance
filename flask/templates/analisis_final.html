@@ -11,10 +11,82 @@
 <body>
     <h1>Costos totales: {{ costos_totales }}</h1>
     <h1>Costos totales por unidad: {{ costos_totales_por_unidad }}</h1>
-    <h2>Costos laborales</h2>
-    <input type="range" min="0" max="100" value="50" step="1">
+    <br>
+    <h2>Resumen de costos</h2>
+    <table>
+        <tr>
+            <th>Categoría de costos</th>
+            <th>Total de la categoría</th>
+            <th>Porcentaje del total</th>
+            <th>Porcentaje del total sin autoempleo</th>
+        </tr>
+        <tr>
+            <td>Costos Mano de Obra Totales</td>
+            <td>{{ costos_mano_de_obra_totales }}</td>
+            <td>{{ costos_mano_de_obra_totales_porcent_total }}</td>
+            <td>{{ costos_mano_de_obra_totales_porcent_total_sin }}</td>
+        </tr>
+        <tr>
+            <td>Costos Mano de Obra Autoempleo</td>
+            <td>{{ costos_mano_de_obra_autoempleo }}</td>
+            <td>{{ costos_mano_de_obra_autoempleo_porcent_total }}</td>
+            <td>{{ costos_mano_de_obra_autoempleo_porcent_total_sin }}</td>
+        </tr>
+        <tr>
+            <td>Sueldos Fijos Totales</td>
+            <td>{{ sueldos_fijos_totales }}</td>
+            <td>{{ sueldos_fijos_totales_porcent_total }}</td>
+            <td>{{ sueldos_fijos_totales_porcent_total_sin }}</td>
+        </tr>
+        <tr>
+            <td>Costos Laborales Totales</td>
+            <td>{{ costos_laborales_totales }}</td>
+            <td>{{ costos_laborales_totales_porcent_total }}</td>
+            <td>{{ costos_laborales_totales_porcent_total_sin }}</td>
+        </tr>
+        <tr>
+            <td>Costos Autoempleo Totales</td>
+            <td>{{ costos_autoempleo_totales }}</td>
+            <td>{{ costos_autoempleo_totales_porcent_total }}</td>
+            <td>{{ costos_autoempleo_totales_porcent_total_sin }}</td>
+        </tr>
+        <tr>
+            <td>Costos Insumos Totales</td>
+            <td>{{ costos_insumos_totales }}</td>
+            <td>{{ costos_insumos_totales_porcent_total }}</td>
+            <td>{{ costos_insumos_totales_porcent_total_sin }}</td>
+        </tr>
+        <tr>
+            <td>Costos Insumos Fijos Totales</td>
+            <td>{{ costos_insumos_fijos_totales }}</td>
+            <td>{{ costos_insumos_fijos_totales_porcent_total }}</td>
+            <td>{{ costos_insumos_fijos_totales_porcent_total_sin }}</td>
+        </tr>
+        <tr>
+            <td>Impuestos Fijos Totales</td>
+            <td>{{ impuestos_fijos_totales }}</td>
+            <td>{{ impuestos_fijos_totales_porcent_total }}</td>
+            <td>{{ impuestos_fijos_totales_porcent_total_sin }}</td>
+        </tr>
+        <tr>
+            <td>Costos Certificación Totales</td>
+            <td>{{ costos_certifiacion_totales }}</td>
+            <td>{{ costos_certifiacion_totales_porcent_total }}</td>
+            <td>{{ costos_certifiacion_totales_porcent_total_sin }}</td>
+        </tr>
+        <tr>
+            <td>Costos Exportación Totales</td>
+            <td>{{ costos_exportacion_totales }}</td>
+            <td>{{ costos_exportacion_totales_porcent_total }}</td>
+            <td>{{ costos_exportacion_totales_porcent_total_sin }}</td>
+        </tr>
+    </table>
+
+
     <button id="showButton">Mostrar desglose de costos completo</button>
     <table id="costosTable" class="hidden">
+    {% if trabajo_actividades %} <p><--THIS NEEDS TO CHANGE PARA QUE el if tenga el efecto deseado, porque siempre va a tener contenido</p>
+    <p>Costos de mano de obra</p>
         <tr>
             <th>Actividad</th>
             <th>Trabajo</th>
@@ -37,6 +109,7 @@
                 </tr>
             {% endfor %}
         {% endfor %}
+    {% endif %}
     </table>
     
     <script>
@@ -46,6 +119,6 @@
         showButton.addEventListener("click", function() {
             costosTable.classList.remove("hidden");
         });
-    </script>
+    </script>  
 </body>
 </html>

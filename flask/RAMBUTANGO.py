@@ -632,7 +632,7 @@ def analisis_final():
         costos_exportacion
     ]
 
-    costos_totales = 0
+    costos_totales = 1
     costos_mano_de_obra_totales = 0
     costos_mano_de_obra_autoempleo = 0
     costos_laborales_totales = 0
@@ -726,10 +726,56 @@ def analisis_final():
     except TypeError:
         pass
 
-    costos_laborales_totales_sin_autoempleo = costos_laborales_totales - costos_autoempleo_totales
-    costos_totales_por_unidad = costos_totales / cantidad_vendida
-    costos_totales_sin_autoempleo = costos_totales - costos_autoempleo_totales
-    costos_totales_por_unidad_sin_autoempleo = costos_totales_sin_autoempleo / cantidad_vendida
+    costos_laborales_totales_sin_autoempleo = round(costos_laborales_totales - costos_autoempleo_totales, 2)
+    costos_totales_por_unidad = round(costos_totales / cantidad_vendida, 2)
+    costos_totales_sin_autoempleo = round(costos_totales - costos_autoempleo_totales, 2)
+    costos_totales_por_unidad_sin_autoempleo = round(costos_totales_sin_autoempleo / cantidad_vendida, 2)
+
+    variables_para_tablas = {
+        "costos_totales_sin_autoempleo_porcent_total": str(
+            round((costos_totales_sin_autoempleo / costos_totales) * 100, 2)) + "%",
+        "costos_mano_de_obra_totales_porcent_total": str(
+            round((costos_mano_de_obra_totales / costos_totales) * 100, 2)) + "%",
+        "costos_mano_de_obra_totales_porcent_total_sin": str(
+            round((costos_mano_de_obra_totales / costos_totales_sin_autoempleo) * 100, 2)) + "%",
+        "costos_mano_de_obra_autoempleo_porcent_total": str(
+            round((costos_mano_de_obra_autoempleo / costos_totales) * 100, 2)) + "%",
+        "costos_mano_de_obra_autoempleo_porcent_total_sin": str(
+            round((costos_mano_de_obra_autoempleo / costos_totales_sin_autoempleo) * 100, 2)) + "%",
+        "sueldos_fijos_totales_porcent_total": str(round((sueldos_fijos_totales / costos_totales) * 100, 2)) + "%",
+        "sueldos_fijos_totales_porcent_total_sin": str(
+            round((sueldos_fijos_totales / costos_totales_sin_autoempleo) * 100, 2)) + "%",
+        "sueldos_fijos_autoempleo_porcent_total": str(
+            round((sueldos_fijos_autoempleo / costos_totales) * 100, 2)) + "%",
+        "sueldos_fijos_autoempleo_porcent_total_sin": str(
+            round((sueldos_fijos_autoempleo / costos_totales_sin_autoempleo) * 100, 2)) + "%",
+        "costos_laborales_totales_porcent_total": str(
+            round((costos_laborales_totales / costos_totales) * 100, 2)) + "%",
+        "costos_laborales_totales_porcent_total_sin": str(
+            round((costos_laborales_totales / costos_totales_sin_autoempleo) * 100, 2)) + "%",
+        "costos_autoempleo_totales_porcent_total": str(
+            round((costos_autoempleo_totales / costos_totales) * 100, 2)) + "%",
+        "costos_autoempleo_totales_porcent_total_sin": str(
+            round((costos_autoempleo_totales / costos_totales_sin_autoempleo) * 100, 2)) + "%",
+        "costos_insumos_totales_porcent_total": str(round((costos_insumos_totales / costos_totales) * 100, 2)) + "%",
+        "costos_insumos_totales_porcent_total_sin": str(
+            round((costos_insumos_totales / costos_totales_sin_autoempleo) * 100, 2)) + "%",
+        "costos_insumos_fijos_totales_porcent_total": str(
+            round((costos_insumos_fijos_totales / costos_totales) * 100, 2)) + "%",
+        "costos_insumos_fijos_totales_porcent_total_sin": str(
+            round((costos_insumos_fijos_totales / costos_totales_sin_autoempleo) * 100, 2)) + "%",
+        "impuestos_fijos_totales_porcent_total": str(round((impuestos_fijos_totales / costos_totales) * 100, 2)) + "%",
+        "impuestos_fijos_totales_porcent_total_sin": str(
+            round((impuestos_fijos_totales / costos_totales_sin_autoempleo) * 100, 2)) + "%",
+        "costos_certifiacion_totales_porcent_total": str(
+            round((costos_certifiacion_totales / costos_totales) * 100, 2)) + "%",
+        "costos_certifiacion_totales_porcent_total_sin": str(
+            round((costos_certifiacion_totales / costos_totales_sin_autoempleo) * 100, 2)) + "%",
+        "costos_exportacion_totales_porcent_total": str(
+            round((costos_exportacion_totales / costos_totales) * 100, 2)) + "%",
+        "costos_exportacion_totales_porcent_total_sin": str(
+            round((costos_exportacion_totales / costos_totales_sin_autoempleo) * 100, 2)) + "%"
+    }
 
     return render_template(
         "analisis_final.html",
@@ -754,6 +800,7 @@ def analisis_final():
         costos_certifiacion_totales=costos_certifiacion_totales,
         costos_exportacion_totales=costos_exportacion_totales,
         **data,
+        **variables_para_tablas,
     )
     """
     return render_template("analisis_final.html")
