@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Análisis final</title>
+    <style>
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>Costos totales: {{ costos_totales }}</h1>
+    <h1>Costos totales por unidad: {{ costos_totales_por_unidad }}</h1>
+    <h2>Costos laborales</h2>
+    <input type="range" min="0" max="100" value="50" step="1">
+    <button id="showButton">Mostrar desglose de costos completo</button>
+    <table id="costosTable" class="hidden">
+        <tr>
+            <th>Actividad</th>
+            <th>Trabajo</th>
+            <th>Cantidad</th>
+            <th>Unidad</th>
+            <th>Costo por unidad</th>
+            <th>Autoempleo</th>
+            <th>Costo total por trabajo</th>
+        </tr>
+        {% for sublist in trabajo_actividades %}
+            {% for item in sublist %}
+                <tr>
+                    <td>{{ item[0] }}</td>
+                    <td>{{ item[1] }}</td>
+                    <td>{{ item[2] }}</td>
+                    <td>{{ item[3] }}</td>
+                    <td>{{ item[4] }}</td>
+                    <td>{{ item[5] }}</td>
+                    <td>{{ item[6] }}</td>
+                </tr>
+            {% endfor %}
+        {% endfor %}
+    </table>
+    
+    <script>
+        var showButton = document.getElementById("showButton");
+        var costosTable = document.getElementById("costosTable");
+        
+        showButton.addEventListener("click", function() {
+            costosTable.classList.remove("hidden");
+        });
+    </script>
+</body>
+</html>

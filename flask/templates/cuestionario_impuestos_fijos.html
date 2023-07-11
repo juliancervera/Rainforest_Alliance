@@ -8,7 +8,7 @@
     <p>INSERTAR AQUÍ EXPLICACIÓN E INSTRUCCIONES</p>
     {% if impuestos_fijos|length > 0 %}
                 <br>
-        <a href="{{ url_for('cuestionario_impuestos_venta') }}"><button class="button">Deshacer y repetir registro</button></a>
+        <a href="{{ url_for('cuestionario_impuestos_fijos') }}"><button class="button">Deshacer y repetir registro</button></a>
         <a href="{{ url_for('pregunta_costos_certificacion') }}"><button class="button">Continuar</button></a>
             <br>
         <p>Estos son los impuestos que usted registró:</p>
@@ -69,4 +69,4 @@
             <br>
             {% endif %}
 </body>
-</html>
+</html> 
