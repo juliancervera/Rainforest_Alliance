@@ -30,21 +30,21 @@
     <p>Éstos son los costos de exportación que usted registró:</p>
     <table>
         <tr>
-                <th>Descripción del costo o impuesto</th>
-                <th>Monto por unidad o cargamento</th>
-                <th>Número de unidades o cargamentos</th>
-                <th>Costo total</th>
+            <th>Descripción del costo o impuesto</th>
+            <th>Monto por unidad o cargamento</th>
+            <th>Número de unidades o cargamentos</th>
+            <th>Costo total</th>
         </tr>
         {% for sublist in costos_exportacion %}
-            <tr>
-                <td>{{ sublist[0] }}</td>
-                <td>{{ sublist[1] }}</td>
-                <td>{{ sublist[2] }}</td>
-                <td>{{ sublist[3] }}</td>
-                <td>{{ sublist[4] }}</td>
-                <td>{{ sublist[5] }}</td>
-                <td>{{ sublist[6] }}</td>
-            </tr>
+        <tr>
+            <td>{{ sublist[0] }}</td>
+            <td>{{ sublist[1] }}</td>
+            <td>{{ sublist[2] }}</td>
+            <td>{{ sublist[3] }}</td>
+            <td>{{ sublist[4] }}</td>
+            <td>{{ sublist[5] }}</td>
+            <td>{{ sublist[6] }}</td>
+        </tr>
         {% endfor %}
     </table>
             <br>
@@ -52,6 +52,7 @@
         <a href="{{ url_for('analisis_final') }}"><button class="button">Continuar</button></a>
             <br>
     {% else %}
+    <p>A continuación, registre los costos de exportación:</p>
     <form action="{{ url_for('cuestionario_costos_exportacion') }}" method="post">
         <table id="costos-exportacion-table"> 
             <tr>
