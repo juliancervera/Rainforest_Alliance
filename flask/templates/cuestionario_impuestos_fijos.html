@@ -2,71 +2,74 @@
 <html>
 <head>
     <title>Cuestionario impuestos fijos</title>
+    <script>
+        var rowCounter = 1;
+
+        function addRow() {
+            var table = document.getElementById("impuestos_fijos_table");
+            var newRow = table.insertRow();
+            rowCounter++;
+            newRow.innerHTML = `
+                <td><input type="text" name="impuesto_fijo_${rowCounter}" value="" maxlength="23"></td>
+                <td><input type="number" name="monto_${rowCounter}" value="">
+                <td><input type="number" name="porcentaje_${rowCounter}" value="100" min="0" max="100"></td>
+                <td><input type="number" name="monto_total_${rowCounter}" value="" readonly></td>
+            `;
+            document.getElementById("rowCounterInput").value = rowCounter;
+        }
+    </script>
 </head>
 <body>
-    <h1>Apunte los impuestos fijos relacionados con el producto {{producto}}</h1>
+    <h1>Impuestos fijos relacionados con el producto {{ producto }}</h1>
     <p>INSERTAR AQUÍ EXPLICACIÓN E INSTRUCCIONES</p>
-    {% if impuestos_fijos|length > 0 %}
-                <br>
+    {% if impuestos_fijos %}
+            <br>
         <a href="{{ url_for('cuestionario_impuestos_fijos') }}"><button class="button">Deshacer y repetir registro</button></a>
         <a href="{{ url_for('pregunta_costos_certificacion') }}"><button class="button">Continuar</button></a>
             <br>
-        <p>Estos son los impuestos que usted registró:</p>
+    <p>Éstos son los impuestos fijos que usted registró:</p>
+    <table>
+        <tr>
+            <th>Nombre del impuesto</th>
+            <th>Monto</th>
+            <th>Porcentaje correspondiente al producto {{ producto }}</th>
+            <th>Monto total</th>
+        </tr>
+        {% for sublist in impuestos_fijos %}
+        <tr>
+            <td>{{ sublist[0] }}</td>
+            <td>{{ sublist[1] }}</td>
+            <td>{{ sublist[2] }}</td>
+            <td>{{ sublist[3] }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+            <br>
+        <a href="{{ url_for('cuestionario_impuestos_fijos') }}"><button class="button">Deshacer y repetir registro</button></a>
+        <a href="{{ url_for('pregunta_costos_certificacion') }}"><button class="button">Continuar</button></a>
+            <br>
     {% else %}
-        <p>Registre los impuestos a continuación:</p>
-    {% endif %}
+    <p>A continuación, registre los impuestos fijos:</p>
     <form action="{{ url_for('cuestionario_impuestos_fijos') }}" method="post">
-            <table> 
-                <tr>
-                    <th>Nombre del impuesto</th>
-                    <th>Monto</th>
-                    <th>Porcentaje correspondiente al producto {{ producto }}</th>
-                    <th>Monto total</th>
-                </tr>
-                <tr>
-                    <td><input type="text" name="impuesto_fijo_1" value="{{ impuesto_fijo_1 }}" maxlength="23" {% if impuestos_venta %}readonly{% endif %}></td>
-                    <td><input type="number" name="monto_1" value="{{ monto_1 }}" {% if impuestos_fijos %}readonly{% endif %}>
-                    <td><input type="number" name="porcentaje_1" value="{{ porcentaje_1 }}" min="0" max="100" {% if impuestos_venta %}readonly{% endif %}></td>
-                    <td><input type="number" name="monto_total_1" value="{{ monto_total_1 }}" readonly></td>
-                <tr>
-                    <td><input type="text" name="impuesto_fijo_2" value="{{ impuesto_fijo_2 }}" maxlength="23" {% if impuestos_venta %}readonly{% endif %}></td>
-                    <td><input type="number" name="monto_2" value="{{ monto_2 }}" {% if impuestos_fijos %}readonly{% endif %}></td>
-                    <td><input type="number" name="porcentaje_2" value="{{ porcentaje_2 }}" min="0" max="100" {% if impuestos_venta %}readonly{% endif %}></td>
-                    <td><input type="number" name="monto_total_2" value="{{ monto_total_2 }}" readonly></td>
-                </tr>
-                <tr>
-                    <td><input type="text" name="impuesto_fijo_3" value="{{ impuesto_fijo_3 }}" maxlength="23" {% if impuestos_venta %}readonly{% endif %}></td>
-                    <td><input type="number" name="monto_3" value="{{ monto_3 }}" {% if impuestos_fijos %}readonly{% endif %}></td>
-                    <td><input type="number" name="porcentaje_3" value="{{ porcentaje_3 }}" min="0" max="100" {% if impuestos_venta %}readonly{% endif %}></td>
-                    <td><input type="number" name="monto_total_3" value="{{ monto_total_3 }}" readonly></td>
-                </tr>
-                <tr>
-                    <td><input type="text" name="impuesto_fijo_4" value="{{ impuesto_fijo_4 }}" maxlength="23" {% if impuestos_venta %}readonly{% endif %}></td>
-                    <td><input type="number" name="monto_4" value="{{ monto_4 }}" {% if impuestos_fijos %}readonly{% endif %}></td>
-                    <td><input type="number" name="porcentaje_4" value="{{ porcentaje_4 }}" min="0" max="100" {% if impuestos_venta %}readonly{% endif %}></td>
-                    <td><input type="number" name="monto_total_4" value="{{ monto_total_4 }}" readonly></td>
-                </tr>
-                <tr>
-                    <td><input type="text" name="impuesto_fijo_5" value="{{ impuesto_fijo_5 }}" maxlength="23" {% if impuestos_venta %}readonly{% endif %}></td>
-                    <td><input type="number" name="monto_5" value="{{ monto_5 }}" {% if impuestos_fijos %}readonly{% endif %}></td>
-                    <td><input type="number" name="porcentaje_5" value="{{ porcentaje_5 }}" min="0" max="100" {% if impuestos_venta %}readonly{% endif %}></td>
-                    <td><input type="number" name="monto_total_5" value="{{ monto_total_5 }}" readonly></td>
-                </tr>
-            </table>
-
-            {% if impuestos_fijos|length == 0 %}
-            <br>
-            <button type="submit" class="button">Enter</button>
+        <table id="impuestos_fijos_table"> 
+            <tr>
+                <th>Nombre del impuesto</th>
+                <th>Monto</th>
+                <th>Porcentaje correspondiente al producto {{ producto }}</th>
+                <th>Monto total</th>
+            </tr>
+            <tr>
+                <td><input type="text" name="impuesto_fijo_1" value="" maxlength="23"></td>
+                <td><input type="number" name="monto_1" value="">
+                <td><input type="number" name="porcentaje_1" value="100" min="0" max="100"></td>
+                <td><input type="number" name="monto_total_1" value="" readonly></td>
+            </tr>
+        </table>
+        <input type="hidden" id="rowCounterInput" name="rowCounter" value="1">
+        <button type="button" onclick="addRow()">Agregar fila</button>
+        <br>
+        <button type="submit">Enviar</button>
     </form>
-
-            {% else %}
-            <br>
-            <button type="submit" class="button" disabled>Enter</button>
-    </form>
-                <br>
-        <a href="{{ url_for('cuestionario_impuestos_fijos') }}"><button class="button">Deshacer y repetir registro</button></a>
-        <a href="{{ url_for('pregunta_costos_certificacion') }}"><button class="button">Continuar</button></a>
-            <br>
-            {% endif %}
+    {% endif %}
 </body>
-</html> 
+</html>

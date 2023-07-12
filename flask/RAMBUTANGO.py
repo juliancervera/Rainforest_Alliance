@@ -322,11 +322,13 @@ def pregunta_costos_exportacion():
 def cuestionario_impuestos_venta():
     if request.method == "POST":
 
+        num_rows = int(request.form.get("rowCounter"))
+
         producto = session.get("producto")
 
         impuestos_venta = []
 
-        for i in range(1, 6):
+        for i in range(1, num_rows + 1):
             locals()[f"impuesto_venta_{i}"] = request.form.get(f"impuesto_venta_{i}")
             locals()[f"unidades_consideradas_{i}"] = float(request.form.get(f"unidades_consideradas_{i}"))
 
@@ -342,24 +344,14 @@ def cuestionario_impuestos_venta():
                 impuestos_venta.append(sublista_impuestos)
 
             except ValueError:
-                locals()[f"porcentaje_{i}"] = request.form.get(f"porcentaje_{i}")
+                pass
 
         session['impuestos_venta'] = impuestos_venta
 
-        # Create a dictionary to store the variables and their values
-        variables = {}
-
-        # Generate the variable names and assign their default values
-        for i in range(1, 6):
-            variables[f"impuesto_venta_{i}"] = locals()[f"impuesto_venta_{i}"]
-            variables[f"porcentaje_{i}"] = locals()[f"porcentaje_{i}"]
-            variables[f"unidades_consideradas_{i}"] = locals()[f"unidades_consideradas_{i}"]
-        print(impuestos_venta)
         return render_template(
             "cuestionario_impuestos_venta.html",
             producto=producto,
-            impuestos_venta=impuestos_venta,
-            **variables
+            impuestos_venta=impuestos_venta
         )
 
     else:
@@ -370,38 +362,30 @@ def cuestionario_impuestos_venta():
 
         session["impuestos_venta"] = impuestos_venta
 
-        unidades_consideradas_default = {}
-
-        # Generate the variable names and assign their default values
-        for i in range(1, 6):
-            locals()[f"unidades_consideradas_{i}"] = cantidad_vendida
-            unidades_consideradas_default[f"unidades_consideradas_{i}"] = locals()[f"unidades_consideradas_{i}"]
-
         return render_template(
             "cuestionario_impuestos_venta.html",
             producto=producto,
+            cantidad_vendida=cantidad_vendida,
             impuestos_venta=impuestos_venta,
-            **unidades_consideradas_default
         )
 
 @app.route("/cuestionario_impuestos_fijos", methods=["GET", "POST"])
 def cuestionario_impuestos_fijos():
     if request.method == "POST":
 
+        num_rows = int(request.form.get("rowCounter"))
+
         producto = session.get("producto")
 
         impuestos_fijos = []
 
-        for i in range(1, 6):
+        for i in range(1, num_rows + 1):
             locals()[f"impuesto_fijo_{i}"] = request.form.get(f"impuesto_fijo_{i}")
-            locals()[f"monto_{i}"] = request.form.get(f"monto_{i}")
-            locals()[f"porcentaje_{i}"] = request.form.get(f"porcentaje_{i}")
-            locals()[f"monto_total_{i}"] = ""
 
             try:
                 locals()[f"monto_{i}"] = float(request.form.get(f"monto_{i}"))
                 locals()[f"porcentaje_{i}"] = float(request.form.get(f"porcentaje_{i}"))
-                locals()[f"monto_total_{i}"] = locals()[f"monto_{i}"] * (locals()[f"porcentaje_{i}"] / 100)
+                locals()[f"monto_total_{i}"] = round(locals()[f"monto_{i}"] * (locals()[f"porcentaje_{i}"] / 100), 2)
 
                 sublista_impuestos = [
                     locals()[f"impuesto_fijo_{i}"],
@@ -417,21 +401,10 @@ def cuestionario_impuestos_fijos():
 
         session['impuestos_fijos'] = impuestos_fijos
 
-        # Create a dictionary to store the variables and their values
-        variables = {}
-
-        # Generate the variable names and assign their default values
-        for i in range(1, 6):
-            variables[f"impuesto_fijo_{i}"] = locals()[f"impuesto_fijo_{i}"]
-            variables[f"monto_{i}"] = locals()[f"monto_{i}"]
-            variables[f"porcentaje_{i}"] = locals()[f"porcentaje_{i}"]
-            variables[f"monto_total_{i}"] = locals()[f"monto_total_{i}"]
-        print(impuestos_fijos)
         return render_template(
             "cuestionario_impuestos_fijos.html",
             producto=producto,
-            impuestos_fijos=impuestos_fijos,
-            **variables
+            impuestos_fijos=impuestos_fijos
         )
 
     else:
@@ -441,18 +414,10 @@ def cuestionario_impuestos_fijos():
 
         session["impuestos_fijos"] = impuestos_fijos
 
-        porcentaje_default = {}
-
-        # Generate the variable names and assign their default values
-        for i in range(1, 6):
-            locals()[f"porcentaje_{i}"] = 100
-            porcentaje_default[f"porcentaje_{i}"] = locals()[f"porcentaje_{i}"]
-
         return render_template(
             "cuestionario_impuestos_fijos.html",
             producto=producto,
             impuestos_fijos=impuestos_fijos,
-            **porcentaje_default
         )
 
 @app.route("/cuestionario_costos_certificacion", methods=["GET", "POST"])
@@ -486,7 +451,7 @@ def cuestionario_costos_certificacion():
                 pass
 
         session['costos_certificacion'] = costos_certificacion
-
+        print(costos_certificacion)
         return render_template(
             "cuestionario_costos_certificacion.html",
             producto=producto,
@@ -538,7 +503,9 @@ def cuestionario_costos_exportacion():
                 pass
 
         session['costos_exportacion'] = costos_exportacion
-
+        print(costos_exportacion)
+        costos_certificacion = session.get("costos_certificacion")
+        print(costos_certificacion)
         return render_template(
             "cuestionario_costos_exportacion.html",
             producto=producto,
@@ -595,7 +562,7 @@ def analisis_final():
         costos_exportacion
     ]
 
-    costos_totales = 1
+    costos_totales = 0.00000001  # ToDo: FIND ALTERNATIVE
     costos_mano_de_obra_totales = 0
     costos_mano_de_obra_autoempleo = 0
     costos_laborales_totales = 0
@@ -613,8 +580,9 @@ def analisis_final():
         for sublist in trabajo_actividades:
             for item in sublist:
                 costos_mano_de_obra_totales += float(item[-1])
+                costos_totales += float(item[-1])
                 if item[-2] == "Sí":
-                    costos_autoempleo.append(item)
+                    costos_autoempleo.append(item)  # Esto no es necesario
                 else:
                     pass
     except TypeError:
@@ -622,7 +590,7 @@ def analisis_final():
     try:
         for sublist in sueldos_fijos:
             if sublist[-2] == "Sí":
-                costos_autoempleo.append(sublist)
+                costos_autoempleo.append(sublist)  # Esto no es necesario
             else:
                 pass
     except TypeError:
@@ -639,44 +607,53 @@ def analisis_final():
         for sublist in insumos_actividades:
             for item in sublist:
                 costos_insumos_totales += float(item[-1])
+                costos_totales += float(item[-1])
     except TypeError:
         pass
 
     try:
         for sublist in costos_fijos:
+            costos_totales += float(sublist[-1])
             costos_insumos_fijos_totales += float(sublist[-1])
     except TypeError:
         pass
 
     try:
         for sublist in sueldos_fijos:
+            costos_totales += float(sublist[-1])
             sueldos_fijos_totales += float(sublist[-1])
     except TypeError:
         pass
 
     try:
         for sublist in impuestos_fijos:
+            costos_totales += float(sublist[-1])
             impuestos_fijos_totales += float(sublist[-1])
     except TypeError:
         pass
 
     try:
         for sublist in costos_certificacion:
+            costos_totales += float(sublist[-1])
             costos_certifiacion_totales += float(sublist[-1])
     except TypeError:
         pass
 
     try:
         for sublist in costos_exportacion:
+            costos_totales += float(sublist[-1])
             costos_exportacion_totales += float(sublist[-1])
     except TypeError:
         pass
+
+    costos_totales = round(costos_totales, 2)
 
     """
     lists = [data[key] for key in session_data.values()]
     for lst in lists:
         print(lst)
     """
+    """ LOS LOOPS DE ANTES QUE NO FUNCIONABAN PORQUE NO SE SUMABA A TOTAL
     try:
         for each_list in lista_actividades_iteracion:
             costos_totales += sum([float(item[-1]) for sublist in each_list for item in sublist])
@@ -688,7 +665,7 @@ def analisis_final():
             costos_totales += sum([float(sublist[-1]) for sublist in each_list])
     except TypeError:
         pass
-
+    """
     costos_laborales_totales_sin_autoempleo = round(costos_laborales_totales - costos_autoempleo_totales, 2)
     costos_totales_por_unidad = round(costos_totales / cantidad_vendida, 2)
     costos_totales_sin_autoempleo = round(costos_totales - costos_autoempleo_totales, 2)
