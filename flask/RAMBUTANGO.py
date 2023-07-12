@@ -24,8 +24,6 @@
 # 5-15 <-- mediano
 # 15 < <--grande
 
-
-
 from flask import Flask, render_template, request, redirect, url_for, session
 
 app = Flask(__name__)
@@ -39,7 +37,7 @@ def inicio():
 
 @app.route("/ventas", methods=["GET", "POST"])
 def ventas():
-    session.clear() #ToDo: check if this line should really go here
+    session.clear()  #ToDo: check if this line should really go here
     if request.method == "POST":
         producto = request.form["producto"]
         cantidad_vendida = float(request.form["cantidad_vendida"])
@@ -461,20 +459,19 @@ def cuestionario_impuestos_fijos():
 def cuestionario_costos_certificacion():
     if request.method == "POST":
 
+        num_rows = int(request.form.get("rowCounter"))
+
         producto = session.get("producto")
 
         costos_certificacion = []
 
-        for i in range(1, 6):
+        for i in range(1, num_rows + 1):
             locals()[f"certificacion_{i}"] = request.form.get(f"certificacion_{i}")
-            locals()[f"costo_{i}"] = request.form.get(f"costo_{i}")
-            locals()[f"porcentaje_{i}"] = request.form.get(f"porcentaje_{i}")
-            locals()[f"costo_total_{i}"] = ""
 
             try:
                 locals()[f"costo_{i}"] = float(request.form.get(f"costo_{i}"))
                 locals()[f"porcentaje_{i}"] = float(request.form.get(f"porcentaje_{i}"))
-                locals()[f"costo_total_{i}"] = locals()[f"costo_{i}"] * (locals()[f"porcentaje_{i}"] / 100)
+                locals()[f"costo_total_{i}"] = round(locals()[f"costo_{i}"] * (locals()[f"porcentaje_{i}"] / 100), 2)
 
                 sublista_certificacion = [
                     locals()[f"certificacion_{i}"],
@@ -490,21 +487,10 @@ def cuestionario_costos_certificacion():
 
         session['costos_certificacion'] = costos_certificacion
 
-        # Create a dictionary to store the variables and their values
-        variables = {}
-
-        # Generate the variable names and assign their default values
-        for i in range(1, 6):
-            variables[f"certificacion_{i}"] = locals()[f"certificacion_{i}"]
-            variables[f"costo_{i}"] = locals()[f"costo_{i}"]
-            variables[f"porcentaje_{i}"] = locals()[f"porcentaje_{i}"]
-            variables[f"costo_total_{i}"] = locals()[f"costo_total_{i}"]
-        print(costos_certificacion)
         return render_template(
             "cuestionario_costos_certificacion.html",
             producto=producto,
-            costos_certificacion=costos_certificacion,
-            **variables
+            costos_certificacion=costos_certificacion
         )
 
     else:
@@ -514,18 +500,10 @@ def cuestionario_costos_certificacion():
 
         session["costos_certificacion"] = costos_certificacion
 
-        porcentaje_default = {}
-
-        # Generate the variable names and assign their default values
-        for i in range(1, 6):
-            locals()[f"porcentaje_{i}"] = 100
-            porcentaje_default[f"porcentaje_{i}"] = locals()[f"porcentaje_{i}"]
-
         return render_template(
             "cuestionario_costos_certificacion.html",
             producto=producto,
-            costos_certificacion=costos_certificacion,
-            **porcentaje_default
+            costos_certificacion=costos_certificacion
         )
 
 # ToDo: Hipótesis: Puedo agregar un if statement at html que cheque si la lista de costos_exportacion tiene contenido.
@@ -537,7 +515,7 @@ def cuestionario_costos_certificacion():
 def cuestionario_costos_exportacion():
     if request.method == "POST":
 
-        num_rows = int(request.form.get("num_rows", 0))
+        num_rows = int(request.form.get("rowCounter"))
 
         producto = session.get("producto")
 
@@ -545,41 +523,26 @@ def cuestionario_costos_exportacion():
 
         for i in range(1, num_rows + 1):
             locals()[f"costo_exportacion_{i}"] = request.form.get(f"costo_exportacion_{i}")
-
             try:
                 locals()[f"costo_unidad_{i}"] = float(request.form.get(f"costo_unidad_{i}"))
-            except ValueError:
-                locals()[f"costo_unidad_{i}"] = request.form.get(f"costo_unidad_{i}")
-
-            try:
                 locals()[f"unidades_consideradas_{i}"] = float(request.form.get(f"unidades_consideradas_{i}"))
+                locals()[f"costo_total_{i}"] = round(locals()[f"costo_unidad_{i}"] * locals()[f"unidades_consideradas_{i}"], 2)
+                sublista_exportacion = [
+                    locals()[f"costo_exportacion_{i}"],
+                    locals()[f"costo_unidad_{i}"],
+                    locals()[f"unidades_consideradas_{i}"],
+                    locals()[f"costo_total_{i}"]
+                ]
+                costos_exportacion.append(sublista_exportacion)
             except ValueError:
-                locals()[f"unidades_consideradas_{i}"] = request.form.get(f"unidades_consideradas_{i}")
-
-            sublista_exportacion = [
-                locals()[f"costo_exportacion_{i}"],
-                locals()[f"costo_unidad_{i}"],
-                locals()[f"unidades_consideradas_{i}"],
-            ]
-
-            costos_exportacion.append(sublista_exportacion)
+                pass
 
         session['costos_exportacion'] = costos_exportacion
 
-            # Create a dictionary to store the variables and their values
-        variables = {}
-
-            # Generate the variable names
-        for i in range(1, num_rows + 1):
-            variables[f"costo_exportacion_{i}"] = locals()[f"costo_exportacion_{i}"]
-            variables[f"costo_unidad_{i}"] = locals()[f"costo_unidad_{i}"]
-            variables[f"unidades_consideradas_{i}"] = locals()[f"unidades_consideradas_{i}"]
-        print(costos_exportacion)
         return render_template(
             "cuestionario_costos_exportacion.html",
             producto=producto,
             costos_exportacion=costos_exportacion,
-            **variables
         )
 
     else:
@@ -802,9 +765,8 @@ def analisis_final():
         **data,
         **variables_para_tablas,
     )
-    """
-    return render_template("analisis_final.html")
-    """
+
+
 if __name__ == "__main__":
     app.run(port=5000, debug=True)
 
