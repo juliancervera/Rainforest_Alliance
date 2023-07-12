@@ -186,94 +186,64 @@ def cuestionario_actividades():
 def cuestionario_costos_fijos():
     if request.method == "POST":
 
+        num_rows_sueldos = int(request.form.get("rowCounter_trabajo"))
+        num_rows_costos = int(request.form.get("rowCounter_insumos"))
+
         producto = session.get("producto")
 
         sueldos_fijos = []
         costos_fijos = []
 
-        for i in range(1, 16):
-            locals()[f"trabajo_fijo_{i}"] = request.form.get(f"trabajo_fijo_{i}")
-            locals()[f"cantidad_trabajo_fijo_{i}"] = request.form.get(f"cantidad_trabajo_fijo_{i}")
-            locals()[f"sueldo_trabajo_fijo_{i}"] = request.form.get(f"sueldo_trabajo_fijo_{i}")
-            locals()[f"autoempleo_fijo_{i}"] = request.form.get(f"autoempleo_fijo_{i}")
-            locals()[f"porcentaje_trabajo_fijo_{i}"] = request.form.get(f"porcentaje_trabajo_fijo_{i}")
-            locals()[f"costo_total_trabajo_fijo_{i}"] = ""
-
-            locals()[f"costo_fijo_{i}"] = request.form.get(f"costo_fijo_{i}")
-            locals()[f"monto_fijo_{i}"] = request.form.get(f"monto_fijo_{i}")
-            locals()[f"porcentaje_costo_fijo_{i}"] = request.form.get(f"porcentaje_costo_fijo_{i}")
-            locals()[f"costo_fijo_total_{i}"] = ""
-
+        for i in range(1, num_rows_sueldos + 1):
             try:
-                locals()[f"cantidad_trabajo_fijo_{i}"] = float(locals()[f"cantidad_trabajo_fijo_{i}"])
-                locals()[f"sueldo_trabajo_fijo_{i}"] = float(locals()[f"sueldo_trabajo_fijo_{i}"])
-                locals()[f"porcentaje_trabajo_fijo_{i}"] = float(locals()[f"porcentaje_trabajo_fijo_{i}"])
-                locals()[f"costo_total_trabajo_fijo_{i}"] = locals()[f"cantidad_trabajo_fijo_{i}"] * locals()[f"sueldo_trabajo_fijo_{i}"] * (locals()[f"porcentaje_trabajo_fijo_{i}"] / 100)
-            except ValueError:
-                # Handle the case where either cantidad or costo_unidad is not a valid number
-                pass
+                locals()[f"trabajo_fijo_{i}"] = request.form.get(f"trabajo_fijo_{i}")
+                locals()[f"cantidad_trabajo_fijo_{i}"] = float(request.form.get(f"cantidad_trabajo_fijo_{i}"))
+                locals()[f"sueldo_trabajo_fijo_{i}"] = float(request.form.get(f"sueldo_trabajo_fijo_{i}"))
+                locals()[f"porcentaje_trabajo_fijo_{i}"] = float(request.form.get(f"porcentaje_trabajo_fijo_{i}"))
+                locals()[f"autoempleo_fijo_{i}"] = request.form.get(f"autoempleo_fijo_{i}")
+                locals()[f"costo_total_trabajo_fijo_{i}"] = round(locals()[f"cantidad_trabajo_fijo_{i}"] * locals()[f"sueldo_trabajo_fijo_{i}"] * (locals()[f"porcentaje_trabajo_fijo_{i}"] / 100), 2)
 
-            try:
-                locals()[f"monto_fijo_{i}"] = float(locals()[f"monto_fijo_{i}"])
-                locals()[f"porcentaje_costo_fijo_{i}"] = float(locals()[f"porcentaje_costo_fijo_{i}"])
-                locals()[f"costo_fijo_total_{i}"] = locals()[f"monto_fijo_{i}"] * (locals()[f"porcentaje_costo_fijo_{i}"] / 100)
-            except ValueError:
-                # Handle the case where either cantidad or costo_unidad is not a valid number
-                pass
+                sublista_trabajo = [
+                    "(Costo fijo)",
+                    locals()[f"trabajo_fijo_{i}"],
+                    locals()[f"cantidad_trabajo_fijo_{i}"],
+                    locals()[f"sueldo_trabajo_fijo_{i}"],
+                    locals()[f"porcentaje_trabajo_fijo_{i}"],
+                    locals()[f"autoempleo_fijo_{i}"],
+                    locals()[f"costo_total_trabajo_fijo_{i}"]
+                ]
 
-            sublista_trabajo = [
-                "(Costo fijo)",
-                locals()[f"trabajo_fijo_{i}"],
-                locals()[f"cantidad_trabajo_fijo_{i}"],
-                locals()[f"sueldo_trabajo_fijo_{i}"],
-                locals()[f"porcentaje_trabajo_fijo_{i}"],
-                locals()[f"autoempleo_fijo_{i}"],
-                locals()[f"costo_total_trabajo_fijo_{i}"]
-            ]
-
-            sublista_insumos = [
-                locals()[f"costo_fijo_{i}"],
-                locals()[f"monto_fijo_{i}"],
-                locals()[f"porcentaje_costo_fijo_{i}"],
-                locals()[f"costo_fijo_total_{i}"]
-            ]
-
-            if sublista_trabajo[-1] != "":
                 sueldos_fijos.append(sublista_trabajo)
-            else:
+
+            except ValueError:
                 pass
 
-            if sublista_insumos[-1] != "":
+        for i in range(1, num_rows_costos + 1):
+            try:
+                locals()[f"costo_fijo_{i}"] = request.form.get(f"costo_fijo_{i}")
+                locals()[f"monto_fijo_{i}"] = float(request.form.get(f"monto_fijo_{i}"))
+                locals()[f"porcentaje_costo_fijo_{i}"] = float(request.form.get(f"porcentaje_costo_fijo_{i}"))
+                locals()[f"costo_fijo_total_{i}"] = round(locals()[f"monto_fijo_{i}"] * (locals()[f"porcentaje_costo_fijo_{i}"] / 100), 2)
+
+                sublista_insumos = [
+                    locals()[f"costo_fijo_{i}"],
+                    locals()[f"monto_fijo_{i}"],
+                    locals()[f"porcentaje_costo_fijo_{i}"],
+                    locals()[f"costo_fijo_total_{i}"]
+                ]
+
                 costos_fijos.append(sublista_insumos)
-            else:
+            except ValueError:
                 pass
 
         session['sueldos_fijos'] = sueldos_fijos
         session['costos_fijos'] = costos_fijos
-
-        # Create a dictionary to store the variables and their values
-        variables = {}
-
-        # Generate the variable names and assign their default values
-        for i in range(1, 16):
-            variables[f"trabajo_fijo_{i}"] = locals()[f"trabajo_fijo_{i}"]
-            variables[f"cantidad_trabajo_fijo_{i}"] = locals()[f"cantidad_trabajo_fijo_{i}"]
-            variables[f"sueldo_trabajo_fijo_{i}"] = locals()[f"sueldo_trabajo_fijo_{i}"]
-            variables[f"porcentaje_trabajo_fijo_{i}"] = locals()[f"porcentaje_trabajo_fijo_{i}"]
-            variables[f"autoempleo_fijo_{i}"] = locals()[f"autoempleo_fijo_{i}"]
-            variables[f"costo_total_trabajo_fijo_{i}"] = locals()[f"costo_total_trabajo_fijo_{i}"]
-
-            variables[f"costo_fijo_{i}"] = locals()[f"costo_fijo_{i}"]
-            variables[f"monto_fijo_{i}"] = locals()[f"monto_fijo_{i}"]
-            variables[f"porcentaje_costo_fijo_{i}"] = locals()[f"porcentaje_costo_fijo_{i}"]
-            variables[f"costo_fijo_total_{i}"] = locals()[f"costo_fijo_total_{i}"]
 
         return render_template(
             "cuestionario_costos_fijos.html",
             producto=producto,
             sueldos_fijos=sueldos_fijos,
             costos_fijos=costos_fijos,
-            **variables
         )
 
     else:
@@ -285,21 +255,11 @@ def cuestionario_costos_fijos():
         session["costos_fijos"] = costos_fijos
         session["sueldos_fijos"] = sueldos_fijos
 
-        porcentajes_default = {}
-
-        # Generate the variable names and assign their default values
-        for i in range(1, 16):
-            locals()[f"porcentaje_costo_fijo_{i}"] = 100
-            locals()[f"porcentaje_trabajo_fijo_{i}"] = 100
-            porcentajes_default[f"porcentaje_costo_fijo_{i}"] = locals()[f"porcentaje_costo_fijo_{i}"]
-            porcentajes_default[f"porcentaje_trabajo_fijo_{i}"] = locals()[f"porcentaje_trabajo_fijo_{i}"]
-
         return render_template(
             "cuestionario_costos_fijos.html",
             producto=producto,
             costos_fijos=costos_fijos,
-            sueldos_fijos=sueldos_fijos,
-            **porcentajes_default
+            sueldos_fijos=sueldos_fijos
         )
 
 @app.route("/pregunta_impuestos_venta")

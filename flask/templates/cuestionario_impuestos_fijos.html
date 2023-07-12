@@ -3,6 +3,15 @@
 <head>
     <title>Cuestionario impuestos fijos</title>
     <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            document.addEventListener("keydown", function(event) {
+                if (event.key === "Enter") {
+                    event.preventDefault();
+                }
+            });
+        });
+    </script>
+    <script>
         var rowCounter = 1;
 
         function addRow() {
@@ -67,6 +76,7 @@
         </table>
         <input type="hidden" id="rowCounterInput" name="rowCounter" value="1">
         <button type="button" onclick="addRow()">Agregar fila</button>
+        <br>
         <br>
         <button type="submit">Enviar</button>
     </form>
