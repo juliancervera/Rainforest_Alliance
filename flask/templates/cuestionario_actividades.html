@@ -28,7 +28,7 @@
                         <option value="No" selected>No</option>
                     </select>
                 </td>
-                <td><input type="number" name="costo_total_trabajo_${rowCounter_trabajo}" step="0.01" value="" readonly></td>
+                <td><input type="number" name="costo_total_trabajo_${rowCounter_trabajo}" step="0.01" value="" style="background-color: lightgrey;" readonly></td>
             `;
             document.getElementById("rowCounterInput_trabajo").value = rowCounter_trabajo;
         }
@@ -45,14 +45,19 @@
                 <td><input type="number" name="cantidad_${rowCounter_insumos}" value="" maxlength="23"></td>
                 <td><input type="text" name="unidad_${rowCounter_insumos}" value="" maxlength="23"></td>
                 <td><input type="number" name="costo_unidad_${rowCounter_insumos}" step="0.01" value="" maxlength="23"></td>
-                <td><input type="number" name="costo_total_${rowCounter_insumos}" step="0.01" value="" readonly></td>
+                <td><input type="number" name="costo_total_${rowCounter_insumos}" step="0.01" value="" style="background-color: lightgrey;" readonly></td>
             `;
             document.getElementById("rowCounterInput_insumos").value = rowCounter_insumos;
         }
     </script>
 </head>
 <body>
-    <h1>Apunte los costos que involucra cada una de las actividades del proceso productivo del producto {{producto}}</h1>
+    <h1>Registro de costos por actividad</h1>
+    <h2>Piense en el proceso productivo del producto {{ producto }} y distinga entre las actividades o fases que se requieren para producir {{ cantidad_vendida }} {{ unidad }}.</h2>
+    <h2>Ejemplos de actividades: siembra, fertilización, cosecha, limpieza, cocción, ahumado, fermentación, envasado, etiquetado, traslado al punto de venta, etcétera.</h2>
+    <h2>Empiece por apuntar el nombre de la primera actividad y los costos que corresponden únicamente a dicha actividad. Dé clic en botón "Enviar" y continúe apuntando las siguientes actividades.</h2>
+    <h2>No olvide registrar las distintas ocasiones de una misma actividad si ésta se repite a lo largo del proceso productivo.</h2>
+
     <p>Actividades registradas hasta ahora:</p>
     {% if nombres_actividades %}
         {% for actividad_registrada in nombres_actividades %}
@@ -120,7 +125,7 @@
     </table>
     {% endif %}
     {% if not actividad %}
-    <p>A continuación, registre los costos de mano de obra:</p>
+    <p>Si esta actividad implica costos de mano de obra, regístrelos a continuación:</p>
         <table id="tabla_sueldos_fijos"> 
             <tr>
                 <th>Trabajo</th>
@@ -141,13 +146,13 @@
                         <option value="No" selected>No</option>
                     </select>
                 </td>
-                <td><input type="number" name="costo_total_trabajo_1" step="0.01" value="" readonly></td>
+                <td><input type="number" name="costo_total_trabajo_1" step="0.01" value="" style="background-color: lightgrey;" readonly></td>
             </tr>
         </table>
         <input type="hidden" id="rowCounterInput_trabajo" name="rowCounter_trabajo" value="1">
         <button type="button" onclick="addRow_trabajo()">Agregar fila</button>
         <br>
-        <p>A continuación, registre los insumos:</p>
+        <p>Si esta actividad implica costos de insumos, regístrelos a continuación:</p>
         <form action="{{ url_for('cuestionario_costos_fijos') }}" method="post">
             <table id="tabla_insumos_fijos"> 
                 <tr>
@@ -162,7 +167,7 @@
                     <td><input type="number" name="cantidad_1" value="" maxlength="23"></td>
                     <td><input type="text" name="unidad_1" value="" maxlength="23"></td>
                     <td><input type="number" name="costo_unidad_1" step="0.01" value="" maxlength="23"></td>
-                    <td><input type="number" name="costo_total_1" step="0.01" value="" readonly></td>
+                    <td><input type="number" name="costo_total_1" step="0.01" value="" style="background-color: lightgrey;" readonly></td>
                 </tr>
             </table>
             <input type="hidden" id="rowCounterInput_insumos" name="rowCounter_insumos" value="1">
@@ -174,7 +179,7 @@
     {% endif %}
     {% if actividad %}
         <br>
-        <a href="{{ url_for('cuestionario_actividades') }}"><button class="button">Ingresar siguiente actividad</button></a>
+        <a href="{{ url_for('cuestionario_actividades') }}"><button class="button">Registrar otra actividad</button></a>
         <a href="{{ url_for('cuestionario_costos_fijos') }}"><button class="button">Apuntar costos fijos</button></a>
     {% endif %}
 </body>

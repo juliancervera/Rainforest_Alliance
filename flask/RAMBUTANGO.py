@@ -75,6 +75,8 @@ def cuestionario_actividades():
         insumos_actividades = session.get('insumos_actividades', [])
         trabajo_actividades = session.get('trabajo_actividades', [])
         producto = session.get("producto")
+        unidad = session.get("unidad")
+        cantidad_vendida = session.get("cantidad_vendida")
 
         lista_insumos = []
         lista_trabajo = []
@@ -129,6 +131,8 @@ def cuestionario_actividades():
             "cuestionario_actividades.html",
             producto=producto,
             actividad=actividad,
+            cantidad_vendida=cantidad_vendida,
+            unidad=unidad,
             nombres_actividades=nombres_actividades,
             lista_insumos=lista_insumos,
             lista_trabajo=lista_trabajo
@@ -136,12 +140,16 @@ def cuestionario_actividades():
 
     else:
         producto = session.get("producto")
+        unidad = session.get("unidad")
+        cantidad_vendida = session.get("cantidad_vendida")
         nombres_actividades = session.get("nombres_actividades")
 
         return render_template(
             "cuestionario_actividades.html",
             producto=producto,
             nombres_actividades=nombres_actividades,
+            cantidad_vendida=cantidad_vendida,
+            unidad=unidad,
         )
 
 # ToDo: Costos fijos: Dos tablas: Sueldos fijos y costos fijos, con base en el Excel

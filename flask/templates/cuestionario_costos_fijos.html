@@ -19,19 +19,19 @@
             var newRow = table.insertRow();
             rowCounter_trabajo++;
             newRow.innerHTML = `
-            <td><input type="text" name="trabajo_fijo_${rowCounter_trabajo}" value="" maxlength="23"></td>
-            <td><input type="number" name="cantidad_trabajo_fijo_${rowCounter_trabajo}" value="" maxlength="23"></td>
-            <td><input type="number" name="sueldo_trabajo_fijo_${rowCounter_trabajo}" value="" maxlength="23"></td>
-            <td>
-            <input type="number" name="porcentaje_trabajo_fijo_${rowCounter_trabajo}" step="0.1" value="100" min="0" max="100">
-            </td>
-            <td>
-                <select name="autoempleo_fijo_${rowCounter_trabajo}">
-                    <option value="Sí">Sí</option>                            
-                    <option value="No" selected>No</option>
-                </select>
-            </td>
-            <td><input type="number" name="costo_total_trabajo_fijo_${rowCounter_trabajo}" step="0.1" value="" readonly></td>
+                <td><input type="text" name="trabajo_fijo_${rowCounter_trabajo}" value="" maxlength="23"></td>
+                <td><input type="number" name="cantidad_trabajo_fijo_${rowCounter_trabajo}" value="" maxlength="23"></td>
+                <td><input type="number" name="sueldo_trabajo_fijo_${rowCounter_trabajo}" value="" maxlength="23"></td>
+                <td>
+                <input type="number" name="porcentaje_trabajo_fijo_${rowCounter_trabajo}" step="0.1" value="100" min="0" max="100">
+                </td>
+                <td>
+                    <select name="autoempleo_fijo_${rowCounter_trabajo}">
+                        <option value="Sí">Sí</option>                            
+                        <option value="No" selected>No</option>
+                    </select>
+                </td>
+                <td><input type="number" name="costo_total_trabajo_fijo_${rowCounter_trabajo}" step="0.1" value="" readonly></td>
             `;
             document.getElementById("rowCounterInput_trabajo").value = rowCounter_trabajo;
         }
@@ -54,8 +54,10 @@
     </script>
 </head>
 <body>
-    <h1>Costos fijos del proceso productivo del producto {{producto}}</h1>
-    <p>INSERTAR AQUÍ EXPLICACIÓN E INSTRUCCIONES</p>
+    <h1>Registro de costos fijos</h1>
+    <h2>Los costos fijos son aquellos que se mantienen iguales sin importar la cantidad producida.</h2>
+    <h2>Por ejemplo: costos de vigilancia, costos de almacenamiento, rentas, sueldos de administradores, costos de electricidad, gastos de telefonía, etcétera.</h2>
+    <h2></h2>
     {% if sueldos_fijos or costos_fijos %}
     <br>
     <a href="{{ url_for('cuestionario_costos_fijos') }}"><button class="button">Deshacer y repetir registro</button></a>
@@ -114,7 +116,8 @@
         <a href="{{ url_for('pregunta_impuestos_venta') }}"><button class="button">Continuar</button></a>
             <br>
     {% else %}
-    <p>A continuación, registre los sueldos fijos:</p>
+    <p>Si la producción del producto {{ producto }} implica sueldos fijos, regístrelos a continuación.</p>
+    <p>Notas: Si sólo una parte del tiempo pagado a los trabajadores se ocupó en el producto en cuestión, escriba el porcentaje en la columna indicada. Por ejemplo, si la mitad del tiempo pagado se ocupó en el producto en cuestión, escriba 50%. Si sólo un tercio del tiempo se ocupó en el producto en cuestión, escriba 33%.</p>
     <form action="{{ url_for('cuestionario_costos_fijos') }}" method="post">
         <table id="tabla_sueldos_fijos"> 
             <tr>
@@ -144,7 +147,8 @@
         <input type="hidden" id="rowCounterInput_trabajo" name="rowCounter_trabajo" value="1">
         <button type="button" onclick="addRow_trabajo()">Agregar fila</button>
         <br>
-        <p>A continuación, registre los insumos fijos:</p>
+        <p>Si la producción del producto {{ producto }} implica costos fijos no salariales, regístrelos a continuación.</p>
+        <p>Notas: Si los costos fijos involucran más de un producto o si el periodo cubierto por el pago de un costo fijo es mayor al tiempo de producción del producto en cuestión, indique qué porcentaje del costo correspone al producto en cuestión. Por ejemplo, si en un mismo almacén se guardan dos productos en cantidades iguales, escriba 50% en la columna "Porcentaje correspondiente al producto". Si la cuota del almacén se paga anualmente, pero los dos productos sólo permanecen ahí seis meses, escriba 25%.</p>
         <form action="{{ url_for('cuestionario_costos_fijos') }}" method="post">
             <table id="tabla_insumos_fijos"> 
                 <tr>

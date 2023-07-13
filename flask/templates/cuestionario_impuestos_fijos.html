@@ -30,7 +30,8 @@
 </head>
 <body>
     <h1>Impuestos fijos relacionados con el producto {{ producto }}</h1>
-    <p>INSERTAR AQUÍ EXPLICACIÓN E INSTRUCCIONES</p>
+    <p>Notas: Si el impuesto pagado involucra más de un producto o si el periodo cubierto por el pago del impuesto es mayor al tiempo de producción del producto en cuestión, indique qué porcentaje del impuesto correspone al producto en cuestión. Por ejemplo, si usted paga impuestos por la posesión de un predio donde cultiva cuatro productos diferentes en cantidades iguales, escriba 25% en la columna "Porcentaje correspondiente al producto".              
+</p>
     {% if impuestos_fijos %}
             <br>
         <a href="{{ url_for('cuestionario_impuestos_fijos') }}"><button class="button">Deshacer y repetir registro</button></a>
