@@ -10,6 +10,7 @@
 # ToDo: Abrir directamente el html de cuestionario_exportacion para ver por qué sólo aparecen ciertos valores default
 # ToDo: Añadir cuarta columna de costos de exportación
 # ToDo: Añadir una opción para indicar cuántas veces se realiza una misma actividad
+# ToDo: Check to see if it makes sense to round certain numbers
 
 # Subdominio cálculo de costos.
 
@@ -63,6 +64,9 @@ def ventas():
 @app.route("/cuestionario_actividades", methods=["GET", "POST"])
 def cuestionario_actividades():
     if request.method == "POST":
+        num_rows_trabajo = int(request.form.get("rowCounter_trabajo"))
+        num_rows_costos = int(request.form.get("rowCounter_insumos"))
+
         actividad = request.form.get("actividad")
         nombres_actividades = session.get("nombres_actividades", [])
         nombres_actividades.append(actividad)
@@ -75,63 +79,44 @@ def cuestionario_actividades():
         lista_insumos = []
         lista_trabajo = []
 
-        for i in range(1, 16):
-            locals()[f"insumo_{i}"] = request.form.get(f"insumo_{i}")
-            locals()[f"cantidad_{i}"] = request.form.get(f"cantidad_{i}")
-            locals()[f"unidad_{i}"] = request.form.get(f"unidad_{i}")
-            locals()[f"costo_unidad_{i}"] = request.form.get(f"costo_unidad_{i}")
-            locals()[f"costo_total_{i}"] = ""
-
-            locals()[f"trabajo_{i}"] = request.form.get(f"trabajo_{i}")
-            locals()[f"cantidad_trabajo_{i}"] = request.form.get(f"cantidad_trabajo_{i}")
-            locals()[f"unidad_trabajo_{i}"] = request.form.get(f"unidad_trabajo_{i}")
-            locals()[f"costo_trabajo_unidad_{i}"] = request.form.get(f"costo_trabajo_unidad_{i}")
-            locals()[f"autoempleo_{i}"] = request.form.get(f"autoempleo_{i}")
-            locals()[f"costo_total_trabajo_{i}"] = ""
-
+        for i in range(1, num_rows_trabajo + 1):
             try:
-                locals()[f"cantidad_{i}"] = float(locals()[f"cantidad_{i}"])
-                locals()[f"costo_unidad_{i}"] = float(locals()[f"costo_unidad_{i}"])
-                locals()[f"costo_total_{i}"] = locals()[f"cantidad_{i}"] * locals()[f"costo_unidad_{i}"]
-            except ValueError:
-                # Handle the case where either cantidad or costo_unidad is not a valid number
-                pass
-
-            try:
-                locals()[f"cantidad_trabajo_{i}"] = float(locals()[f"cantidad_trabajo_{i}"])
-                locals()[f"costo_trabajo_unidad_{i}"] = float(locals()[f"costo_trabajo_unidad_{i}"])
-                locals()[f"costo_total_trabajo_{i}"] = locals()[f"cantidad_trabajo_{i}"] * locals()[f"costo_trabajo_unidad_{i}"]
-            except ValueError:
-                # Handle the case where either cantidad or costo_unidad is not a valid number
-                pass
-
-            sublista_insumos = [
-                locals()[f"actividad"],
-                locals()[f"insumo_{i}"],
-                locals()[f"cantidad_{i}"],
-                locals()[f"unidad_{i}"],
-                locals()[f"costo_unidad_{i}"],
-                locals()[f"costo_total_{i}"]
-            ]
-
-            sublista_trabajo = [
-                locals()[f"actividad"],
-                locals()[f"trabajo_{i}"],
-                locals()[f"cantidad_trabajo_{i}"],
-                locals()[f"unidad_trabajo_{i}"],
-                locals()[f"costo_trabajo_unidad_{i}"],
-                locals()[f"autoempleo_{i}"],
-                locals()[f"costo_total_trabajo_{i}"]
-            ]
-
-            if sublista_insumos[-1] != "":
-                lista_insumos.append(sublista_insumos)
-            else:
-                pass
-
-            if sublista_trabajo[-1] != "":
+                locals()[f"trabajo_{i}"] = request.form.get(f"trabajo_{i}")
+                locals()[f"cantidad_trabajo_{i}"] = float(request.form.get(f"cantidad_trabajo_{i}"))
+                locals()[f"unidad_trabajo_{i}"] = request.form.get(f"unidad_trabajo_{i}")
+                locals()[f"costo_trabajo_unidad_{i}"] = float(request.form.get(f"costo_trabajo_unidad_{i}"))
+                locals()[f"autoempleo_{i}"] = request.form.get(f"autoempleo_{i}")
+                locals()[f"costo_total_trabajo_{i}"] = round(locals()[f"cantidad_trabajo_{i}"] * locals()[f"costo_trabajo_unidad_{i}"], 2)
+                sublista_trabajo = [
+                    locals()[f"actividad"],
+                    locals()[f"trabajo_{i}"],
+                    locals()[f"cantidad_trabajo_{i}"],
+                    locals()[f"unidad_trabajo_{i}"],
+                    locals()[f"costo_trabajo_unidad_{i}"],
+                    locals()[f"autoempleo_{i}"],
+                    locals()[f"costo_total_trabajo_{i}"]
+                ]
                 lista_trabajo.append(sublista_trabajo)
-            else:
+            except ValueError:
+                pass
+
+        for i in range(1, num_rows_costos + 1):
+            try:
+                locals()[f"insumo_{i}"] = request.form.get(f"insumo_{i}")
+                locals()[f"cantidad_{i}"] = float(request.form.get(f"cantidad_{i}"))
+                locals()[f"unidad_{i}"] = request.form.get(f"unidad_{i}")
+                locals()[f"costo_unidad_{i}"] = float(request.form.get(f"costo_unidad_{i}"))
+                locals()[f"costo_total_{i}"] = round(locals()[f"cantidad_{i}"] * locals()[f"costo_unidad_{i}"], 2)
+                sublista_insumos = [
+                    locals()[f"actividad"],
+                    locals()[f"insumo_{i}"],
+                    locals()[f"cantidad_{i}"],
+                    locals()[f"unidad_{i}"],
+                    locals()[f"costo_unidad_{i}"],
+                    locals()[f"costo_total_{i}"]
+                ]
+                lista_insumos.append(sublista_insumos)
+            except ValueError:
                 pass
 
         insumos_actividades.append(lista_insumos)
@@ -140,31 +125,13 @@ def cuestionario_actividades():
         session['insumos_actividades'] = insumos_actividades
         session['trabajo_actividades'] = trabajo_actividades
 
-        # Create a dictionary to store the variables and their values
-        variables = {}
-
-        # Generate the variable names and assign their default values
-        for i in range(1, 16):
-            variables[f"insumo_{i}"] = locals()[f"insumo_{i}"]
-            variables[f"cantidad_{i}"] = locals()[f"cantidad_{i}"]
-            variables[f"unidad_{i}"] = locals()[f"unidad_{i}"]
-            variables[f"costo_unidad_{i}"] = locals()[f"costo_unidad_{i}"]
-            variables[f"costo_total_{i}"] = locals()[f"costo_total_{i}"]
-
-            variables[f"trabajo_{i}"] = locals()[f"trabajo_{i}"]
-            variables[f"cantidad_trabajo_{i}"] = locals()[f"cantidad_trabajo_{i}"]
-            variables[f"unidad_trabajo_{i}"] = locals()[f"unidad_trabajo_{i}"]
-            variables[f"costo_trabajo_unidad_{i}"] = locals()[f"costo_trabajo_unidad_{i}"]
-            variables[f"costo_total_trabajo_{i}"] = locals()[f"costo_total_trabajo_{i}"]
-            variables[f"autoempleo_{i}"] = locals()[f"autoempleo_{i}"]
-
         return render_template(
             "cuestionario_actividades.html",
             producto=producto,
             actividad=actividad,
             nombres_actividades=nombres_actividades,
-            insumos_actividades=insumos_actividades,
-            **variables
+            lista_insumos=lista_insumos,
+            lista_trabajo=lista_trabajo
         )
 
     else:

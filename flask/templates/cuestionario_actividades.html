@@ -10,6 +10,46 @@
             });
         });
     </script>
+    <script>
+        var rowCounter_trabajo = 1;
+
+        function addRow_trabajo() {
+            var table = document.getElementById("tabla_sueldos_fijos");
+            var newRow = table.insertRow();
+            rowCounter_trabajo++;
+            newRow.innerHTML = `
+                <td><input type="text" name="trabajo_${rowCounter_trabajo}" value="" maxlength="23"></td>
+                <td><input type="number" name="cantidad_trabajo_${rowCounter_trabajo}" value="" maxlength="23"></td>
+                <td><input type="text" name="unidad_trabajo_${rowCounter_trabajo}" value="" maxlength="23"></td>
+                <td><input type="number" name="costo_trabajo_unidad_${rowCounter_trabajo}" step="0.01" value="" maxlength="23"></td>
+                <td>
+                    <select name="autoempleo_${rowCounter_trabajo}">
+                        <option value="Sí">Sí</option>                            
+                        <option value="No" selected>No</option>
+                    </select>
+                </td>
+                <td><input type="number" name="costo_total_trabajo_${rowCounter_trabajo}" step="0.01" value="" readonly></td>
+            `;
+            document.getElementById("rowCounterInput_trabajo").value = rowCounter_trabajo;
+        }
+    </script>
+    <script>
+        var rowCounter_insumos = 1;
+
+        function addRow_insumos() {
+            var table = document.getElementById("tabla_insumos_fijos");
+            var newRow = table.insertRow();
+            rowCounter_insumos++;
+            newRow.innerHTML = `
+                <td><input type="text" name="insumo_${rowCounter_insumos}" value="" maxlength="23"></td>
+                <td><input type="number" name="cantidad_${rowCounter_insumos}" value="" maxlength="23"></td>
+                <td><input type="text" name="unidad_${rowCounter_insumos}" value="" maxlength="23"></td>
+                <td><input type="number" name="costo_unidad_${rowCounter_insumos}" step="0.01" value="" maxlength="23"></td>
+                <td><input type="number" name="costo_total_${rowCounter_insumos}" step="0.01" value="" readonly></td>
+            `;
+            document.getElementById("rowCounterInput_insumos").value = rowCounter_insumos;
+        }
+    </script>
 </head>
 <body>
     <h1>Apunte los costos que involucra cada una de las actividades del proceso productivo del producto {{producto}}</h1>
@@ -19,24 +59,97 @@
             <p>{{ actividad_registrada }}</p>
         {% endfor %}
     {% else %}
-        <p>Ninguna. Por favor registre la primera actividad:</p>
+    <p>Ninguna. Por favor registre la primera actividad:</p>
+    <form action="{{ url_for('cuestionario_actividades') }}" method="post">
+    <input type="text" name="actividad" value="" maxlength="23" required>
     {% endif %}
     {% if actividad %}
-            <br>
+        <br>
         <a href="{{ url_for('cuestionario_actividades') }}"><button class="button">Registrar otra actividad</button></a>
         <a href="{{ url_for('cuestionario_costos_fijos') }}"><button class="button">Apuntar costos fijos</button></a>
-            <br>
-            <p>Éstos son los insumos que usted registró para la actividad de {{actividad}}:</p>
-    <form action="{{ url_for('cuestionario_actividades') }}" method="post">
-    {% else %}
-    {% if nombres_actividades %}
-    <p>Por favor registre la siguiente actividad:</p>
+        <br>
     {% endif %}
-    <form action="{{ url_for('cuestionario_actividades') }}" method="post">
-        <input type="text" name="actividad" value="{% if actividad is not none %}{{ actividad }}{% endif %}" maxlength="23" required>
+    {% if nombres_actividades and not actividad %}
+        <p>Por favor registre la siguiente actividad:</p>
+        <form action="{{ url_for('cuestionario_actividades') }}" method="post">
+        <input type="text" name="actividad" value="" maxlength="23" required>
+    {% endif %}
+    {% if lista_trabajo %}
+    <p>Éstos son los costos de mano de obra que usted registró para la actividad de {{actividad}}:</p>
+    <table>
+        <tr>
+            <th>Trabajo</th>
+            <th>Cantidad</th>
+            <th>Unidad</th>
+            <th>Costo por unidad</th>
+            <th>Autoempleo</th>
+            <th>Costo total por trabajo</th>
+        </tr>
+        {% for sublist in lista_trabajo %}
+        <tr>
+            <td>{{ sublist[1] }}</td>
+            <td>{{ sublist[2] }}</td>
+            <td>{{ sublist[3] }}</td>
+            <td>{{ sublist[4] }}</td>
+            <td>{{ sublist[5] }}</td>
+            <td>{{ sublist[6] }}</td>        
+        </tr>
+        {% endfor %}
+    </table>
+    <br>
+    {% endif %}
+    {% if lista_insumos %}
+    <p>Éstos son los insumos que usted registró para la actividad de {{actividad}}:</p>
+    <table>
+        <tr>
+            <th>Insumo</th>
+            <th>Cantidad</th>
+            <th>Unidad</th>
+            <th>Costo por unidad</th>
+            <th>Costo total por insumo</th>
+        </tr>
+        {% for sublist in lista_insumos %}
+        <tr>
+            <td>{{ sublist[1] }}</td>
+            <td>{{ sublist[2] }}</td>
+            <td>{{ sublist[3] }}</td>
+            <td>{{ sublist[4] }}</td>
+            <td>{{ sublist[5] }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% endif %}
+    {% if not actividad %}
+    <p>A continuación, registre los costos de mano de obra:</p>
+        <table id="tabla_sueldos_fijos"> 
+            <tr>
+                <th>Trabajo</th>
+                <th>Cantidad</th>
+                <th>Unidad</th>
+                <th>Costo por unidad</th>
+                <th>Autoempleo</th>
+                <th>Costo total por trabajo</th>
+            </tr>
+            <tr>
+                <td><input type="text" name="trabajo_1" value="" maxlength="23"></td>
+                <td><input type="number" name="cantidad_trabajo_1" value="" maxlength="23"></td>
+                <td><input type="text" name="unidad_trabajo_1" value="" maxlength="23"></td>
+                <td><input type="number" name="costo_trabajo_unidad_1" step="0.01" value="" maxlength="23"></td>
+                <td>
+                    <select name="autoempleo_1">
+                        <option value="Sí">Sí</option>                            
+                        <option value="No" selected>No</option>
+                    </select>
+                </td>
+                <td><input type="number" name="costo_total_trabajo_1" step="0.01" value="" readonly></td>
+            </tr>
+        </table>
+        <input type="hidden" id="rowCounterInput_trabajo" name="rowCounter_trabajo" value="1">
+        <button type="button" onclick="addRow_trabajo()">Agregar fila</button>
+        <br>
         <p>A continuación, registre los insumos:</p>
-    {% endif %}
-            <table>
+        <form action="{{ url_for('cuestionario_costos_fijos') }}" method="post">
+            <table id="tabla_insumos_fijos"> 
                 <tr>
                     <th>Insumo</th>
                     <th>Cantidad</th>
@@ -45,333 +158,24 @@
                     <th>Costo total por insumo</th>
                 </tr>
                 <tr>
-                    <td><input type="text" name="insumo_1" value="{{ insumo_1 }}" maxlength="23" {% if actividad %}readonly{% endif %}></td>
-                    <td><input type="number" name="cantidad_1" value="{{ cantidad_1 }}" maxlength="23" {% if actividad %}readonly{% endif %}></td>
-                    <td><input type="text" name="unidad_1" value="{{ unidad_1 }}" maxlength="23" {% if actividad %}readonly{% endif %}></td>
-                    <td><input type="number" name="costo_unidad_1" step="0.01" value="{{ costo_unidad_1 }}" maxlength="23" {% if actividad %}readonly{% endif %}></td>
-                    <td><input type="number" name="costo_total_1" step="0.01" value="{{ costo_total_1 }}" readonly></td>
-                </tr>
-                <tr>
-                    <td><input type="text" name="insumo_2" value="{{ insumo_2 }}" maxlength="23" {% if actividad %}readonly{% endif %}></td>
-                    <td><input type="number" name="cantidad_2" value="{{ cantidad_2 }}" maxlength="23" {% if actividad %}readonly{% endif %}></td>
-                    <td><input type="text" name="unidad_2" value="{{ unidad_2 }}" maxlength="23" {% if actividad %}readonly{% endif %}></td>
-                    <td><input type="number" name="costo_unidad_2" step="0.01" value="{{ costo_unidad_2 }}" maxlength="23" {% if actividad %}readonly{% endif %}></td>
-                    <td><input type="number" name="costo_total_2" step="0.01" value="{{ costo_total_2 }}" readonly></td>
-                </tr>
-                <tr>
-                    <td><input type="text" name="insumo_3" value="{{ insumo_3 }}" maxlength="23" {% if actividad %}readonly{% endif %}></td>
-                    <td><input type="number" name="cantidad_3" value="{{ cantidad_3 }}" maxlength="23" {% if actividad %}readonly{% endif %}></td>
-                    <td><input type="text" name="unidad_3" value="{{ unidad_3 }}" maxlength="23" {% if actividad %}readonly{% endif %}></td>
-                    <td><input type="number" name="costo_unidad_3" step="0.01" value="{{ costo_unidad_3 }}" maxlength="23" {% if actividad %}readonly{% endif %}></td>
-                    <td><input type="number" name="costo_total_3" step="0.01" value="{{ costo_total_3 }}" readonly></td>
-                </tr>
-                <tr>
-                    <td><input type="text" name="insumo_4" value="{{ insumo_4 }}" maxlength="23" {% if actividad %}readonly{% endif %}></td>
-                    <td><input type="number" name="cantidad_4" value="{{ cantidad_4 }}" maxlength="23" {% if actividad %}readonly{% endif %}></td>
-                    <td><input type="text" name="unidad_4" value="{{ unidad_4 }}" maxlength="23" {% if actividad %}readonly{% endif %}></td>
-                    <td><input type="number" name="costo_unidad_4" step="0.01" value="{{ costo_unidad_4 }}" maxlength="23" {% if actividad %}readonly{% endif %}></td>
-                    <td><input type="number" name="costo_total_4" step="0.01" value="{{ costo_total_4 }}" readonly></td>
-                </tr>
-                <tr>
-                    <td><input type="text" name="insumo_5" value="{{ insumo_5 }}" maxlength="23" {% if actividad %}readonly{% endif %}></td>
-                    <td><input type="number" name="cantidad_5" value="{{ cantidad_5 }}" maxlength="23" {% if actividad %}readonly{% endif %}></td>
-                    <td><input type="text" name="unidad_5" value="{{ unidad_5 }}" maxlength="23" {% if actividad %}readonly{% endif %}></td>
-                    <td><input type="number" name="costo_unidad_5" step="0.01" value="{{ costo_unidad_5 }}" maxlength="23" {% if actividad %}readonly{% endif %}></td>
-                    <td><input type="number" name="costo_total_5" step="0.01" value="{{ costo_total_5 }}" readonly></td>
-                </tr>
-                <tr>
-                    <td><input type="text" name="insumo_6" value="{{ insumo_6 }}" maxlength="23" {% if actividad %}readonly{% endif %}></td>
-                    <td><input type="number" name="cantidad_6" value="{{ cantidad_6 }}" maxlength="23" {% if actividad %}readonly{% endif %}></td>
-                    <td><input type="text" name="unidad_6" value="{{ unidad_6 }}" maxlength="23" {% if actividad %}readonly{% endif %}></td>
-                    <td><input type="number" name="costo_unidad_6" step="0.01" value="{{ costo_unidad_6 }}" maxlength="23" {% if actividad %}readonly{% endif %}></td>
-                    <td><input type="number" name="costo_total_6" step="0.01" value="{{ costo_total_6 }}" readonly></td>
-                </tr>
-                <tr>
-                    <td><input type="text" name="insumo_7" value="{{ insumo_7 }}" maxlength="23" {% if actividad %}readonly{% endif %}></td>
-                    <td><input type="number" name="cantidad_7" value="{{ cantidad_7 }}" maxlength="23" {% if actividad %}readonly{% endif %}></td>
-                    <td><input type="text" name="unidad_7" value="{{ unidad_7 }}" maxlength="23" {% if actividad %}readonly{% endif %}></td>
-                    <td><input type="number" name="costo_unidad_7" step="0.01" value="{{ costo_unidad_7 }}" maxlength="23" {% if actividad %}readonly{% endif %}></td>
-                    <td><input type="number" name="costo_total_7" step="0.01" value="{{ costo_total_7 }}" readonly></td>
-                </tr>
-                <tr>
-                    <td><input type="text" name="insumo_8" value="{{ insumo_8 }}" maxlength="23" {% if actividad %}readonly{% endif %}></td>
-                    <td><input type="number" name="cantidad_8" value="{{ cantidad_8 }}" maxlength="23" {% if actividad %}readonly{% endif %}></td>
-                    <td><input type="text" name="unidad_8" value="{{ unidad_8 }}" maxlength="23" {% if actividad %}readonly{% endif %}></td>
-                    <td><input type="number" name="costo_unidad_8" step="0.01" value="{{ costo_unidad_8 }}" maxlength="23" {% if actividad %}readonly{% endif %}></td>
-                    <td><input type="number" name="costo_total_8" step="0.01" value="{{ costo_total_8 }}" readonly></td>
-                </tr>
-                <tr>
-                    <td><input type="text" name="insumo_9" value="{{ insumo_9 }}" maxlength="23" {% if actividad %}readonly{% endif %}></td>
-                    <td><input type="number" name="cantidad_9" value="{{ cantidad_9 }}" maxlength="23" {% if actividad %}readonly{% endif %}></td>
-                    <td><input type="text" name="unidad_9" value="{{ unidad_9 }}" maxlength="23" {% if actividad %}readonly{% endif %}></td>
-                    <td><input type="number" name="costo_unidad_9" step="0.01" value="{{ costo_unidad_9 }}" maxlength="23" {% if actividad %}readonly{% endif %}></td>
-                    <td><input type="number" name="costo_total_9" step="0.01" value="{{ costo_total_9 }}" readonly></td>
-                </tr>
-                <tr>
-                    <td><input type="text" name="insumo_10" value="{{ insumo_10 }}" maxlength="23" {% if actividad %}readonly{% endif %}></td>
-                    <td><input type="number" name="cantidad_10" value="{{ cantidad_10 }}" maxlength="23" {% if actividad %}readonly{% endif %}></td>
-                    <td><input type="text" name="unidad_10" value="{{ unidad_10 }}" maxlength="23" {% if actividad %}readonly{% endif %}></td>
-                    <td><input type="number" name="costo_unidad_10" step="0.01" value="{{ costo_unidad_10 }}" maxlength="23" {% if actividad %}readonly{% endif %}></td>
-                    <td><input type="number" name="costo_total_10" step="0.01" value="{{ costo_total_10 }}" readonly></td>
-                </tr>
-                <tr>
-                    <td><input type="text" name="insumo_11" value="{{ insumo_11 }}" maxlength="23" {% if actividad %}readonly{% endif %}></td>
-                    <td><input type="number" name="cantidad_11" value="{{ cantidad_11 }}" maxlength="23" {% if actividad %}readonly{% endif %}></td>
-                    <td><input type="text" name="unidad_11" value="{{ unidad_11 }}" maxlength="23" {% if actividad %}readonly{% endif %}></td>
-                    <td><input type="number" name="costo_unidad_11" step="0.01" value="{{ costo_unidad_11 }}" maxlength="23" {% if actividad %}readonly{% endif %}></td>
-                    <td><input type="number" name="costo_total_11" step="0.01" value="{{ costo_total_11 }}" readonly></td>
-                </tr>
-                <tr>
-                    <td><input type="text" name="insumo_12" value="{{ insumo_12 }}" maxlength="23" {% if actividad %}readonly{% endif %}></td>
-                    <td><input type="number" name="cantidad_12" value="{{ cantidad_12 }}" maxlength="23" {% if actividad %}readonly{% endif %}></td>
-                    <td><input type="text" name="unidad_12" value="{{ unidad_12 }}" maxlength="23" {% if actividad %}readonly{% endif %}></td>
-                    <td><input type="number" name="costo_unidad_12" step="0.01" value="{{ costo_unidad_12 }}" maxlength="23" {% if actividad %}readonly{% endif %}></td>
-                    <td><input type="number" name="costo_total_12" step="0.01" value="{{ costo_total_12 }}" readonly></td>
-                </tr>
-                <tr>
-                    <td><input type="text" name="insumo_13" value="{{ insumo_13 }}" maxlength="23" {% if actividad %}readonly{% endif %}></td>
-                    <td><input type="number" name="cantidad_13" value="{{ cantidad_13 }}" maxlength="23" {% if actividad %}readonly{% endif %}></td>
-                    <td><input type="text" name="unidad_13" value="{{ unidad_13 }}" maxlength="23" {% if actividad %}readonly{% endif %}></td>
-                    <td><input type="number" name="costo_unidad_13" step="0.01" value="{{ costo_unidad_13 }}" maxlength="23" {% if actividad %}readonly{% endif %}></td>
-                    <td><input type="number" name="costo_total_13" step="0.01" value="{{ costo_total_13 }}" readonly></td>
-                </tr>
-                <tr>
-                    <td><input type="text" name="insumo_14" value="{{ insumo_14 }}" maxlength="23" {% if actividad %}readonly{% endif %}></td>
-                    <td><input type="number" name="cantidad_14" value="{{ cantidad_14 }}" maxlength="23" {% if actividad %}readonly{% endif %}></td>
-                    <td><input type="text" name="unidad_14" value="{{ unidad_14 }}" maxlength="23" {% if actividad %}readonly{% endif %}></td>
-                    <td><input type="number" name="costo_unidad_14" step="0.01" value="{{ costo_unidad_14 }}" maxlength="23" {% if actividad %}readonly{% endif %}></td>
-                    <td><input type="number" name="costo_total_14" step="0.01" value="{{ costo_total_14 }}" readonly></td>
-                </tr>
-                <tr>
-                    <td><input type="text" name="insumo_15" value="{{ insumo_15 }}" maxlength="23" {% if actividad %}readonly{% endif %}></td>
-                    <td><input type="number" name="cantidad_15" value="{{ cantidad_15 }}" maxlength="23" {% if actividad %}readonly{% endif %}></td>
-                    <td><input type="text" name="unidad_15" value="{{ unidad_15 }}" maxlength="23" {% if actividad %}readonly{% endif %}></td>
-                    <td><input type="number" name="costo_unidad_15" step="0.01" value="{{ costo_unidad_15 }}" maxlength="23" {% if actividad %}readonly{% endif %}></td>
-                    <td><input type="number" name="costo_total_15" step="0.01" value="{{ costo_total_15 }}" readonly></td>
+                    <td><input type="text" name="insumo_1" value="" maxlength="23"></td>
+                    <td><input type="number" name="cantidad_1" value="" maxlength="23"></td>
+                    <td><input type="text" name="unidad_1" value="" maxlength="23"></td>
+                    <td><input type="number" name="costo_unidad_1" step="0.01" value="" maxlength="23"></td>
+                    <td><input type="number" name="costo_total_1" step="0.01" value="" readonly></td>
                 </tr>
             </table>
+            <input type="hidden" id="rowCounterInput_insumos" name="rowCounter_insumos" value="1">
+            <button type="button" onclick="addRow_insumos()">Agregar fila</button>
             <br>
-            {% if actividad %}
-            <p>Éstos son los costos de mano de obra que usted registró para la actividad de {{actividad}}</p>
-            {% else %}
-            <p>A continuación, registre los costos de mano de obra</p>
-            {% endif %}
             <br>
-            <table>
-                <tr>
-                    <th>Trabajo</th>
-                    <th>Cantidad</th>
-                    <th>Unidad</th>
-                    <th>Costo por unidad</th>
-                    <th>Autoempleo</th>
-                    <th>Costo total por trabajo</th>
-                </tr>    
-                <tr>
-                    <td><input type="text" name="trabajo_1" value="{{ trabajo_1 }}" maxlength="23" {% if actividad %}readonly{% endif %}></td>
-                    <td><input type="number" name="cantidad_trabajo_1" value="{{ cantidad_trabajo_1 }}" maxlength="23" {% if actividad %}readonly{% endif %}></td>
-                    <td><input type="text" name="unidad_trabajo_1" value="{{ unidad_trabajo_1 }}" maxlength="23" {% if actividad %}readonly{% endif %}></td>
-                    <td><input type="number" name="costo_trabajo_unidad_1" step="0.01" value="{{ costo_trabajo_unidad_1 }}" maxlength="23" {% if actividad %}readonly{% endif %}></td>
-                    <td>
-                        <select name="autoempleo_1" {% if actividad %}disabled{% endif %}>
-                            <option value="Sí" {% if autoempleo_1 == "Sí" %}selected{% endif %}>Sí</option>                            
-                            <option value="No" {% if autoempleo_1 != "Sí" %}selected{% endif %}>No</option>
-                        </select>
-                    </td>
-                    <td><input type="number" name="costo_total_trabajo_1" step="0.01" value="{{ costo_total_trabajo_1 }}" readonly></td>
-                </tr>
-                <tr>
-                    <td><input type="text" name="trabajo_2" value="{{ trabajo_2 }}" maxlength="23" {% if actividad %}readonly{% endif %}></td>
-                    <td><input type="number" name="cantidad_trabajo_2" value="{{ cantidad_trabajo_2 }}" maxlength="23" {% if actividad %}readonly{% endif %}></td>
-                    <td><input type="text" name="unidad_trabajo_2" value="{{ unidad_trabajo_2 }}" maxlength="23" {% if actividad %}readonly{% endif %}></td>
-                    <td><input type="number" name="costo_trabajo_unidad_2" step="0.01" value="{{ costo_trabajo_unidad_2 }}" maxlength="23" {% if actividad %}readonly{% endif %}></td>
-                    <td>
-                        <select name="autoempleo_2" {% if actividad %}disabled{% endif %}>
-                            <option value="Sí" {% if autoempleo_2 == "Sí" %}selected{% endif %}>Sí</option>
-                            <option value="No" {% if autoempleo_2 != "Sí" %}selected{% endif %}>No</option>
-                        </select>
-                    </td>
-                    <td><input type="number" name="costo_total_trabajo_2" step="0.01" value="{{ costo_total_trabajo_2 }}" readonly></td>
-                </tr>
-                <tr>
-                    <td><input type="text" name="trabajo_3" value="{{ trabajo_3 }}" maxlength="23" {% if actividad %}readonly{% endif %}></td>
-                    <td><input type="number" name="cantidad_trabajo_3" value="{{ cantidad_trabajo_3 }}" maxlength="23" {% if actividad %}readonly{% endif %}></td>
-                    <td><input type="text" name="unidad_trabajo_3" value="{{ unidad_trabajo_3 }}" maxlength="23" {% if actividad %}readonly{% endif %}></td>
-                    <td><input type="number" name="costo_trabajo_unidad_3" step="0.01" value="{{ costo_trabajo_unidad_3 }}" maxlength="23" {% if actividad %}readonly{% endif %}></td>
-                    <td>
-                        <select name="autoempleo_3" {% if actividad %}disabled{% endif %}>
-                            <option value="Sí" {% if autoempleo_3 == "Sí" %}selected{% endif %}>Sí</option>
-                            <option value="No" {% if autoempleo_3 != "Sí" %}selected{% endif %}>No</option>
-                        </select>
-                    </td>
-                    <td><input type="number" name="costo_total_trabajo_3" step="0.01" value="{{ costo_total_trabajo_3 }}" readonly></td>
-                </tr>
-                <tr>
-                    <td><input type="text" name="trabajo_4" value="{{ trabajo_4 }}" maxlength="23" {% if actividad %}readonly{% endif %}></td>
-                    <td><input type="number" name="cantidad_trabajo_4" value="{{ cantidad_trabajo_4 }}" maxlength="23" {% if actividad %}readonly{% endif %}></td>
-                    <td><input type="text" name="unidad_trabajo_4" value="{{ unidad_trabajo_4 }}" maxlength="23" {% if actividad %}readonly{% endif %}></td>
-                    <td><input type="number" name="costo_trabajo_unidad_4" step="0.01" value="{{ costo_trabajo_unidad_4 }}" maxlength="23" {% if actividad %}readonly{% endif %}></td>
-                    <td>
-                        <select name="autoempleo_4" {% if actividad %}disabled{% endif %}>
-                            <option value="Sí" {% if autoempleo_4 == "Sí" %}selected{% endif %}>Sí</option>
-                            <option value="No" {% if autoempleo_4 != "Sí" %}selected{% endif %}>No</option>
-                        </select>
-                    </td>
-                    <td><input type="number" name="costo_total_trabajo_4" step="0.01" value="{{ costo_total_trabajo_4 }}" readonly></td>
-                </tr>
-                <tr>
-                    <td><input type="text" name="trabajo_5" value="{{ trabajo_5 }}" maxlength="23" {% if actividad %}readonly{% endif %}></td>
-                    <td><input type="number" name="cantidad_trabajo_5" value="{{ cantidad_trabajo_5 }}" maxlength="23" {% if actividad %}readonly{% endif %}></td>
-                    <td><input type="text" name="unidad_trabajo_5" value="{{ unidad_trabajo_5 }}" maxlength="23" {% if actividad %}readonly{% endif %}></td>
-                    <td><input type="number" name="costo_trabajo_unidad_5" step="0.01" value="{{ costo_trabajo_unidad_5 }}" maxlength="23" {% if actividad %}readonly{% endif %}></td>
-                    <td>
-                        <select name="autoempleo_5" {% if actividad %}disabled{% endif %}>
-                            <option value="Sí" {% if autoempleo_5 == "Sí" %}selected{% endif %}>Sí</option>
-                            <option value="No" {% if autoempleo_5 != "Sí" %}selected{% endif %}>No</option>
-                        </select>
-                    </td>
-                    <td><input type="number" name="costo_total_trabajo_5" step="0.01" value="{{ costo_total_trabajo_5 }}" readonly></td>
-                </tr>
-                <tr>
-                    <td><input type="text" name="trabajo_6" value="{{ trabajo_6 }}" maxlength="23" {% if actividad %}readonly{% endif %}></td>
-                    <td><input type="number" name="cantidad_trabajo_6" value="{{ cantidad_trabajo_6 }}" maxlength="23" {% if actividad %}readonly{% endif %}></td>
-                    <td><input type="text" name="unidad_trabajo_6" value="{{ unidad_trabajo_6 }}" maxlength="23" {% if actividad %}readonly{% endif %}></td>
-                    <td><input type="number" name="costo_trabajo_unidad_6" step="0.01" value="{{ costo_trabajo_unidad_6 }}" maxlength="23" {% if actividad %}readonly{% endif %}></td>
-                    <td>
-                        <select name="autoempleo_6" {% if actividad %}disabled{% endif %}>
-                            <option value="Sí" {% if autoempleo_6 == "Sí" %}selected{% endif %}>Sí</option>
-                            <option value="No" {% if autoempleo_6 != "Sí" %}selected{% endif %}>No</option>
-                        </select>
-                    </td>
-                    <td><input type="number" name="costo_total_trabajo_6" step="0.01" value="{{ costo_total_trabajo_6 }}" readonly></td>
-                </tr>
-                <tr>
-                    <td><input type="text" name="trabajo_7" value="{{ trabajo_7 }}" maxlength="23" {% if actividad %}readonly{% endif %}></td>
-                    <td><input type="number" name="cantidad_trabajo_7" value="{{ cantidad_trabajo_7 }}" maxlength="23" {% if actividad %}readonly{% endif %}></td>
-                    <td><input type="text" name="unidad_trabajo_7" value="{{ unidad_trabajo_7 }}" maxlength="23" {% if actividad %}readonly{% endif %}></td>
-                    <td><input type="number" name="costo_trabajo_unidad_7" step="0.01" value="{{ costo_trabajo_unidad_7 }}" maxlength="23" {% if actividad %}readonly{% endif %}></td>
-                    <td>
-                        <select name="autoempleo_7" {% if actividad %}disabled{% endif %}>
-                            <option value="Sí" {% if autoempleo_7 == "Sí" %}selected{% endif %}>Sí</option>
-                            <option value="No" {% if autoempleo_7 != "Sí" %}selected{% endif %}>No</option>
-                        </select>
-                    </td>
-                    <td><input type="number" name="costo_total_trabajo_7" step="0.01" value="{{ costo_total_trabajo_7 }}" readonly></td>
-                </tr>
-                <tr>
-                    <td><input type="text" name="trabajo_8" value="{{ trabajo_8 }}" maxlength="23" {% if actividad %}readonly{% endif %}></td>
-                    <td><input type="number" name="cantidad_trabajo_8" value="{{ cantidad_trabajo_8 }}" maxlength="23" {% if actividad %}readonly{% endif %}></td>
-                    <td><input type="text" name="unidad_trabajo_8" value="{{ unidad_trabajo_8 }}" maxlength="23" {% if actividad %}readonly{% endif %}></td>
-                    <td><input type="number" name="costo_trabajo_unidad_8" step="0.01" value="{{ costo_trabajo_unidad_8 }}" maxlength="23" {% if actividad %}readonly{% endif %}></td>
-                    <td>
-                        <select name="autoempleo_8" {% if actividad %}disabled{% endif %}>
-                            <option value="Sí" {% if autoempleo_8 == "Sí" %}selected{% endif %}>Sí</option>
-                            <option value="No" {% if autoempleo_8 != "Sí" %}selected{% endif %}>No</option>
-                        </select>
-                    </td>
-                    <td><input type="number" name="costo_total_trabajo_8" step="0.01" value="{{ costo_total_trabajo_8 }}" readonly></td>
-                </tr>
-                <tr>
-                    <td><input type="text" name="trabajo_9" value="{{ trabajo_9 }}" maxlength="23" {% if actividad %}readonly{% endif %}></td>
-                    <td><input type="number" name="cantidad_trabajo_9" value="{{ cantidad_trabajo_9 }}" maxlength="23" {% if actividad %}readonly{% endif %}></td>
-                    <td><input type="text" name="unidad_trabajo_9" value="{{ unidad_trabajo_9 }}" maxlength="23" {% if actividad %}readonly{% endif %}></td>
-                    <td><input type="number" name="costo_trabajo_unidad_9" step="0.01" value="{{ costo_trabajo_unidad_9 }}" maxlength="23" {% if actividad %}readonly{% endif %}></td>
-                    <td>
-                        <select name="autoempleo_9" {% if actividad %}disabled{% endif %}>
-                            <option value="Sí" {% if autoempleo_9 == "Sí" %}selected{% endif %}>Sí</option>
-                            <option value="No" {% if autoempleo_9 != "Sí" %}selected{% endif %}>No</option>
-                        </select>
-                    </td>
-                    <td><input type="number" name="costo_total_trabajo_9" step="0.01" value="{{ costo_total_trabajo_9 }}" readonly></td>
-                </tr>
-                <tr>
-                    <td><input type="text" name="trabajo_10" value="{{ trabajo_10 }}" maxlength="23" {% if actividad %}readonly{% endif %}></td>
-                    <td><input type="number" name="cantidad_trabajo_10" value="{{ cantidad_trabajo_10 }}" maxlength="23" {% if actividad %}readonly{% endif %}></td>
-                    <td><input type="text" name="unidad_trabajo_10" value="{{ unidad_trabajo_10 }}" maxlength="23" {% if actividad %}readonly{% endif %}></td>
-                    <td><input type="number" name="costo_trabajo_unidad_10" step="0.01" value="{{ costo_trabajo_unidad_10 }}" maxlength="23" {% if actividad %}readonly{% endif %}></td>
-                    <td>
-                        <select name="autoempleo_10" {% if actividad %}disabled{% endif %}>
-                            <option value="Sí" {% if autoempleo_10 == "Sí" %}selected{% endif %}>Sí</option>
-                            <option value="No" {% if autoempleo_10 != "Sí" %}selected{% endif %}>No</option>
-                        </select>
-                    </td>
-                    <td><input type="number" name="costo_total_trabajo_10" step="0.01" value="{{ costo_total_trabajo_10 }}" readonly></td>
-                </tr>
-                <tr>
-                    <td><input type="text" name="trabajo_11" value="{{ trabajo_11 }}" maxlength="23" {% if actividad %}readonly{% endif %}></td>
-                    <td><input type="number" name="cantidad_trabajo_11" value="{{ cantidad_trabajo_11 }}" maxlength="23" {% if actividad %}readonly{% endif %}></td>
-                    <td><input type="text" name="unidad_trabajo_11" value="{{ unidad_trabajo_11 }}" maxlength="23" {% if actividad %}readonly{% endif %}></td>
-                    <td><input type="number" name="costo_trabajo_unidad_11" step="0.01" value="{{ costo_trabajo_unidad_11 }}" maxlength="23" {% if actividad %}readonly{% endif %}></td>
-                    <td>
-                        <select name="autoempleo_11" {% if actividad %}disabled{% endif %}>
-                            <option value="Sí" {% if autoempleo_11 == "Sí" %}selected{% endif %}>Sí</option>
-                            <option value="No" {% if autoempleo_11 != "Sí" %}selected{% endif %}>No</option>
-                        </select>
-                    </td>
-                    <td><input type="number" name="costo_total_trabajo_11" step="0.01" value="{{ costo_total_trabajo_11 }}" readonly></td>
-                </tr>
-                <tr>
-                    <td><input type="text" name="trabajo_12" value="{{ trabajo_12 }}" maxlength="23" {% if actividad %}readonly{% endif %}></td>
-                    <td><input type="number" name="cantidad_trabajo_12" value="{{ cantidad_trabajo_12 }}" maxlength="23" {% if actividad %}readonly{% endif %}></td>
-                    <td><input type="text" name="unidad_trabajo_12" value="{{ unidad_trabajo_12 }}" maxlength="23" {% if actividad %}readonly{% endif %}></td>
-                    <td><input type="number" name="costo_trabajo_unidad_12" step="0.01" value="{{ costo_trabajo_unidad_12 }}" maxlength="23" {% if actividad %}readonly{% endif %}></td>
-                    <td>
-                        <select name="autoempleo_12" {% if actividad %}disabled{% endif %}>
-                            <option value="Sí" {% if autoempleo_12 == "Sí" %}selected{% endif %}>Sí</option>
-                            <option value="No" {% if autoempleo_12 != "Sí" %}selected{% endif %}>No</option>
-                        </select>
-                    </td>
-                    <td><input type="number" name="costo_total_trabajo_12" step="0.01" value="{{ costo_total_trabajo_12 }}" readonly></td>
-                </tr>
-                <tr>
-                    <td><input type="text" name="trabajo_13" value="{{ trabajo_13 }}" maxlength="23" {% if actividad %}readonly{% endif %}></td>
-                    <td><input type="number" name="cantidad_trabajo_13" value="{{ cantidad_trabajo_13 }}" maxlength="23" {% if actividad %}readonly{% endif %}></td>
-                    <td><input type="text" name="unidad_trabajo_13" value="{{ unidad_trabajo_13 }}" maxlength="23" {% if actividad %}readonly{% endif %}></td>
-                    <td><input type="number" name="costo_trabajo_unidad_13" step="0.01" value="{{ costo_trabajo_unidad_13 }}" maxlength="23" {% if actividad %}readonly{% endif %}></td>
-                    <td>
-                        <select name="autoempleo_13" {% if actividad %}disabled{% endif %}>
-                            <option value="Sí" {% if autoempleo_13 == "Sí" %}selected{% endif %}>Sí</option>
-                            <option value="No" {% if autoempleo_13 != "Sí" %}selected{% endif %}>No</option>
-                        </select>
-                    </td>
-                    <td><input type="number" name="costo_total_trabajo_13" step="0.01" value="{{ costo_total_trabajo_13 }}" readonly></td>
-                </tr>
-                <tr>
-                    <td><input type="text" name="trabajo_14" value="{{ trabajo_14 }}" maxlength="23" {% if actividad %}readonly{% endif %}></td>
-                    <td><input type="number" name="cantidad_trabajo_14" value="{{ cantidad_trabajo_14 }}" maxlength="23" {% if actividad %}readonly{% endif %}></td>
-                    <td><input type="text" name="unidad_trabajo_14" value="{{ unidad_trabajo_14 }}" maxlength="23" {% if actividad %}readonly{% endif %}></td>
-                    <td><input type="number" name="costo_trabajo_unidad_14" step="0.01" value="{{ costo_trabajo_unidad_14 }}" maxlength="23" {% if actividad %}readonly{% endif %}></td>
-                    <td>
-                        <select name="autoempleo_14" {% if actividad %}disabled{% endif %}>
-                            <option value="Sí" {% if autoempleo_14 == "Sí" %}selected{% endif %}>Sí</option>
-                            <option value="No" {% if autoempleo_14 != "Sí" %}selected{% endif %}>No</option>
-                        </select>
-                    </td>
-                    <td><input type="number" name="costo_total_trabajo_14" step="0.01" value="{{ costo_total_trabajo_14 }}" readonly></td>
-                </tr>
-                <tr>
-                    <td><input type="text" name="trabajo_15" value="{{ trabajo_15 }}" maxlength="23" {% if actividad %}readonly{% endif %}></td>
-                    <td><input type="number" name="cantidad_trabajo_15" value="{{ cantidad_trabajo_15 }}" maxlength="23" {% if actividad %}readonly{% endif %}></td>
-                    <td><input type="text" name="unidad_trabajo_15" value="{{ unidad_trabajo_15 }}" maxlength="23" {% if actividad %}readonly{% endif %}></td>
-                    <td><input type="number" name="costo_trabajo_unidad_15" step="0.01" value="{{ costo_trabajo_unidad_15 }}" maxlength="23" {% if actividad %}readonly{% endif %}></td>
-                    <td>
-                        <select name="autoempleo_15" {% if actividad %}disabled{% endif %}>
-                            <option value="Sí" {% if autoempleo_15 == "Sí" %}selected{% endif %}>Sí</option>
-                            <option value="No" {% if autoempleo_15 != "Sí" %}selected{% endif %}>No</option>
-                        </select>
-                    </td>
-                    <td><input type="number" name="costo_total_trabajo_15" step="0.01" value="{{ costo_total_trabajo_15 }}" readonly></td>
-                </tr>
-            </table>         
-
-            {% if actividad %}
-                <button type="submit" class="button" disabled>Enter</button>
+        <button type="submit">Enviar</button>
     </form>
-            <br>
+    {% endif %}
+    {% if actividad %}
+        <br>
         <a href="{{ url_for('cuestionario_actividades') }}"><button class="button">Ingresar siguiente actividad</button></a>
         <a href="{{ url_for('cuestionario_costos_fijos') }}"><button class="button">Apuntar costos fijos</button></a>
-            {% else %}
-                <button type="submit" class="button">Enter</button>
-    </form>
-            {% endif %}
+    {% endif %}
 </body>
 </html>
