@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Ventas Page</title>
+    <title>Producción</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
 </head>
 <body>
     <h1>Registro de producción</h1>
@@ -10,27 +11,19 @@
     <form action="{{ url_for('ventas') }}" method="POST">
         <table>
             <tr>
-                <th>Producto</th>
-                <th>Cantidad vendida</th>
-                <th>Unidad</th>
-                <th>Precio de venta por unidad</th>
-                <th>Ingreso total por producto</th>
+                <th>Nombre del<br>producto</th>
+                <th>Cantidad<br>producida</th>
+                <th>Unidad<br><span>(ej.: cajas, frascos, prendas)</span></th>
             </tr>
             <tr>
                 <td><input type="text" name="producto" value="{{ producto }}" required></td>
                 <td><input type="number" name="cantidad_vendida" step="any" value="{{ cantidad_vendida }}" required></td>
                 <td><input type="text" name="unidad" value="{{ unidad }}" required></td>
-                <td><input type="number" name="precio_venta" step="any" value="{{ precio_venta }}" required></td>
-                <td><input type="text" name="ingreso_ventas" value="{{ ingreso_ventas }}" style="background-color: lightgrey;" readonly></td>
             </tr>
         </table>
         <br>
-        <button type="submit">Enter</button>
-    </form>
+        <a href="{{ url_for('pregunta_actividades') }}"><button type="submit" class="send_form">REGISTRAR Y CONTINUAR</button></a>
 
-    {% if producto and cantidad_vendida and unidad and precio_venta and ingreso_ventas %}
-        <br>
-        <a href="{{ url_for('cuestionario_actividades') }}"><button>Next</button></a>
-    {% endif %}
+    </form>
 </body>
 </html>

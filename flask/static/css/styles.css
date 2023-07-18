@@ -1,44 +1,69 @@
 body {
-  margin: 20px;
+  margin: 10px;
+  margin-right: 10px;
 }
 
 table {
   display: inline-table; /* Make the table shrink-wrap its contents */
   border-collapse: collapse;
-  padding: 100px;
   width: 100%;
-  font-size:2vw;
 }
 
 td {
   padding: 3px;
   text-align: center;
   border: 1px solid black;
+  font-size: 2vw; /* Set initial font size relative to viewport width */
 }
 
 th {
-  padding: 3px;
+  padding: 1px;
   white-space: normal; /* Allow line breaks within the cell */
   overflow: hidden;
   text-overflow: ellipsis;
+  line-height: 1;
+  font-size: 350%;
+}
+
+.output {
+  font-size: 200%;
+}
+
+th span {
+  font-size: 70%; /* Set a smaller font size for the content after line break */
 }
 
 td input[type="text"],
 td input[type="number"],
 td select {
   padding: 0px;
+  margin-top: 2px;
+  margin-bottom: 2px;
   border: none;
   outline: none;
-  font-size:1.7vw;
+  font-size: 4vw;
+  text-align: center;
+  line-height: 2;
 }
 
 form {
   margin-left: auto; 
-  margin-right: auto;
+  margin-right: 10px;
 }
 
 .add_row {
   margin: 4px;
+  font-size: 5vw;
+  padding: 8px 16px;
+  background-color: #ccde82;
+}
+
+.send_form {
+  margin: 4px;
+  display: block;
+  text-align: left;
+  font-size: 4vw;
+  background-color: #ffe030;
 }
 
 .input-lightgrey {
