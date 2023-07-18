@@ -58,28 +58,25 @@
     <h2>Ejemplos de actividades: siembra, fertilización, cosecha, limpieza, cocción, ahumado, fermentación, envasado, etiquetado, traslado al punto de venta, etcétera.</h2>
     <h2>Empiece por apuntar el nombre de la primera actividad y los costos que corresponden únicamente a dicha actividad. Dé clic en botón "Enviar" y continúe apuntando las siguientes actividades.</h2>
     <h2>No olvide registrar las distintas ocasiones de una misma actividad si ésta se repite a lo largo del proceso productivo.</h2>
-
-    <p>Actividades registradas hasta ahora:</p>
-    {% if nombres_actividades %}
-        {% for actividad_registrada in nombres_actividades %}
-            <p>{{ actividad_registrada }}</p>
+    {% if not lista_trabajo and not lista_insumos %}
+    <p>Actividades con costos registrados hasta ahora:</p>
+    <p class="activity-list">
+        {% for i in range(nombres_actividades|length - 1) %}
+            {% set counter = i + 1 %}
+            <span class="activity-item">{{ counter }}. {{ nombres_actividades[i] }}</span>{% if not loop.last %}, {% endif %}
         {% endfor %}
+    </p>
     {% else %}
-    <p>Ninguna. Por favor registre la primera actividad:</p>
-    <form action="{{ url_for('cuestionario_actividades') }}" method="post">
-    <input type="text" name="actividad" value="" maxlength="23" required>
+    <p>Actividades con costos registrados hasta ahora:</p>
+    <p class="activity-list">
+        {% for i in range(nombres_actividades|length) %}
+            {% set counter = i + 1 %}
+            <span class="activity-item">{{ counter }}. {{ nombres_actividades[i] }}</span>{% if not loop.last %}, {% endif %}
+        {% endfor %}
+    </p>
+    <br>
     {% endif %}
-    {% if actividad %}
-        <br>
-        <a href="{{ url_for('cuestionario_actividades') }}"><button class="button">Registrar otra actividad</button></a>
-        <a href="{{ url_for('cuestionario_costos_fijos') }}"><button class="button">Apuntar costos fijos</button></a>
-        <br>
-    {% endif %}
-    {% if nombres_actividades and not actividad %}
-        <p>Por favor registre la siguiente actividad:</p>
-        <form action="{{ url_for('cuestionario_actividades') }}" method="post">
-        <input type="text" name="actividad" value="" maxlength="23" required>
-    {% endif %}
+
     {% if lista_trabajo %}
     <p>Éstos son los costos de mano de obra que usted registró para la actividad de {{actividad}}:</p>
     <table>
@@ -125,9 +122,9 @@
         {% endfor %}
     </table>
     {% endif %}
-    {% if not actividad %}
-    <div class="table">
-    <p>Si esta actividad implica costos de mano de obra, regístrelos a continuación:</p>
+    {% if not lista_insumos and not lista_trabajo %}
+    <form action="{{ url_for('cuestionario_actividades') }}" method="post">
+    <p>Registre los costos de mano de obra de la actividad de {{ actividad }} para producir {{ cantidad_vendida }} {{ unidad }} de {{ producto }}:</p>
         <table id="tabla_sueldos_fijos"> 
             <tr>
                 <th>Trabajo</th>
@@ -155,7 +152,7 @@
         <br>
         <button type="button" class="add_row" onclick="addRow_trabajo()">Agregar fila</button>
         <br>
-        <p>Si esta actividad implica costos de insumos, regístrelos a continuación:</p>
+        <p>Registre los costos de insumos de la actividad de {{ actividad }} para producir {{ cantidad_vendida }} {{ unidad }} de {{ producto }}:</p>
         <form action="{{ url_for('cuestionario_costos_fijos') }}" method="post">
             <table id="tabla_insumos_fijos"> 
                 <tr>
@@ -178,14 +175,13 @@
             <button type="button" class="add_row" onclick="addRow_insumos()">Agregar fila</button>
             <br>
             <br>
-        <button class="send_form" type="submit">Enviar</button>
+        <button class="send_form" type="submit">REGISTRAR</button>
     </form>
     </div>
-    {% endif %}
-    {% if actividad %}
+    {% else %}
         <br>
-        <a href="{{ url_for('cuestionario_actividades') }}"><button class="button">Registrar otra actividad</button></a>
-        <a href="{{ url_for('cuestionario_costos_fijos') }}"><button class="button">Apuntar costos fijos</button></a>
+        <a href="{{ url_for('pregunta_actividades') }}"><button class="button">REGISTRAR OTRA ACTIVIDAD</button></a>
+        <a href="{{ url_for('cuestionario_costos_fijos') }}"><button class="button">CONTINUAR A COSTOS FIJOS</button></a>
     {% endif %}
 </body>
 </html>

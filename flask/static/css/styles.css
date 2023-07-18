@@ -60,9 +60,9 @@ form {
 
 .send_form {
   margin: 4px;
-  display: block;
   text-align: left;
-  font-size: 4vw;
+  font-size: 5vw;
+  padding: 8px 16px;
   background-color: #ffe030;
 }
 

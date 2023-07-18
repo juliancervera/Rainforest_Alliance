@@ -43,20 +43,37 @@ def ventas():
         producto = request.form["producto"]
         cantidad_vendida = float(request.form["cantidad_vendida"])
         unidad = request.form["unidad"]
-        precio_venta = float(request.form["precio_venta"])
 
-        ingreso_ventas = cantidad_vendida * precio_venta
-
-        session['producto'] = producto
+        session['producto'] = producto.lower()
         session['cantidad_vendida'] = cantidad_vendida
-        session['unidad'] = unidad
-        session['precio_venta'] = precio_venta
-        session['ingreso_ventas'] = ingreso_ventas
+        session['unidad'] = unidad.lower()
 
-        return render_template("ventas.html", producto=producto, cantidad_vendida=cantidad_vendida,
-                               unidad=unidad, precio_venta=precio_venta, ingreso_ventas=ingreso_ventas)
+        return redirect(url_for('pregunta_actividades'))
     else:
         return render_template("ventas.html")
+
+@app.route("/pregunta_actividades", methods=["GET", "POST"])
+def pregunta_actividades():
+    if request.method == "POST":
+        actividad = request.form.get("actividad")
+        nombres_actividades = session.get("nombres_actividades", [])
+        nombres_actividades.append(actividad)
+        session["nombres_actividades"] = nombres_actividades
+        session["actividad"] = actividad.lower()
+
+        return redirect(url_for('cuestionario_actividades'))
+    else:
+        producto = session.get("producto")
+        unidad = session.get("unidad")
+        cantidad_vendida = session.get("cantidad_vendida")
+        nombres_actividades = session.get("nombres_actividades", [])
+
+        return render_template("pregunta_actividades.html",
+                               nombres_actividades=nombres_actividades,
+                               producto=producto,
+                               unidad=unidad,
+                               cantidad_vendida=cantidad_vendida)
+
 
 # ToDo: Cambiar para que cheque si la lista de nombres_actividades está vacía
 #ToDo: Hacer que el botón de "go back" borre la última sublista añadida a insumos_actividades y trabajo_actividades
@@ -67,8 +84,6 @@ def cuestionario_actividades():
         num_rows_trabajo = int(request.form.get("rowCounter_trabajo"))
         num_rows_costos = int(request.form.get("rowCounter_insumos"))
 
-        actividad = request.form.get("actividad")
-        nombres_actividades = session.get("nombres_actividades", [])
         nombres_actividades.append(actividad)
         session["nombres_actividades"] = nombres_actividades
 
@@ -143,12 +158,14 @@ def cuestionario_actividades():
         unidad = session.get("unidad")
         cantidad_vendida = session.get("cantidad_vendida")
         nombres_actividades = session.get("nombres_actividades")
+        actividad = session.get("actividad")
 
         return render_template(
             "cuestionario_actividades.html",
             producto=producto,
             nombres_actividades=nombres_actividades,
             cantidad_vendida=cantidad_vendida,
+            actividad=actividad,
             unidad=unidad,
         )
 
