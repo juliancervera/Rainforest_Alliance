@@ -5,21 +5,26 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
 </head>
 <body>
-    <h1>HERRAMIENTA PARA EL CÁLCULO DE COSTOS, INGRESOS Y GANANCIAS</h1>
-    <p>Tiene a su disposición una herramienta lo más sencilla posible para saber cuánto dinero le cuesta producir una cierta cantidad de algún producto y cuántas ganancias (o pérdidas) genera la venta de dicho producto.</p>
-    <p>La herramienta está diseñada para calcular los costos de un lote de producción específico; por ejemplo, una cosecha específica de un cultivo, una cierta cantidad de galones de vino, un lote de jaleas o galletas, etcétera.</p>
-    <p>La herramienta no está diseñada para llevar la contabilidad completa de un negocio.</p>
-    <p>La herramienta le permitirá ingresar datos sobre las siguientes categorías de costos:</p>
-    <p>----------Insumos de producción</p>
-    <p>----------Costos de mano de obra</p>
-    <p>----------Costos fijos</p>
-    <p>----------Sueldos fijos</p>
-    <p>----------Impuestos sobre la venta</p>
-    <p>----------Impuestos fijos</p>
-    <p>----------Costos de certifiación</p>
-    <p>----------Costos de exportación</p>
-    <p>Por favor lea las instrucciones en cada página antes de empezar a ingresar los datos</p>
+    <h1>HERRAMIENTA PARA EL CÁLCULO<br>DE COSTOS, INGRESOS Y GANANCIAS</h1>
+    <p style="text-align: center; color: #94ba29; font-size: 38px;"><em><b>Coloque su celular en posición horizontal</b></em></p>
+    <p><b>Esta herramienta le ofrece:</b></p>
+        <ul>
+            <li>Cálculo de costos totales y por unidad.</li>
+            <li>Resumen de costos por categoría.</li>
+            <li>Distintas opciones de precios con sus respectivos márgenes de ganancia y puntos de equilibrio.</li>
+            <li>Reporte final en formato PDF.</li>
+        </ul>
+    <p><b>Consideraciones importantes:</b></p>
+        <ul>
+            <li>Esta herramienta calcula los costos de un único producto a la vez.</li>
+            <li>La herramienta no almacena sus datos, por lo que deberá indicar todos los costos de una sola vez.</li>
+            <li>La herramienta le permite ingresar datos sobre las siguientes seis categorías:</li>
+        </ul>
+    <img src="{{ url_for('static', filename='images/index.png') }}" alt="Mapa de las páginas de la herramienta">
     <br>
-    <a href="{{ url_for('ventas') }}"><button>Iniciar</button></a>
+    <br>
+    <div class="center-aligned">
+    <a href="{{ url_for('ventas') }}"><button class="send_form">COMENZAR REGISTRO DE COSTOS</button></a>
+    </div>
 </body>
 </html>

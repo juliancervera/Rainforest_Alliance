@@ -1,7 +1,20 @@
 body {
-  margin: 10px;
+  font-family: Geneva, sans-serif, Helvetica;
+  font-weight: normal;
+  background-color: #ececec;
+  color: #175259;
+  margin-left: 10px;
   margin-right: 10px;
 }
+
+p {
+  font-size: 30px;
+}
+
+li {
+  font-size: 26px;
+}
+
 
 table {
   display: inline-table; /* Make the table shrink-wrap its contents */
@@ -9,11 +22,18 @@ table {
   width: 100%;
 }
 
+h1 {
+  font-size: 46px;
+  text-align: center;
+  color: darkcyan;
+}
+
 td {
-  padding: 3px;
+  padding: 4px;
   text-align: center;
   border: 1px solid black;
-  font-size: 2vw; /* Set initial font size relative to viewport width */
+  font-size: 24px;
+  background-color: white;
 }
 
 th {
@@ -22,12 +42,10 @@ th {
   overflow: hidden;
   text-overflow: ellipsis;
   line-height: 1;
-  font-size: 350%;
+  font-size: 28px;
+  color: darkcyan;
 }
 
-.output {
-  font-size: 200%;
-}
 
 th span {
   font-size: 70%; /* Set a smaller font size for the content after line break */
@@ -37,13 +55,15 @@ td input[type="text"],
 td input[type="number"],
 td select {
   padding: 0px;
-  margin-top: 2px;
-  margin-bottom: 2px;
+  margin-top: 1px;
+  margin-bottom: 1px;
   border: none;
   outline: none;
-  font-size: 4vw;
   text-align: center;
   line-height: 2;
+  font-size: 24px;
+  background-color: white;
+  color: #175259;
 }
 
 form {
@@ -53,19 +73,36 @@ form {
 
 .add_row {
   margin: 4px;
-  font-size: 5vw;
+  text-align: left;
+  font-size: 24;
   padding: 8px 16px;
   background-color: #ccde82;
 }
 
 .send_form {
   margin: 4px;
-  text-align: left;
-  font-size: 5vw;
+  font-size: 34px;
   padding: 8px 16px;
   background-color: #ffe030;
 }
 
 .input-lightgrey {
   background-color: lightgrey;
+}
+
+.input-text {
+  font-size: 36px;
+  height: 75px;
+  width: 650px;
+  text-align: center;
+  color: #175259;
+  border: 1px solid black;
+}
+
+.center-aligned {
+  text-align: center;
+}
+
+img {
+  width: 100%;
 }

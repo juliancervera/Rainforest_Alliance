@@ -84,14 +84,14 @@ def cuestionario_actividades():
         num_rows_trabajo = int(request.form.get("rowCounter_trabajo"))
         num_rows_costos = int(request.form.get("rowCounter_insumos"))
 
-        nombres_actividades.append(actividad)
-        session["nombres_actividades"] = nombres_actividades
-
-        insumos_actividades = session.get('insumos_actividades', [])
-        trabajo_actividades = session.get('trabajo_actividades', [])
+        actividad = session.get("actividad")
+        nombres_actividades = session.get("nombres_actividades")
         producto = session.get("producto")
         unidad = session.get("unidad")
         cantidad_vendida = session.get("cantidad_vendida")
+
+        insumos_actividades = session.get('insumos_actividades', [])
+        trabajo_actividades = session.get('trabajo_actividades', [])
 
         lista_insumos = []
         lista_trabajo = []

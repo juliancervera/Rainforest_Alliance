@@ -6,8 +6,7 @@
 </head>
 <body>
     <h1>Registro de producción</h1>
-    <p>Por favor indique el nombre del producto y cuántas unidades tomará en cuenta para el cálculo de costos.</p>
-    <p>Ejemplos de unidades: cajas, botellas, frascos, sacos, bolsas, piezas, etcétera.</p>
+    <p><em><b>IMPORTANTE:</em></b> todos los costos que usted registre en las siguientes páginas deberán ser en función de la cantidad producida que usted indique en esta página.</p>
     <form action="{{ url_for('ventas') }}" method="POST">
         <table>
             <tr>
@@ -22,7 +21,10 @@
             </tr>
         </table>
         <br>
+        <br>
+        <div class="center-aligned">
         <button type="submit" class="send_form">REGISTRAR Y CONTINUAR</button>
+        </div>
     </form>
 </body>
 </html>

@@ -3,27 +3,37 @@
 <head>
     <title>Actividades</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            document.addEventListener("keydown", function(event) {
+                if (event.key === "Enter") {
+                    event.preventDefault();
+                }
+            });
+        });
+    </script>
 </head>
 <body>
     <h1>Actividades necesarias para producir {{ cantidad_vendida }} {{ unidad }} de {{ producto }}</h1>
-    <p>Por favor indique el nombre del producto y cuántas unidades tomará en cuenta para el cálculo de costos.</p>
-    <p>Ejemplos de unidades: cajas, botellas, frascos, sacos, bolsas, piezas, etcétera.</p>
     <form action="{{ url_for('pregunta_actividades') }}" method="POST">
-        <p>Actividades registradas hasta ahora:</p>
     {% if nombres_actividades %}
+    <p>Actividades registradas hasta ahora:</p>
     <p class="activity-list">
         {% for i in range(nombres_actividades|length) %}
             {% set counter = i + 1 %}
             <span class="activity-item">{{ counter }}. {{ nombres_actividades[i] }}</span>{% if not loop.last %}, {% endif %}
         {% endfor %}
     </p>
-    <p>Registre la siguiente actividad necesaria para producir {{ cantidad_vendida }} {{ unidad }} de {{ producto }}:
+    <p>Escriba el nombre de <b><em>la siguiente</b></em> actividad necesaria para producir {{ cantidad_vendida }} {{ unidad }} de {{ producto }}:
     {% else %}
-    <p>Ninguna. Registre la primera actividad necesaria para producir {{ cantidad_vendida }} {{ unidad }} de {{ producto }}:</p>
+    <p>Escriba el nombre de <b><em>la primera</b></em> actividad necesaria para producir {{ cantidad_vendida }} {{ unidad }} de {{ producto }}:</p>
     {% endif %}
-    <input type="text" name="actividad" value="" maxlength="23" required>
+    <div class="center-aligned">
+    <input type="text" class="input-text" name="actividad" value="" maxlength="23" required>
+        <br>
         <br>
         <button type="submit" class="send_form">REGISTRAR Y CONTINUAR</button>
+    </div>
     </form>
 </body>
 </html>

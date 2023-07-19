@@ -54,12 +54,11 @@
 </head>
 <body>
     <h1>Registro de costos por actividad</h1>
-    <h2>Piense en el proceso productivo del producto {{ producto }} y distinga entre las actividades o fases que se requieren para producir {{ cantidad_vendida }} {{ unidad }}.</h2>
-    <h2>Ejemplos de actividades: siembra, fertilización, cosecha, limpieza, cocción, ahumado, fermentación, envasado, etiquetado, traslado al punto de venta, etcétera.</h2>
-    <h2>Empiece por apuntar el nombre de la primera actividad y los costos que corresponden únicamente a dicha actividad. Dé clic en botón "Enviar" y continúe apuntando las siguientes actividades.</h2>
-    <h2>No olvide registrar las distintas ocasiones de una misma actividad si ésta se repite a lo largo del proceso productivo.</h2>
     {% if not lista_trabajo and not lista_insumos %}
     <p>Actividades con costos registrados hasta ahora:</p>
+    {% if nombres_actividades|length < 2 %}
+    <p>Ninguna.</p>
+    {% endif %}
     <p class="activity-list">
         {% for i in range(nombres_actividades|length - 1) %}
             {% set counter = i + 1 %}
@@ -81,12 +80,12 @@
     <p>Éstos son los costos de mano de obra que usted registró para la actividad de {{actividad}}:</p>
     <table>
         <tr>
-            <th class="output">Trabajo</th>
-            <th class="output">Cantidad</th>
-            <th class="output">Unidad</th>
-            <th class="output">Costo por<br>unidad</th>
-            <th class="output">Auto-<br>empleo</th>
-            <th class="output">Costo<br>total</th>
+            <th>Trabajo</th>
+            <th>Cantidad</th>
+            <th>Unidad</th>
+            <th>Costo por<br>unidad</th>
+            <th>Auto-<br>empleo</th>
+            <th>Costo<br>total</th>
         </tr>
         {% for sublist in lista_trabajo %}
         <tr>
@@ -105,11 +104,11 @@
     <p>Éstos son los insumos que usted registró para la actividad de {{actividad}}:</p>
     <table>
         <tr>
-            <th class="output">Insumo</th>
-            <th class="output">Cantidad</th>
-            <th class="output">Unidad</th>
-            <th class="output">Costo por unidad</th>
-            <th class="output">Costo total por insumo</th>
+            <th>Insumo</th>
+            <th>Cantidad</th>
+            <th>Unidad</th>
+            <th>Costo por unidad</th>
+            <th>Costo total por insumo</th>
         </tr>
         {% for sublist in lista_insumos %}
         <tr>
@@ -123,6 +122,7 @@
     </table>
     {% endif %}
     {% if not lista_insumos and not lista_trabajo %}
+
     <form action="{{ url_for('cuestionario_actividades') }}" method="post">
     <p>Registre los costos de mano de obra de la actividad de {{ actividad }} para producir {{ cantidad_vendida }} {{ unidad }} de {{ producto }}:</p>
         <table id="tabla_sueldos_fijos"> 
@@ -175,9 +175,9 @@
             <button type="button" class="add_row" onclick="addRow_insumos()">Agregar fila</button>
             <br>
             <br>
-        <button class="send_form" type="submit">REGISTRAR</button>
+        <button class="send_form" type="submit">REGISTRAR COSTOS</button>
     </form>
-    </div>
+
     {% else %}
         <br>
         <a href="{{ url_for('pregunta_actividades') }}"><button class="button">REGISTRAR OTRA ACTIVIDAD</button></a>
