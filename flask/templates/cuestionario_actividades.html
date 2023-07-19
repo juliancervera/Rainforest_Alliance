@@ -29,7 +29,7 @@
                         <option value="No" selected>No</option>
                     </select>
                 </td>
-                <td class="input-lightgrey"><input class="input-lightgrey" type="number" name="costo_total_trabajo_${rowCounter_trabajo}" step="0.01" value="" min="0" max="999" readonly></td>
+                <td class="input-lightgrey"><input style="background-color: lightgrey; max-width: 12px;" type="number" name="costo_total_trabajo_${rowCounter_trabajo}" step="0.01" value="" min="0" max="999" readonly></td>
             `;
             document.getElementById("rowCounterInput_trabajo").value = rowCounter_trabajo;
         }
@@ -46,34 +46,29 @@
                 <td><input type="number" name="cantidad_${rowCounter_insumos}" value="" min="0"></td>
                 <td><input type="text" name="unidad_${rowCounter_insumos}" value="" maxlength="15"></td>
                 <td><input type="number" name="costo_unidad_${rowCounter_insumos}" step="0.01" value="" min="0.01" maxlength="23"></td>
-                <td class="input-lightgrey"><input class="input-lightgrey" type="number" name="costo_total_${rowCounter_insumos}" step="0.01" value="" min="0" max="999" readonly></td>
+                <td class="input-lightgrey"><input style="background-color: lightgrey; max-width: 12px;" type="number" name="costo_total_${rowCounter_insumos}" step="0.01" value="" min="0" max="999" readonly></td>
             `;
             document.getElementById("rowCounterInput_insumos").value = rowCounter_insumos;
         }
     </script>
 </head>
 <body>
-    <h1>Registro de costos por actividad</h1>
+    <h1>Registro de costos por actividad:</h1>
+    <p class="color-emphasis"><b><em>>>>>>> {{ actividad }} <<<<<<</em></b></p>
     {% if not lista_trabajo and not lista_insumos %}
-    <p>Actividades con costos registrados hasta ahora:</p>
-    {% if nombres_actividades|length < 2 %}
-    <p>Ninguna.</p>
-    {% endif %}
-    <p class="activity-list">
+    <p>Actividades con costos registrados hasta ahora: {% if nombres_actividades|length < 2 %}Ninguna.{% endif %}
         {% for i in range(nombres_actividades|length - 1) %}
             {% set counter = i + 1 %}
             <span class="activity-item">{{ counter }}. {{ nombres_actividades[i] }}</span>{% if not loop.last %}, {% endif %}
         {% endfor %}
     </p>
     {% else %}
-    <p>Actividades con costos registrados hasta ahora:</p>
-    <p class="activity-list">
+    <p>Actividades con costos registrados hasta ahora: 
         {% for i in range(nombres_actividades|length) %}
             {% set counter = i + 1 %}
             <span class="activity-item">{{ counter }}. {{ nombres_actividades[i] }}</span>{% if not loop.last %}, {% endif %}
         {% endfor %}
     </p>
-    <br>
     {% endif %}
 
     {% if lista_trabajo %}
@@ -98,7 +93,7 @@
         </tr>
         {% endfor %}
     </table>
-    <br>
+    <br><br>
     {% endif %}
     {% if lista_insumos %}
     <p>Éstos son los insumos que usted registró para la actividad de {{actividad}}:</p>
@@ -120,17 +115,18 @@
         </tr>
         {% endfor %}
     </table>
+    <br><br>
     {% endif %}
     {% if not lista_insumos and not lista_trabajo %}
 
     <form action="{{ url_for('cuestionario_actividades') }}" method="post">
-    <p>Registre los costos de mano de obra de la actividad de {{ actividad }} para producir {{ cantidad_vendida }} {{ unidad }} de {{ producto }}:</p>
+    <p>Registre los <span class="text-highlight">costos de mano de obra</span> de la actividad de <span class="text-highlight">{{ actividad }}</span> para producir <span class="text-highlight">{{ cantidad_vendida }} {{ unidad }} de {{ producto }}:</span></p>
         <table id="tabla_sueldos_fijos"> 
             <tr>
                 <th>Trabajo</th>
-                <th>Cantidad<br><span>(núm. de hrs., días u otra unidad)</span></th>
-                <th>Unidad<br><span>(hrs., días u otra unidad)</span></th>
-                <th>Costo por<br>unidad</th>
+                <th>Cantidad<br><span>de hrs., días<br>u otra unidad</span></th>
+                <th>Unidad<br><span>(hrs., días,<br>otra unidad)</span></th>
+                <th>Costo<span> por</span><br>unidad</th>
                 <th>Auto-<br>empleo</th>
                 <th>Costo<br>total</th>
             </tr>
@@ -145,20 +141,20 @@
                         <option value="No" selected>No</option>
                     </select>
                 </td>
-                <td class="input-lightgrey"><input type="number" class="input-lightgrey" name="costo_total_trabajo_1" step="0.01" value="" min="1" max="999" readonly></td>
+                <td class="input-lightgrey"><input type="number" style="background-color: lightgrey; max-width: 12px;" name="costo_total_trabajo_1" step="0.01" value="" min="1" max="999" readonly></td>
             </tr>
         </table>
         <input type="hidden" id="rowCounterInput_trabajo" name="rowCounter_trabajo" value="1">
         <br>
         <button type="button" class="add_row" onclick="addRow_trabajo()">Agregar fila</button>
         <br>
-        <p>Registre los costos de insumos de la actividad de {{ actividad }} para producir {{ cantidad_vendida }} {{ unidad }} de {{ producto }}:</p>
+        <p>Registre los <span class="text-highlight">costos de insumos</span> de la actividad de <span class="text-highlight">{{ actividad }}</span> para producir <span class="text-highlight">{{ cantidad_vendida }} {{ unidad }} de {{ producto }}:</span></p>
         <form action="{{ url_for('cuestionario_costos_fijos') }}" method="post">
             <table id="tabla_insumos_fijos"> 
                 <tr>
                     <th>Insumo</th>
-                    <th>Cantidad<br><span>(núm. de unidades)</span></th>
-                    <th>Unidad<br><span>(ej.: plantas, cajas, sacos...)</span></th>
+                    <th>Cantidad</th>
+                    <th>Unidad<br><span>(ej.: kilos, litros,<br>piezas...)</span></th>
                     <th>Costo por<br>unidad</th>
                     <th>Costo<br>total</th>
                 </tr>
@@ -167,7 +163,7 @@
                     <td><input type="number" name="cantidad_1" value="" min="0"></td>
                     <td><input type="text" name="unidad_1" value="" maxlength="15"></td>
                     <td><input type="number" name="costo_unidad_1" step="0.01" value="" min="0.01"></td>
-                    <td class="input-lightgrey"><input type="number" class="input-lightgrey" name="costo_total_1" step="0.01" value="" min="1" max="999" readonly></td>
+                    <td class="input-lightgrey"><input type="number" style="background-color: lightgrey; max-width: 12px;" name="costo_total_1" step="0.01" value="" min="1" max="999" readonly></td>
                 </tr>
             </table>
             <br>
@@ -179,9 +175,13 @@
     </form>
 
     {% else %}
-        <br>
-        <a href="{{ url_for('pregunta_actividades') }}"><button class="button">REGISTRAR OTRA ACTIVIDAD</button></a>
-        <a href="{{ url_for('cuestionario_costos_fijos') }}"><button class="button">CONTINUAR A COSTOS FIJOS</button></a>
+    <div class="center-aligned">
+        <a href="{{ url_for('pregunta_actividades') }}"><button class="send_form">REGISTRAR OTRA<br>ACTIVIDAD</button></a>
+        <a href="{{ url_for('cuestionario_costos_fijos') }}"><button class="send_form" style="background-color: #ccde82;">CONTINUAR A<br>COSTOS FIJOS</button></a>
+        <a href="{{ url_for('pregunta_actividades') }}"><button class="send_form" style="background-color: #f5b224;">DESHACER<br>REGISTRO</button></a>
+    </div>
+    <br>
+    <img src="{{ url_for('static', filename='images/actividades.png') }}" alt="Mapa de las páginas de la herramienta">
     {% endif %}
 </body>
 </html>

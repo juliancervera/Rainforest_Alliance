@@ -24,9 +24,9 @@
             <span class="activity-item">{{ counter }}. {{ nombres_actividades[i] }}</span>{% if not loop.last %}, {% endif %}
         {% endfor %}
     </p>
-    <p>Escriba el nombre de <b><em>la siguiente</b></em> actividad necesaria para producir {{ cantidad_vendida }} {{ unidad }} de {{ producto }}:
+    <p>Escriba el nombre de <span class="text-highlight">la siguiente</span> actividad necesaria para producir <span class="text-highlight"> {{ cantidad_vendida }} {{ unidad }} de {{ producto }}:</span>
     {% else %}
-    <p>Escriba el nombre de <b><em>la primera</b></em> actividad necesaria para producir {{ cantidad_vendida }} {{ unidad }} de {{ producto }}:</p>
+    <p>Escriba el nombre de <span class="text-highlight">la primera</span> actividad necesaria para producir <span class="text-highlight">{{ cantidad_vendida }} {{ unidad }} de {{ producto }}:</span></p>
     {% endif %}
     <div class="center-aligned">
     <input type="text" class="input-text" name="actividad" value="" maxlength="23" required>

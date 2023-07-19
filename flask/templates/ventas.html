@@ -3,16 +3,25 @@
 <head>
     <title>Producción</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            document.addEventListener("keydown", function(event) {
+                if (event.key === "Enter") {
+                    event.preventDefault();
+                }
+            });
+        });
+    </script>
 </head>
 <body>
     <h1>Registro de producción</h1>
-    <p><em><b>IMPORTANTE:</em></b> todos los costos que usted registre en las siguientes páginas deberán ser en función de la cantidad producida que usted indique en esta página.</p>
+    <p><em><b>IMPORTANTE:</em></b> todos los costos que usted registre en las siguientes páginas deberán ser en función de la <span class="text-highlight">cantidad producida</span> que usted indique en esta página.</p>
     <form action="{{ url_for('ventas') }}" method="POST">
         <table>
             <tr>
                 <th>Nombre del<br>producto</th>
                 <th>Cantidad<br>producida</th>
-                <th>Unidad<br><span>(ej.: cajas, frascos, prendas)</span></th>
+                <th>Unidad<br><span>Ej.: cajas, frascos,<br>prendas, etc.</span></th>
             </tr>
             <tr>
                 <td><input type="text" name="producto" value="{{ producto }}" required></td>

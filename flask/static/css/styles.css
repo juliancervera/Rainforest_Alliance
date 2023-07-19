@@ -5,6 +5,7 @@ body {
   color: #175259;
   margin-left: 10px;
   margin-right: 10px;
+  line-height: 2.7em;
 }
 
 p {
@@ -34,6 +35,7 @@ td {
   border: 1px solid black;
   font-size: 24px;
   background-color: white;
+  max-width: 100px;
 }
 
 th {
@@ -44,6 +46,7 @@ th {
   line-height: 1;
   font-size: 28px;
   color: darkcyan;
+  text
 }
 
 
@@ -64,6 +67,7 @@ td select {
   font-size: 24px;
   background-color: white;
   color: #175259;
+  width: 100%;
 }
 
 form {
@@ -74,9 +78,15 @@ form {
 .add_row {
   margin: 4px;
   text-align: left;
-  font-size: 24;
+  font-size: 28px;
   padding: 8px 16px;
   background-color: #ccde82;
+}
+
+.color-emphasis {
+  text-align: center;
+  color: #94ba29;
+  font-size: 38px;
 }
 
 .send_form {
@@ -84,10 +94,17 @@ form {
   font-size: 34px;
   padding: 8px 16px;
   background-color: #ffe030;
+  color: #175259;
+}
+
+.text-highlight {
+  font-size: 110%;
+  font-weight: bolder;
 }
 
 .input-lightgrey {
   background-color: lightgrey;
+  max-width: 12px;
 }
 
 .input-text {

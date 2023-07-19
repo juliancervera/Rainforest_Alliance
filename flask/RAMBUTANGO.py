@@ -57,7 +57,7 @@ def pregunta_actividades():
     if request.method == "POST":
         actividad = request.form.get("actividad")
         nombres_actividades = session.get("nombres_actividades", [])
-        nombres_actividades.append(actividad)
+        nombres_actividades.append(actividad.lower())
         session["nombres_actividades"] = nombres_actividades
         session["actividad"] = actividad.lower()
 
