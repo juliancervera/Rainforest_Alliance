@@ -15,7 +15,6 @@
 </head>
 <body>
     <h1>Actividades necesarias para producir {{ cantidad_vendida }} {{ unidad }} de {{ producto }}</h1>
-    <form action="{{ url_for('pregunta_actividades') }}" method="POST">
     {% if nombres_actividades %}
     <p>Actividades registradas hasta ahora:</p>
     <p class="activity-list">
@@ -23,11 +22,13 @@
             {% set counter = i + 1 %}
             <span class="activity-item">{{ counter }}. {{ nombres_actividades[i] }}</span>{% if not loop.last %}, {% endif %}
         {% endfor %}
+        <span><a href="{{ url_for('borrar') }}"><button class="borrar">🡰BORRAR ÚLTIMA</button></a></span>
     </p>
     <p>Escriba el nombre de <span class="text-highlight">la siguiente</span> actividad necesaria para producir <span class="text-highlight"> {{ cantidad_vendida }} {{ unidad }} de {{ producto }}:</span>
     {% else %}
     <p>Escriba el nombre de <span class="text-highlight">la primera</span> actividad necesaria para producir <span class="text-highlight">{{ cantidad_vendida }} {{ unidad }} de {{ producto }}:</span></p>
     {% endif %}
+    <form action="{{ url_for('pregunta_actividades') }}" method="POST">
     <div class="center-aligned">
     <input type="text" class="input-text" name="actividad" value="" maxlength="23" required>
         <br>

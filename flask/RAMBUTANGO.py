@@ -56,10 +56,21 @@ def ventas():
 def pregunta_actividades():
     if request.method == "POST":
         actividad = request.form.get("actividad")
+        actividad = actividad.lower()  # Convert to lowercase
+
         nombres_actividades = session.get("nombres_actividades", [])
-        nombres_actividades.append(actividad.lower())
+
+        # Check if actividad already exists in nombres_actividades
+        if actividad in nombres_actividades:
+            # Generate a unique version of actividad
+            counter = 2
+            while f"{actividad}_{counter}" in nombres_actividades:
+                counter += 1
+            actividad = f"{actividad}_{counter}"
+
+        nombres_actividades.append(actividad)
         session["nombres_actividades"] = nombres_actividades
-        session["actividad"] = actividad.lower()
+        session["actividad"] = actividad
 
         return redirect(url_for('cuestionario_actividades'))
     else:
@@ -105,7 +116,7 @@ def cuestionario_actividades():
                 locals()[f"autoempleo_{i}"] = request.form.get(f"autoempleo_{i}")
                 locals()[f"costo_total_trabajo_{i}"] = round(locals()[f"cantidad_trabajo_{i}"] * locals()[f"costo_trabajo_unidad_{i}"], 2)
                 sublista_trabajo = [
-                    locals()[f"actividad"],
+                    locals()["actividad"],
                     locals()[f"trabajo_{i}"],
                     locals()[f"cantidad_trabajo_{i}"],
                     locals()[f"unidad_trabajo_{i}"],
@@ -125,7 +136,7 @@ def cuestionario_actividades():
                 locals()[f"costo_unidad_{i}"] = float(request.form.get(f"costo_unidad_{i}"))
                 locals()[f"costo_total_{i}"] = round(locals()[f"cantidad_{i}"] * locals()[f"costo_unidad_{i}"], 2)
                 sublista_insumos = [
-                    locals()[f"actividad"],
+                    locals()["actividad"],
                     locals()[f"insumo_{i}"],
                     locals()[f"cantidad_{i}"],
                     locals()[f"unidad_{i}"],
@@ -136,8 +147,19 @@ def cuestionario_actividades():
             except ValueError:
                 pass
 
-        insumos_actividades.append(lista_insumos)
-        trabajo_actividades.append(lista_trabajo)
+        # Guardar listas en la sesión poder recuperarlas en "/deshacer"
+        session["lista_insumos"] = lista_insumos
+        session["lista_trabajo"] = lista_trabajo
+
+        if lista_insumos:
+            insumos_actividades.append(lista_insumos)
+        else:
+            pass
+
+        if lista_trabajo:
+            trabajo_actividades.append(lista_trabajo)
+        else:
+            pass
 
         session['insumos_actividades'] = insumos_actividades
         session['trabajo_actividades'] = trabajo_actividades
@@ -173,6 +195,33 @@ def cuestionario_actividades():
 # ToDo: Vaciar las listas correspondientes si el usuario vuelve al formulario vacío (get request?)
 # ToDo: la variable de porcentaje debe guardarse tal cual para reaparecer en la página, pero...
 # ...debe transformarse en número y dividirse entre cien para ser multiplicada y guardarse en la lista
+
+@app.route("/borrar")
+def borrar():
+    insumos_actividades = session.get('insumos_actividades', [])
+    trabajo_actividades = session.get('trabajo_actividades', [])
+    nombres_actividades = session.get("nombres_actividades")
+    actividad = session.get("actividad")
+
+    nombres_actividades.pop()
+
+    if trabajo_actividades:
+        for sublist in trabajo_actividades[-1]:
+            if sublist[0] == actividad:
+                trabajo_actividades.pop()
+                break
+
+    if insumos_actividades:
+        for sublist in insumos_actividades[-1]:
+            if sublist[0] == actividad:
+                insumos_actividades.pop()
+                break
+
+    session['insumos_actividades'] = insumos_actividades
+    session['trabajo_actividades'] = trabajo_actividades
+    session['nombres_actividades'] = nombres_actividades
+
+    return redirect(url_for('pregunta_actividades'))
 
 @app.route("/cuestionario_costos_fijos", methods=["GET", "POST"])
 def cuestionario_costos_fijos():

@@ -9,7 +9,11 @@ body {
 }
 
 p {
-  font-size: 30px;
+  font-size: 3vw;
+}
+
+ul {
+    margin-top: 0; /* Remove the default top margin of the ul */
 }
 
 li {
@@ -21,6 +25,7 @@ table {
   display: inline-table; /* Make the table shrink-wrap its contents */
   border-collapse: collapse;
   width: 100%;
+  margin-top: 0px;
 }
 
 h1 {
@@ -75,6 +80,10 @@ form {
   margin-right: 10px;
 }
 
+.pre_bullet_list {
+    margin-bottom: 3px;
+}
+
 .add_row {
   margin: 4px;
   text-align: left;
@@ -118,6 +127,12 @@ form {
 
 .center-aligned {
   text-align: center;
+}
+
+.borrar {
+  font-size: 20px;
+  color: #175259;
+  background-color: #fdffab;
 }
 
 img {

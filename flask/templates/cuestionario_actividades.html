@@ -54,14 +54,16 @@
 </head>
 <body>
     <h1>Registro de costos por actividad:</h1>
-    <p class="color-emphasis"><b><em>>>>>>> {{ actividad }} <<<<<<</em></b></p>
+    <p class="color-emphasis"><b><em>🡪🡪🡪 {{ actividad }} 🡨🡨🡨</em></b></p>
     {% if not lista_trabajo and not lista_insumos %}
-    <p>Actividades con costos registrados hasta ahora: {% if nombres_actividades|length < 2 %}Ninguna.{% endif %}
+    {% if nombres_actividades|length > 1 %}
+    <p>Actividades con costos registrados hasta ahora:
         {% for i in range(nombres_actividades|length - 1) %}
             {% set counter = i + 1 %}
             <span class="activity-item">{{ counter }}. {{ nombres_actividades[i] }}</span>{% if not loop.last %}, {% endif %}
         {% endfor %}
     </p>
+    {% endif %}
     {% else %}
     <p>Actividades con costos registrados hasta ahora: 
         {% for i in range(nombres_actividades|length) %}
@@ -178,7 +180,7 @@
     <div class="center-aligned">
         <a href="{{ url_for('pregunta_actividades') }}"><button class="send_form">REGISTRAR OTRA<br>ACTIVIDAD</button></a>
         <a href="{{ url_for('cuestionario_costos_fijos') }}"><button class="send_form" style="background-color: #ccde82;">CONTINUAR A<br>COSTOS FIJOS</button></a>
-        <a href="{{ url_for('pregunta_actividades') }}"><button class="send_form" style="background-color: #f5b224;">DESHACER<br>REGISTRO</button></a>
+        <a href="{{ url_for('borrar') }}"><button class="send_form" style="background-color: #f5b224;">DESHACER<br>REGISTRO</button></a>
     </div>
     <br>
     <img src="{{ url_for('static', filename='images/actividades.png') }}" alt="Mapa de las páginas de la herramienta">
