@@ -13,6 +13,18 @@
         });
     </script>
     <script>
+        function displayText(modalId) {
+          var modal = document.getElementById(modalId);
+          modal.style.display = "block";
+        }
+
+        function closeModal(modalId) {
+          var modal = document.getElementById(modalId);
+          modal.style.display = "none";
+        }
+
+    </script>
+    <script>
         var rowCounter_trabajo = 1;
 
         function addRow_trabajo() {
@@ -32,7 +44,7 @@
                         <option value="No" selected>No</option>
                     </select>
                 </td>
-                <td><input type="number" name="costo_total_trabajo_fijo_${rowCounter_trabajo}" step="0.1" value="" style="background-color: lightgrey;" readonly></td>
+                <td style="background-color: lightgrey; max-width: 12px;"><input type="number" name="costo_total_trabajo_fijo_${rowCounter_trabajo}" step="0.1" value="" style="background-color: lightgrey; max-width: 12px;" readonly></td>
             `;
             document.getElementById("rowCounterInput_trabajo").value = rowCounter_trabajo;
         }
@@ -48,34 +60,27 @@
                 <td><input type="text" name="costo_fijo_${rowCounter_insumos}" value="" maxlength="23"></td>
                 <td><input type="number" name="monto_fijo_${rowCounter_insumos}" value="" maxlength="23"></td>
                 <td><input type="number" name="porcentaje_costo_fijo_${rowCounter_insumos}" value="100" min="0" max="100"></td>
-                <td><input type="number" name="costo_fijo_total_${rowCounter_insumos}" step="0.1" value="" style="background-color: lightgrey;" readonly></td>
+                <td style="background-color: lightgrey; max-width: 12px;"><input type="number" name="costo_fijo_total_${rowCounter_insumos}" step="0.1" value="" style="background-color: lightgrey;" readonly></td>
             `;
             document.getElementById("rowCounterInput_insumos").value = rowCounter_insumos;
         }
     </script>
 </head>
 <body>
-    <h1>Registro de costos fijos</h1>
-    <h2>Los costos fijos son aquellos que se mantienen iguales sin importar la cantidad producida.</h2>
-    <h2>Por ejemplo: costos de vigilancia, costos de almacenamiento, rentas, sueldos de administradores, costos de electricidad, gastos de telefonía, etcétera.</h2>
-    <h2></h2>
-    {% if sueldos_fijos or costos_fijos %}
-    <br>
-    <a href="{{ url_for('cuestionario_costos_fijos') }}"><button class="button">Deshacer y repetir registro</button></a>
-    <a href="{{ url_for('pregunta_impuestos_venta') }}"><button class="button">Continuar</button></a>
-    <br>
-    {% endif %}
+    <h1>Registro de costos fijos*</h1>
+    <div class="center-aligned">
+    <p><b><span class="text-highlight">*</span>se mantienen iguales sin importar la cantidad producida</b><br>(vigilancia, administración, almacenamiento, rentas, electricidad, telefonía, etcétera)</p>
+    </div>
     {% if sueldos_fijos %}
-    <br>
     <p>Éstos son los sueldos fijos que usted registró:</p>
     <table>
         <tr>
-            <th>Trabajo realizado</th>
-            <th>Número de horas, días o meses</th>
-            <th>Sueldo por hora día o mes</th>
-            <th>Porcentaje del tiempo dedicado al producto</th>
-            <th>Autoempleo</th>
-            <th>Costo total por trabajo</th>
+            <th>Trabajo</th>
+            <th>Núm de<br><span>hrs., días,<br>meses</span></th>
+            <th>Sueldo<span><br>por hora,<br>día o mes</span></th>
+            <th>Porcent.</th>
+            <th>Auto-<br>empleo</th>
+            <th>Costo<br>total</th>
         </tr>
         {% for sublist in sueldos_fijos %}
         <tr>
@@ -91,14 +96,13 @@
     <br>
     {% endif %}
     {% if costos_fijos %}
-    <br>
     <p>Éstos son los insumos fijos que usted registró:</p>
     <table>
         <tr>
-            <th>Descripción del costo</th>
+            <th>Costo</th>
             <th>Monto</th>
-            <th>Porcentaje correspondiente al producto</th>
-            <th>Monto total</th>
+            <th>Porcent.</th>
+            <th>Costo<br>total</th>
         </tr>
         {% for sublist in costos_fijos %}
         <tr>
@@ -112,22 +116,33 @@
     <br>
     {% endif %}
     {% if sueldos_fijos or costos_fijos %}
+    <div class="center-aligned">
             <br>
-        <a href="{{ url_for('cuestionario_costos_fijos') }}"><button class="button">Deshacer y repetir registro</button></a>
-        <a href="{{ url_for('pregunta_impuestos_venta') }}"><button class="button">Continuar</button></a>
-            <br>
+        <a href="{{ url_for('cuestionario_costos_fijos') }}"><button class="send_form" style="background-color: #f5b224;">DESHACER<br>REGISTRO</button></a>
+        <a href="{{ url_for('pregunta_impuestos_venta') }}"><button class="send_form" style="background-color: #ccde82;">CONTINUAR<br>A IMPUESTOS</button></a>
+    </div>
+    <br>
+    <img src="{{ url_for('static', filename='images/costos_fijos.png') }}" alt="Mapa de las páginas de la herramienta">
     {% else %}
-    <p>Si la producción del producto {{ producto }} implica sueldos fijos, regístrelos a continuación.</p>
-    <p>Notas: Si sólo una parte del tiempo pagado a los trabajadores se ocupó en el producto en cuestión, escriba el porcentaje en la columna indicada. Por ejemplo, si la mitad del tiempo pagado se ocupó en el producto en cuestión, escriba 50%. Si sólo un tercio del tiempo se ocupó en el producto en cuestión, escriba 33%.</p>
+    <p>Registre los <span class="text-highlight">sueldos fijos</span> necesarios para producir <span class="text-highlight">{{ cantidad_vendida }} {{ unidad }} de {{ producto }}:</span></p>
     <form action="{{ url_for('cuestionario_costos_fijos') }}" method="post">
         <table id="tabla_sueldos_fijos"> 
             <tr>
-                <th>Trabajo realizado</th>
-                <th>Número de horas, días o meses</th>
-                <th>Sueldo por hora día o mes</th>
-                <th>Porcentaje del tiempo dedicado al producto</th>
-                <th>Autoempleo</th>
-                <th>Costo total por trabajo</th>
+                <th>Trabajo</th>
+                <th>Núm de<br><span>hrs., días,<br>meses</span></th>
+                <th>Sueldo<span><br>por hora,<br>día o mes</span></th>
+                <th>
+                  Porcent.<br>
+                  <button class="tutorial" type="button" onclick="displayText('modal1')">INFO</button>
+                  <div id="modal1" class="modal">
+                    <div class="modal-content">
+                      <span class="close" onclick="closeModal('modal1')">&times;</span>
+                      <p class="pop-up">Si sólo una parte del tiempo pagado a los trabajadores se ocupó en el producto "{{ producto }}", escriba un número entre 0 y 100 para indicar el porcentaje. Por ejemplo, si la mitad del tiempo pagado se ocupó en el producto "{{ producto }}", escriba 50. Si sólo un tercio del tiempo se ocupó en este producto, escriba 33.</p>
+                    </div>
+                  </div>
+                </th>
+                <th>Auto-<br>empleo</th>
+                <th>Costo<br>total</th>
             </tr>
             <tr>
                 <td><input type="text" name="trabajo_fijo_1" value="" maxlength="23"></td>
@@ -142,34 +157,42 @@
                         <option value="No" selected>No</option>
                     </select>
                 </td>
-                <td><input type="number" name="costo_total_trabajo_fijo_1" step="0.1" value="" style="background-color: lightgrey;" readonly></td>
+                <td class="input-lightgrey"><input type="number" name="costo_total_trabajo_fijo_1" step="0.1" value="" style="background-color: lightgrey; max-width: 12px;" readonly></td>
             </tr>
         </table>
         <input type="hidden" id="rowCounterInput_trabajo" name="rowCounter_trabajo" value="1">
-        <button type="button" onclick="addRow_trabajo()">Agregar fila</button>
+        <button type="button" class="add_row" onclick="addRow_trabajo()">Agregar fila</button>
         <br>
-        <p>Si la producción del producto {{ producto }} implica costos fijos no salariales, regístrelos a continuación.</p>
-        <p>Notas: Si los costos fijos involucran más de un producto o si el periodo cubierto por el pago de un costo fijo es mayor al tiempo de producción del producto en cuestión, indique qué porcentaje del costo correspone al producto en cuestión. Por ejemplo, si en un mismo almacén se guardan dos productos en cantidades iguales, escriba 50% en la columna "Porcentaje correspondiente al producto". Si la cuota del almacén se paga anualmente, pero los dos productos sólo permanecen ahí seis meses, escriba 25%.</p>
+        <p>Registre los <span class="text-highlight">gastos fijos no salariales</span> necesarios para producir <span class="text-highlight">{{ cantidad_vendida }} {{ unidad }} de {{ producto }}:</span></p>
         <form action="{{ url_for('cuestionario_costos_fijos') }}" method="post">
             <table id="tabla_insumos_fijos"> 
                 <tr>
-                    <th>Descripción del costo</th>
+                    <th>Costo</th>
                     <th>Monto</th>
-                    <th>Porcentaje correspondiente al producto</th>
-                    <th>Monto total</th>
+                    <th>
+                      Porcent.<br>
+                      <button class="tutorial" type="button" onclick="displayText('modal2')">INFO</button>
+                      <div id="modal2" class="modal">
+                        <div class="modal-content">
+                          <span class="close" onclick="closeModal('modal2')">&times;</span>
+                          <p class="pop-up">Si los costos fijos involucran más de un producto o si el periodo cubierto por el pago de un costo fijo es mayor al tiempo de producción de {{cantidad_vendida }} {{ unidad }} de {{ producto }}, indique qué porcentaje del costo corresponde al producto "{{ producto }}". Por ejemplo, si el producto "{{ producto }}" comparte un almacén con otro producto en cantidades iguales, escriba 50. Si la cuota del almacén se paga anualmente, pero los dos productos sólo permanecen ahí seis meses, escriba 25.</p>
+                        </div>
+                      </div>
+                    </th>
+                    <th>Costo<br>total</th>
                 </tr>
                 <tr>
                     <td><input type="text" name="costo_fijo_1" value="" maxlength="23"></td>
                     <td><input type="number" name="monto_fijo_1" value="" maxlength="23"></td>
                     <td><input type="number" name="porcentaje_costo_fijo_1" value="100" min="0" max="100"></td>
-                    <td><input type="number" name="costo_fijo_total_1" step="0.1" value="" style="background-color: lightgrey;" readonly></td>
+                    <td style="background-color: lightgrey; max-width: 12px;"><input type="number" name="costo_fijo_total_1" step="0.1" value="" style="background-color: lightgrey; max-width: 12px;" readonly></td>
                 </tr>
             </table>
             <input type="hidden" id="rowCounterInput_insumos" name="rowCounter_insumos" value="1">
-            <button type="button" onclick="addRow_insumos()">Agregar fila</button>
+            <button type="button" class="add_row" onclick="addRow_insumos()">Agregar fila</button>
             <br>
             <br>
-        <button type="submit">Enviar</button>
+        <button type="submit" class="send_form">REGISTRAR COSTOS</button>
     </form>
     {% endif %}
 </body>

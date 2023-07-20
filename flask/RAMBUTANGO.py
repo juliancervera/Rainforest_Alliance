@@ -231,6 +231,8 @@ def cuestionario_costos_fijos():
         num_rows_costos = int(request.form.get("rowCounter_insumos"))
 
         producto = session.get("producto")
+        cantidad_vendida = session.get("cantidad_vendida")
+        unidad = session.get("unidad")
 
         sueldos_fijos = []
         costos_fijos = []
@@ -283,12 +285,16 @@ def cuestionario_costos_fijos():
         return render_template(
             "cuestionario_costos_fijos.html",
             producto=producto,
+            unidad=unidad,
+            cantidad_vendida=cantidad_vendida,
             sueldos_fijos=sueldos_fijos,
             costos_fijos=costos_fijos,
         )
 
     else:
         producto = session.get("producto")
+        cantidad_vendida = session.get("cantidad_vendida")
+        unidad = session.get("unidad")
 
         costos_fijos = []
         sueldos_fijos = []
@@ -299,6 +305,8 @@ def cuestionario_costos_fijos():
         return render_template(
             "cuestionario_costos_fijos.html",
             producto=producto,
+            unidad=unidad,
+            cantidad_vendida=cantidad_vendida,
             costos_fijos=costos_fijos,
             sueldos_fijos=sueldos_fijos
         )
