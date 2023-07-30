@@ -26,6 +26,7 @@
 # 15 < <--grande
 
 from flask import Flask, render_template, request, redirect, url_for, session
+import sys
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'
@@ -562,6 +563,12 @@ def analisis_final():
     costos_certificacion = session.get("costos_certificacion")
     costos_exportacion = session.get("costos_exportacion")
 
+    all_lists = [insumos_actividades, trabajo_actividades, sueldos_fijos, costos_fijos, impuestos_venta,
+                 impuestos_fijos, costos_certificacion, costos_exportacion]
+
+    for lst in all_lists:
+        print(lst)
+
     lista_actividades_iteracion = [insumos_actividades, trabajo_actividades]
     lista_costos_iteracion = [
         sueldos_fijos,
@@ -571,24 +578,54 @@ def analisis_final():
         costos_exportacion
     ]
 
-    costos_totales = 0.00000001  # ToDo: FIND ALTERNATIVE
-    costos_mano_de_obra_totales = 0
-    costos_mano_de_obra_autoempleo = 0
+    costos_totales = sys.float_info.epsilon  # Smallest possible number
+    costos_laborales_actividades_totales = 0
+    costos_autoempleo_actividades_totales = 0
+    costos_empleo_actividades_totales = 0
     costos_laborales_totales = 0
+    costos_laborales_totales_sin_autoempleo = 0
     costos_autoempleo_totales = 0
+    sueldos_fijos_totales = 0
+    sueldos_fijos_totales_sin_autoempleo = 0
+    sueldos_fijos_autoempleo = 0
     costos_insumos_totales = 0
+    costos_insumos_actividades_totales = 0
     costos_insumos_fijos_totales = 0
     impuestos_fijos_totales = 0
-    sueldos_fijos_totales = 0
-    sueldos_fijos_autoempleo = 0
     costos_certifiacion_totales = 0
     costos_exportacion_totales = 0
-    costos_autoempleo = []
+
+    try:
+        for lst in lista_actividades_iteracion:
+            for sublist in lst:
+                for row in sublist:
+                    costos_totales += float(row[-1])
+                    if len(row) == 7:
+                        costos_laborales_actividades_totales += float(row[-1])
+                        costos_laborales_totales += float(row[-1])
+                        if row[-2] == "Sí":
+                            costos_autoempleo_actividades_totales += float(row[-1])
+                            costos_autoempleo_totales += float(row[-1])
+                        else:
+                            costos_empleo_actividades_totales += float(row[-1])
+                            costos_laborales_totales_sin_autoempleo += float(row[-1])
+                    else:
+                        costos_insumos_totales += float(row[-1])
+                        costos_insumos_actividades_totales += float(row[-1])
+    except TypeError:
+        pass
+
+
+
+
+
+
+
 
     try:
         for sublist in trabajo_actividades:
             for item in sublist:
-                costos_mano_de_obra_totales += float(item[-1])
+                costos_laborales_actividades_totales += float(item[-1])
                 costos_totales += float(item[-1])
                 if item[-2] == "Sí":
                     costos_autoempleo.append(item)  # Esto no es necesario
@@ -605,20 +642,7 @@ def analisis_final():
     except TypeError:
         pass
 
-    for sublist in costos_autoempleo:
-        costos_autoempleo_totales += float(sublist[-1])
-        if sublist[0] == "(Costo fijo)":
-            sueldos_fijos_autoempleo += float(sublist[-1])
-        else:
-            costos_mano_de_obra_autoempleo += float(sublist[-1])
 
-    try:
-        for sublist in insumos_actividades:
-            for item in sublist:
-                costos_insumos_totales += float(item[-1])
-                costos_totales += float(item[-1])
-    except TypeError:
-        pass
 
     try:
         for sublist in costos_fijos:
@@ -684,13 +708,13 @@ def analisis_final():
         "costos_totales_sin_autoempleo_porcent_total": str(
             round((costos_totales_sin_autoempleo / costos_totales) * 100, 2)) + "%",
         "costos_mano_de_obra_totales_porcent_total": str(
-            round((costos_mano_de_obra_totales / costos_totales) * 100, 2)) + "%",
+            round((costos_laborales_actividades_totales / costos_totales) * 100, 2)) + "%",
         "costos_mano_de_obra_totales_porcent_total_sin": str(
-            round((costos_mano_de_obra_totales / costos_totales_sin_autoempleo) * 100, 2)) + "%",
+            round((costos_laborales_actividades_totales / costos_totales_sin_autoempleo) * 100, 2)) + "%",
         "costos_mano_de_obra_autoempleo_porcent_total": str(
-            round((costos_mano_de_obra_autoempleo / costos_totales) * 100, 2)) + "%",
+            round((costos_autoempleo_actividades_totales / costos_totales) * 100, 2)) + "%",
         "costos_mano_de_obra_autoempleo_porcent_total_sin": str(
-            round((costos_mano_de_obra_autoempleo / costos_totales_sin_autoempleo) * 100, 2)) + "%",
+            round((costos_autoempleo_actividades_totales / costos_totales_sin_autoempleo) * 100, 2)) + "%",
         "sueldos_fijos_totales_porcent_total": str(round((sueldos_fijos_totales / costos_totales) * 100, 2)) + "%",
         "sueldos_fijos_totales_porcent_total_sin": str(
             round((sueldos_fijos_totales / costos_totales_sin_autoempleo) * 100, 2)) + "%",
@@ -736,8 +760,8 @@ def analisis_final():
         costos_totales_sin_autoempleo=costos_totales_sin_autoempleo,
         costos_totales_por_unidad=costos_totales_por_unidad,
         costos_totales_por_unidad_sin_autoempleo=costos_totales_por_unidad_sin_autoempleo,
-        costos_mano_de_obra_totales=costos_mano_de_obra_totales,
-        costos_mano_de_obra_autoempleo=costos_mano_de_obra_autoempleo,
+        costos_mano_de_obra_totales=costos_laborales_actividades_totales,
+        costos_mano_de_obra_autoempleo=costos_autoempleo_actividades_totales,
         sueldos_fijos_totales=sueldos_fijos_totales,
         sueldos_fijos_autoempleo=sueldos_fijos_autoempleo,
         costos_laborales_totales=costos_laborales_totales,
