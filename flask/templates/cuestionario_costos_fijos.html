@@ -78,7 +78,7 @@
             <th>Trabajo</th>
             <th>Núm de<br><span>hrs., días,<br>meses</span></th>
             <th>Sueldo<span><br>por hora,<br>día o mes</span></th>
-            <th>Porcent.</th>
+            <th>Porcen-<br>taje</th>
             <th>Auto-<br>empleo</th>
             <th>Costo<br>total</th>
         </tr>
@@ -99,7 +99,7 @@
     <p>Éstos son los insumos fijos que usted registró:</p>
     <table>
         <tr>
-            <th>Costo</th>
+            <th>Descrip.<br><span>del</span> costo</th>
             <th>Monto</th>
             <th>Porcent.</th>
             <th>Costo<br>total</th>
@@ -167,11 +167,11 @@
         <form action="{{ url_for('cuestionario_costos_fijos') }}" method="post">
             <table id="tabla_insumos_fijos"> 
                 <tr>
-                    <th>Costo</th>
+                    <th>Descripción<br><span>del</span> costo</th>
                     <th>Monto</th>
                     <th>
-                      Porcent.<br>
-                      <button class="tutorial" type="button" onclick="displayText('modal2')">INFO</button>
+                      Porcentaje<br>
+                      <button class="tutorial" type="button" onclick="displayText('modal2')">INFORMACIÓN</button>
                       <div id="modal2" class="modal">
                         <div class="modal-content">
                           <span class="close" onclick="closeModal('modal2')">&times;</span>

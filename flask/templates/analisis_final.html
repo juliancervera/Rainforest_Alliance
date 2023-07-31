@@ -3,17 +3,13 @@
 <head>
     <title>Análisis final</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
-    <style>
-        .hidden {
-            display: none;
-        }
-    </style>
 </head>
 <body>
     <h1>Costos totales: {{ costos_totales }}</h1>
     <h1>Costos totales por unidad: {{ costos_totales_por_unidad }}</h1>
     <br>
     <h2>Resumen de costos</h2>
+    {% if costos_autoempleo_totales > 0.001 %}
     <table>
         <tr>
             <th>Categoría de costos</th>
@@ -22,80 +18,181 @@
             <th>Porcentaje del total sin autoempleo</th>
         </tr>
         <tr>
-            <td>Costos Mano de Obra Totales</td>
-            <td>{{ costos_mano_de_obra_totales }}</td>
-            <td>{{ costos_mano_de_obra_totales_porcent_total }}</td>
-            <td>{{ costos_mano_de_obra_totales_porcent_total_sin }}</td>
-        </tr>
-        <tr>
-            <td>Costos Mano de Obra Autoempleo</td>
-            <td>{{ costos_mano_de_obra_autoempleo }}</td>
-            <td>{{ costos_mano_de_obra_autoempleo_porcent_total }}</td>
-            <td>{{ costos_mano_de_obra_autoempleo_porcent_total_sin }}</td>
-        </tr>
-        <tr>
-            <td>Sueldos Fijos Totales</td>
-            <td>{{ sueldos_fijos_totales }}</td>
-            <td>{{ sueldos_fijos_totales_porcent_total }}</td>
-            <td>{{ sueldos_fijos_totales_porcent_total_sin }}</td>
-        </tr>
-        <tr>
-            <td>Costos Laborales Totales</td>
+            <td>Laborales<sup class="footnote"><b>1</b></sup></td>
             <td>{{ costos_laborales_totales }}</td>
             <td>{{ costos_laborales_totales_porcent_total }}</td>
             <td>{{ costos_laborales_totales_porcent_total_sin }}</td>
         </tr>
         <tr>
-            <td>Costos Autoempleo Totales</td>
+            <td>Empleo<sup class="footnote"><b>2</b></sup></td>
+            <td>{{ costos_laborales_totales_sin_autoempleo }}</td>
+            <td>{{ costos_laborales_totales_sin_autoempleo_porcent_total }}</td>
+            <td>{{ costos_laborales_totales_sin_autoempleo_porcent_total_sin }}</td>
+        </tr>
+        <tr>
+            <td>Autoempleo<sup class="footnote"><b>3</b></sup></td>
             <td>{{ costos_autoempleo_totales }}</td>
             <td>{{ costos_autoempleo_totales_porcent_total }}</td>
             <td>{{ costos_autoempleo_totales_porcent_total_sin }}</td>
         </tr>
         <tr>
-            <td>Costos Insumos Totales</td>
+            <td>Laborales actividades<sup class="footnote"><b>4</b></sup></td>
+            <td>{{ costos_laborales_actividades_totales }}</td>
+            <td>{{ costos_laborales_actividades_totales_porcent_total }}</td>
+            <td>{{ costos_laborales_actividades_totales_porcent_total_sin }}</td>
+        </tr>
+        <tr>
+            <td>Empleo actividades<sup class="footnote"><b>5</b></sup></td>
+            <td>{{ costos_empleo_actividades_totales }}</td>
+            <td>{{ costos_empleo_actividades_totales_porcent_total }}</td>
+            <td>{{ costos_empleo_actividades_totales_porcent_total_sin }}</td>
+        </tr>
+        <tr>
+            <td>Autoempleo actividades<sup class="footnote"><b>6</b></sup></td>
+            <td>{{ costos_autoempleo_actividades_totales }}</td>
+            <td>{{ costos_autoempleo_actividades_totales_porcent_total }}</td>
+            <td>{{ costos_autoempleo_actividades_totales_porcent_total_sin }}</td>
+        </tr>
+        <tr>
+            <td>Laborales fijos<sup class="footnote"><b>7</b></sup></td>
+            <td>{{ sueldos_fijos_totales }}</td>
+            <td>{{ sueldos_fijos_totales_porcent_total }}</td>
+            <td>{{ sueldos_fijos_totales_porcent_total_sin }}</td>
+        </tr>
+        <tr>
+            <td>Empleo fijo<sup class="footnote"><b>8</b></sup></td>
+            <td>{{ sueldos_fijos_totales_sin_autoempleo }}</td>
+            <td>{{ sueldos_fijos_totales_sin_autoempleo_porcent_total }}</td>
+            <td>{{ sueldos_fijos_totales_sin_autoempleo_porcent_total_sin }}</td>
+        </tr>
+        <tr>
+            <td>Autoempleo fijo<sup class="footnote"><b>9</b></sup></td>
+            <td>{{ sueldos_fijos_autoempleo }}</td>
+            <td>{{ sueldos_fijos_autoempleo_porcent_total }}</td>
+            <td>{{ sueldos_fijos_autoempleo_porcent_total_sin }}</td>
+        </tr>
+        <tr>
+            <td>Insumos<sup class="footnote"><b>10</b></sup></td>
             <td>{{ costos_insumos_totales }}</td>
             <td>{{ costos_insumos_totales_porcent_total }}</td>
             <td>{{ costos_insumos_totales_porcent_total_sin }}</td>
         </tr>
         <tr>
-            <td>Costos Insumos Fijos Totales</td>
+            <td>Insumos actividades<sup class="footnote"><b>11</b></sup></td>
+            <td>{{ costos_insumos_actividades_totales }}</td>
+            <td>{{ costos_insumos_actividades_totales_porcent_total }}</td>
+            <td>{{ costos_insumos_actividades_totales_porcent_total_sin }}</td>
+        </tr>
+        <tr>
+            <td>Insumos fijos<sup class="footnote"><b>12</b></sup></td>
             <td>{{ costos_insumos_fijos_totales }}</td>
             <td>{{ costos_insumos_fijos_totales_porcent_total }}</td>
             <td>{{ costos_insumos_fijos_totales_porcent_total_sin }}</td>
         </tr>
         <tr>
-            <td>Impuestos Fijos Totales</td>
+            <td>Impuestos fijos</td>
             <td>{{ impuestos_fijos_totales }}</td>
             <td>{{ impuestos_fijos_totales_porcent_total }}</td>
             <td>{{ impuestos_fijos_totales_porcent_total_sin }}</td>
         </tr>
         <tr>
-            <td>Costos Certificación Totales</td>
-            <td>{{ costos_certifiacion_totales }}</td>
-            <td>{{ costos_certifiacion_totales_porcent_total }}</td>
-            <td>{{ costos_certifiacion_totales_porcent_total_sin }}</td>
+            <td>Certificación</td>
+            <td>{{ costos_certificacion_totales }}</td>
+            <td>{{ costos_certificacion_totales_porcent_total }}</td>
+            <td>{{ costos_certificacion_totales_porcent_total_sin }}</td>
         </tr>
         <tr>
-            <td>Costos Exportación Totales</td>
+            <td>Exportación</td>
             <td>{{ costos_exportacion_totales }}</td>
             <td>{{ costos_exportacion_totales_porcent_total }}</td>
             <td>{{ costos_exportacion_totales_porcent_total_sin }}</td>
         </tr>
     </table>
+    <p><b class="footnote">1</b>: Los costos laborales incluyen los costos de empleo y autoempleo, tanto de los sueldos fijos como de los costos de mano de obra de las actividades del proceso productivo.</p>
+    <p><b class="footnote">2</b>: Esta categoría incluye todos los sueldos pagados, tanto los sueldos fijos como los costos de mano de obra de las actividades del proceso productivo, excluyendo costos de autoempleo.</p> 
+    <p><b class="footnote">3</b>: Incluye todos los costos de autoempleo, tanto los fijos como los que forman parte de las actividades del proceso productivo.</p> 
+    <p><b class="footnote">4</b>: Incluye todos los costos de mano de obra de las actividades del proceso productivo, tanto las remuneraciones pagadas como el autoempleo.</p> 
+    <p><b class="footnote">5</b>: Incluye únicamente las remuneraciones pagadas como parte de las actividades del proceso productivo, excluyendo el autoempleo.</p> 
+    <p><b class="footnote">6</b>: Incluye únicamente los costos de autoempleo de las actividades del proceso productivo.</p>
+    <p><b class="footnote">7</b>: Inlcuye todos los costos laborales fijos, tanto los sueldos pagados como el autoempleo.</p>
+    <p><b class="footnote">8</b>: Incluye únicamente los sueldos fijos pagados, excluyendo el autoempleo.</p> 
+    <p><b class="footnote">9</b>: Incluye únicamente los costos de autoempleo fijos.</p> 
+    <p><b class="footnote">10</b>: Incluye tanto los costos de insumos fijos como los costos de insumos de las actividades del proceso productivo.</p>
+    <p><b class="footnote">11</b>: Incluye únicamente los costos de insumos de las actividades del proceso productivo.</p> 
+    <p><b class="footnote">12</b>: Incluye únicamente los costos de insumos fijos.</p> 
+    {% else %}
+    <table>
+        <tr>
+            <th>Categoría de costos</th>
+            <th>Total de la categoría</th>
+            <th>Porcentaje del total</th>
+        </tr>
+        <tr>
+            <td>Laborales<sup class="footnote"><b>1</b></sup></td>
+            <td>{{ costos_laborales_totales }}</td>
+            <td>{{ costos_laborales_totales_porcent_total }}</td>
+        </tr>
+        <tr>
+            <td>Mano de obra actividades<sup class="footnote"><b>2</b></sup></td>
+            <td>{{ costos_laborales_actividades_totales }}</td>
+            <td>{{ costos_laborales_actividades_totales_porcent_total }}</td>
+        </tr>
+        <tr>
+            <td>Sueldos fijos<sup class="footnote"><b>3</b></sup></td>
+            <td>{{ sueldos_fijos_totales }}</td>
+            <td>{{ sueldos_fijos_totales_porcent_total }}</td>
+        </tr>
+        <tr>
+            <td>Insumos<sup class="footnote"><b>4</b></sup></td>
+            <td>{{ costos_insumos_totales }}</td>
+            <td>{{ costos_insumos_totales_porcent_total }}</td>
+        </tr>
+        <tr>
+            <td>Insumos actividades<sup class="footnote"><b>5</b></sup></td>
+            <td>{{ costos_insumos_actividades_totales }}</td>
+            <td>{{ costos_insumos_actividades_totales_porcent_total }}</td>
+        </tr>
+        <tr>
+            <td>Insumos fijos<sup class="footnote"><b>6</b></sup></td>
+            <td>{{ costos_insumos_fijos_totales }}</td>
+            <td>{{ costos_insumos_fijos_totales_porcent_total }}</td>
+        </tr>
+        <tr>
+            <td>Impuestos fijos</td>
+            <td>{{ impuestos_fijos_totales }}</td>
+            <td>{{ impuestos_fijos_totales_porcent_total }}</td>
+        </tr>
+        <tr>
+            <td>Certificación</td>
+            <td>{{ costos_certificacion_totales }}</td>
+            <td>{{ costos_certificacion_totales_porcent_total }}</td>
+        </tr>
+        <tr>
+            <td>Exportación</td>
+            <td>{{ costos_exportacion_totales }}</td>
+            <td>{{ costos_exportacion_totales_porcent_total }}</td>
+        </tr>
+    </table>
+    <p><b class="footnote">1</b>: Los costos laborales incluyen tanto los sueldos fijos como los costos de mano de obra de las actividades del proceso productivo.</p>
+    <p><b class="footnote">2</b>: Esta categoría sólo incluye los costos de mano de obra de las actividades del proceso productivo.</p> 
+    <p><b class="footnote">3</b>: Incluye únicamente las remuneraciones o sueldos fijos.</p> 
+    <p><b class="footnote">4</b>: Incluye tanto los costos de insumos fijos como los costos de insumos de las actividades del proceso productivo.</p> 
+    <p><b class="footnote">5</b>: Incluye únicamente los costos de insumos de las actividades del proceso productivo.</p> 
+    <p><b class="footnote">6</b>: Incluye únicamente los costos de insumos fijos.</p> 
+    {% endif %}
 
-
-    <button id="showButton">Mostrar desglose de costos completo</button>
-    <table id="costosTable" class="hidden">
-    {% if trabajo_actividades %} <p><--THIS NEEDS TO CHANGE PARA QUE el if tenga el efecto deseado, porque siempre va a tener contenido</p>
-    <p>Costos de mano de obra</p>
+    <div class="center-aligned">
+    {% if trabajo_actividades %}
+    <p>Costos laborales actividades</p>
+    <table>
         <tr>
             <th>Actividad</th>
             <th>Trabajo</th>
             <th>Cantidad</th>
             <th>Unidad</th>
-            <th>Costo por unidad</th>
-            <th>Autoempleo</th>
-            <th>Costo total por trabajo</th>
+            <th>Costo<br>unidad</th>
+            <th>Auto-<br>empleo</th>
+            <th>Costo<br>total</th>
         </tr>
         {% for sublist in trabajo_actividades %}
             {% for item in sublist %}
@@ -110,16 +207,138 @@
                 </tr>
             {% endfor %}
         {% endfor %}
-    {% endif %}
     </table>
-    
-    <script>
-        var showButton = document.getElementById("showButton");
-        var costosTable = document.getElementById("costosTable");
-        
-        showButton.addEventListener("click", function() {
-            costosTable.classList.remove("hidden");
-        });
-    </script>  
+    {% endif %}
+    {% if insumos_actividades %}
+    <p>Costos insumos actividades</p>
+    <table>
+        <tr>
+            <th>Actividad</th>
+            <th>Insumo</th>
+            <th>Cantidad</th>
+            <th>Unidad</th>
+            <th>Costo<br>unidad</th>
+            <th>Costo<br>total</th>
+        </tr>
+        {% for sublist in insumos_actividades %}
+            {% for item in sublist %}
+                <tr>
+                    <td>{{ item[0] }}</td>
+                    <td>{{ item[1] }}</td>
+                    <td>{{ item[2] }}</td>
+                    <td>{{ item[3] }}</td>
+                    <td>{{ item[4] }}</td>
+                    <td>{{ item[5] }}</td>
+                </tr>
+            {% endfor %}
+        {% endfor %}
+    </table>
+    {% endif %}
+    {% if sueldos_fijos %}
+    <p>Sueldos fijos</p>
+    <table>
+        <tr>
+            <th>Trabajo</th>
+            <th>Núm de<br><span>hrs., días,<br>meses</span></th>
+            <th>Sueldo<span><br>por hora,<br>día o mes</span></th>
+            <th>Porcen-<br>taje</th>
+            <th>Auto-<br>empleo</th>
+            <th>Costo<br>total</th>
+        </tr>
+        {% for sublist in sueldos_fijos %}
+        <tr>
+            <td>{{ sublist[1] }}</td>
+            <td>{{ sublist[2] }}</td>
+            <td>{{ sublist[3] }}</td>
+            <td>{{ sublist[4] }}%</td>
+            <td>{{ sublist[5] }}</td>
+            <td>{{ sublist[6] }}</td>            
+        </tr>
+        {% endfor %}
+    </table>
+    {% endif %}
+    {% if costos_fijos %}
+    <p>Costos fijos no salariales</p>
+    <table>
+        <tr>
+            <th>Descrip.<br><span>del</span> costo</th>
+            <th>Monto</th>
+            <th>Porcen-<br>taje</th>
+            <th>Costo<br>total</th>
+        </tr>
+        {% for sublist in costos_fijos %}
+        <tr>
+            <td>{{ sublist[0] }}</td>
+            <td>{{ sublist[1] }}</td>
+            <td>{{ sublist[2] }}%</td>
+            <td>{{ sublist[3] }}</td>          
+        </tr>
+        {% endfor %}
+    </table>
+    {% endif %}     
+    {% if impuestos_fijos %}
+    <p>Impuestos fijos</p>
+    <table>
+        <tr>
+            <th>Nombre<br><span>del</span> impuesto</th>
+            <th>Monto</th>
+            <th>Porcen-<br>taje</th>
+            <th>Costo<br>total</th>
+        </tr>
+        {% for sublist in impuestos_fijos %}
+        <tr>
+            <td>{{ sublist[0] }}</td>
+            <td>{{ sublist[1] }}</td>
+            <td>{{ sublist[2] }}%</td>
+            <td>{{ sublist[3] }}</td>          
+        </tr>
+        {% endfor %}
+    </table>
+    {% endif %}     
+    {% if costos_certificacion %}
+    <p>Costos de certificación</p>
+    <table>
+        <tr>
+            <th>Certificación</th>
+            <th>Costo</th>
+            <th>Porcen-<br>taje</th>
+            <th>Costo<br>total</th>
+        </tr>
+        {% for sublist in costos_certificacion %}
+        <tr>
+            <td>{{ sublist[0] }}</td>
+            <td>{{ sublist[1] }}</td>
+            <td>{{ sublist[2] }}%</td>
+            <td>{{ sublist[3] }}</td>          
+        </tr>
+        {% endfor %}
+    </table>
+    {% endif %}
+    {% if costos_exportacion %}
+    <p>Costos de exportación</p>
+    <table>
+        <tr>
+            <th>Descr. <span>del</span><br>costo/impuesto</th>
+            <th>Monto <span>por<br>unidad/cargamento</span></th>
+            <th>Núm. <span>de<br>unidades/cargamentos</span></th>
+            <th>Costo<br>total</th>
+        </tr>
+        {% for sublist in costos_exportacion %}
+        <tr>
+            <td>{{ sublist[0] }}</td>
+            <td>{{ sublist[1] }}</td>
+            <td>{{ sublist[2] }}</td>
+            <td>{{ sublist[3] }}</td>          
+        </tr>
+        {% endfor %}
+    </table>
+    {% endif %}
+
+
+
+
+    </div>
+
+ 
 </body>
 </html>
