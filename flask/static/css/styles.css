@@ -181,3 +181,11 @@ img {
 .footnote {
   color: #F72119;
 }
+
+.interactive {
+  width: 100%;
+}
+
+.financial_metrics {
+  text-align: right;
+}

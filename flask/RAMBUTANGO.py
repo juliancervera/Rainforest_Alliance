@@ -87,9 +87,7 @@ def pregunta_actividades():
                                cantidad_vendida=cantidad_vendida)
 
 
-# ToDo: Cambiar para que cheque si la lista de nombres_actividades está vacía
-#ToDo: Hacer que el botón de "go back" borre la última sublista añadida a insumos_actividades y trabajo_actividades
-#ToDo: Poner primero trabajo y luego insumos
+# ToDo: Cambiar para que cheque si la lista de nombres_actividades está vacía <--???
 @app.route("/cuestionario_actividades", methods=["GET", "POST"])
 def cuestionario_actividades():
     if request.method == "POST":
@@ -192,10 +190,6 @@ def cuestionario_actividades():
             unidad=unidad,
         )
 
-# ToDo: Costos fijos: Dos tablas: Sueldos fijos y costos fijos, con base en el Excel
-# ToDo: Vaciar las listas correspondientes si el usuario vuelve al formulario vacío (get request?)
-# ToDo: la variable de porcentaje debe guardarse tal cual para reaparecer en la página, pero...
-# ...debe transformarse en número y dividirse entre cien para ser multiplicada y guardarse en la lista
 
 @app.route("/borrar")
 def borrar():
@@ -536,8 +530,6 @@ def cuestionario_costos_exportacion():
         )
 
 
-#ToDo: ROUND VALUES BEFORE PASSING TO HTML
-#ToDo: Elegantizar esto con una función, sin clavarme demasiado
 @app.route("/analisis_final", methods=["GET"])
 def analisis_final():
     session_data = {
@@ -627,53 +619,30 @@ def analisis_final():
     for nombre_lista in lista_costos_iteracion:
         try:
             for row in data[nombre_lista]:
-                print("EEEEEEEYYY" + str(row[-1]))
                 data["costos_totales"] += float(row[-1])
                 data[nombre_lista + "_totales"] += float(row[-1])
         except TypeError:
             pass
-    """ 
-    USANDO LOCALS EN VEZ DEL DICCIONARIO
-    for nombre_lista in lista_costos_iteracion:
-        try:
-            for row in locals()["nombre_lista"]:
-                costos_totales += float(row[-1])
-                locals()[nombre_lista + "_totales"] += float(row[-1])
-        except TypeError:
-            pass
-    """
+
     try:
         for row in data["impuestos_venta"]:
             row[1] = float(row[1]) / 100
     except TypeError:
         pass
 
-    """ LOOPS SIN USAR LOCALS
-    try:
-        for row in impuestos_fijos:
-            costos_totales += float(row[-1])
-            impuestos_fijos_totales += float(row[-1])
-    except TypeError:
-        pass
-
-    try:
-        for row in costos_certificacion:
-            costos_totales += float(row[-1])
-            costos_certificacion_totales += float(row[-1])
-    except TypeError:
-        pass
-
-    try:
-        for row in costos_exportacion:
-            costos_totales += float(row[-1])
-            costos_exportacion_totales += float(row[-1])
-    except TypeError:
-        pass
-    """
-
     data["costos_totales_por_unidad"] = round(data["costos_totales"] / cantidad_vendida, 2)
     data["costos_totales_sin_autoempleo"] = round(data["costos_totales"] - data["costos_autoempleo_totales"], 2)
     data["costos_totales_por_unidad_sin_autoempleo"] = round(data["costos_totales_sin_autoempleo"] / cantidad_vendida, 2)
+    data["costos_fijos_totales"] = round(data["sueldos_fijos_totales"] \
+                                   + data["costos_insumos_fijos_totales"] + data["impuestos_fijos_totales"], 2)
+    data["costos_fijos_totales_sin_autoempleo"] = round(data["sueldos_fijos_totales_sin_autoempleo"] \
+                                   + data["costos_insumos_fijos_totales"] + data["impuestos_fijos_totales"], 2)
+    data["costos_variables_totales"] = round(data["costos_laborales_actividades_totales"] + data["costos_insumos_actividades_totales"] \
+                                       + data["costos_certificacion_totales"] + data["costos_exportacion_totales"], 2)
+    data["costos_variables_totales_sin_autoempleo"] = round(data["costos_empleo_actividades_totales"] \
+                                                      + data["costos_insumos_actividades_totales"] \
+                                       + data["costos_certificacion_totales"] + data["costos_exportacion_totales"], 2)
+    data["costos_variables_totales_por_unidad"] = round(data["costos_variables_totales"] / cantidad_vendida, 2)
 
     if data["costos_totales_sin_autoempleo"] == 0:
         data["costos_totales_sin_autoempleo"] = sys.float_info.epsilon  # El número más pequeño posible, para evitar dividir entre 0
@@ -684,10 +653,16 @@ def analisis_final():
     def div_entre_costos_totales_sin_autoempleo(resultado_suma):
         return str(round((data[resultado_suma] / data["costos_totales_sin_autoempleo"]) * 100, 2)) + "%"
 
-    print(data["trabajo_actividades"])
-
     variables_para_tablas = {
         "costos_totales_sin_autoempleo_porcent_total": div_entre_costos_totales("costos_totales_sin_autoempleo"),
+        "costos_fijos_totales_porcent_total": div_entre_costos_totales("costos_fijos_totales"),
+        "costos_fijos_totales_porcent_total_sin": div_entre_costos_totales_sin_autoempleo("costos_fijos_totales"),
+        "costos_fijos_totales_sin_autoempleo_porcent_total": div_entre_costos_totales("costos_fijos_totales_sin_autoempleo"),
+        "costos_fijos_totales_sin_autoempleo_porcent_total_sin": div_entre_costos_totales_sin_autoempleo("costos_fijos_totales_sin_autoempleo"),
+        "costos_variables_totales_porcent_total": div_entre_costos_totales("costos_variables_totales"),
+        "costos_variables_totales_porcent_total_sin": div_entre_costos_totales_sin_autoempleo("costos_variables_totales"),
+        "costos_variables_totales_sin_autoempleo_porcent_total": div_entre_costos_totales("costos_variables_totales_sin_autoempleo"),
+        "costos_variables_totales_sin_autoempleo_porcent_total_sin": div_entre_costos_totales_sin_autoempleo("costos_variables_totales_sin_autoempleo"),
         "costos_laborales_actividades_totales_porcent_total": div_entre_costos_totales("costos_laborales_actividades_totales"),
         "costos_laborales_actividades_totales_porcent_total_sin": div_entre_costos_totales_sin_autoempleo("costos_laborales_actividades_totales"),
         "costos_empleo_actividades_totales_porcent_total_sin": div_entre_costos_totales_sin_autoempleo("costos_empleo_actividades_totales"),
@@ -735,67 +710,3 @@ def analisis_final():
 
 if __name__ == "__main__":
     app.run(port=5000, debug=True)
-
-"""
-costos_actividades = [
-    [
-        "siembra",
-        ["Fertilizante", 4.5, "saco", 1300, 5850],
-        ["Otro insumo", 34, "kilos", 10, 340],
-    ],
-    [
-        "siembra",
-        ["Fertilizante", 4.5, "saco", 1300, 5850],
-        ["Otro insumo", 34, "kilos", 10, 340],
-    ]
-]
-
-
-#
-
-
-insumos_actividades = [
-    [
-        ['Siembra',
-         ['Sembrar', 3.0, 'días de trabajo', 1000.0, 'Sí', 3000.0],
-         ['', '', '', '', 'No', ''],
-         ['', '', '', '', 'No', ''],
-         ['', '', '', '', 'No', ''],
-         ['', '', '', '', 'No', ''],
-         ['', '', '', '', 'No', ''],
-         ['', '', '', '', 'No', ''],
-         ['', '', '', '', 'No', ''],
-         ['', '', '', '', 'No', ''],
-         ['', '', '', '', 'No', ''],
-         ['', '', '', '', 'No', ''],
-         ['', '', '', '', 'No', ''],
-         ['', '', '', '', 'No', ''],
-         ['', '', '', '', 'No', ''],
-         ['', '', '', '', 'No', '']
-        ]
-    ],
-    [
-        ['Deschuponar',
-         ['Cortar', 2.0, 'días de trabajo', 1000.0, 'Sí', 2000.0],
-         ['', '', '', '', 'No', ''],
-         ['', '', '', '', 'No', ''],
-         ['', '', '', '', 'No', ''],
-         ['', '', '', '', 'No', ''],
-         ['', '', '', '', 'No', ''],
-         ['', '', '', '', 'No', ''],
-         ['', '', '', '', 'No', ''],
-         ['', '', '', '', 'No', ''],
-         ['', '', '', '', 'No', ''],
-         ['', '', '', '', 'No', ''],
-         ['', '', '', '', 'No', ''],
-         ['', '', '', '', 'No', ''],
-         ['', '', '', '', 'No', ''],
-         ['', '', '', '', 'No', '']
-        ]
-    ]
-]
-
-
-for actividad in insumos_actividades:
-
-"""

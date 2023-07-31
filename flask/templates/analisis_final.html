@@ -9,82 +9,107 @@
     <h1>Costos totales por unidad: {{ costos_totales_por_unidad }}</h1>
     <br>
     <h2>Resumen de costos</h2>
+    <p>(No considera impuestos sobre la venta)</p>
     {% if costos_autoempleo_totales > 0.001 %}
     <table>
         <tr>
-            <th>Categoría de costos</th>
-            <th>Total de la categoría</th>
-            <th>Porcentaje del total</th>
-            <th>Porcentaje del total sin autoempleo</th>
+            <th>Categoría <span>de</span> costos</th>
+            <th>Total <span>de la</span><br>categoría</th>
+            <th>% de los<br>costos totales</th>
+            <th>% <span>del</span> total sin<br>autoempleo</th>
         </tr>
         <tr>
-            <td>Laborales<sup class="footnote"><b>1</b></sup></td>
+            <td>Variables<sup class="footnote"><b>1</b></sup></td>
+            <td>{{ costos_variables_totales }}</td>
+            <td>{{ costos_variables_totales_porcent_total }}</td>
+            <td>{{ costos_variables_totales_porcent_total_sin }}</td>
+        </tr>
+        <tr>
+            <td>Fijos<sup class="footnote"><b>2</b></sup></td>
+            <td>{{ costos_fijos_totales }}</td>
+            <td>{{ costos_fijos_totales_porcent_total }}</td>
+            <td>{{ costos_fijos_totales_porcent_total_sin }}</td>
+        </tr>
+        <tr>
+            <td>Variables sin autoempleo<sup class="footnote"><b>3</b></sup></td>
+            <td>{{ costos_variables_totales_sin_autoempleo }}</td>
+            <td>{{ costos_variables_totales_sin_autoempleo_porcent_total }}</td>
+            <td>{{ costos_variables_totales_sin_autoempleo_porcent_total_sin }}</td>
+        </tr>
+        <tr>
+            <td>Fijos sin autoempleo<sup class="footnote"><b>4</b></sup></td>
+            <td>{{ costos_fijos_totales_sin_autoempleo }}</td>
+            <td>{{ costos_fijos_totales_sin_autoempleo_porcent_total }}</td>
+            <td>{{ costos_fijos_totales_sin_autoempleo_porcent_total_sin }}</td>
+        </tr>
+        <tr>
+            <td>Laborales<sup class="footnote"><b>5</b></sup></td>
             <td>{{ costos_laborales_totales }}</td>
             <td>{{ costos_laborales_totales_porcent_total }}</td>
             <td>{{ costos_laborales_totales_porcent_total_sin }}</td>
         </tr>
         <tr>
-            <td>Empleo<sup class="footnote"><b>2</b></sup></td>
+            <td>Empleo<sup class="footnote"><b>6</b></sup></td>
             <td>{{ costos_laborales_totales_sin_autoempleo }}</td>
             <td>{{ costos_laborales_totales_sin_autoempleo_porcent_total }}</td>
             <td>{{ costos_laborales_totales_sin_autoempleo_porcent_total_sin }}</td>
         </tr>
         <tr>
-            <td>Autoempleo<sup class="footnote"><b>3</b></sup></td>
+            <td>Autoempleo<sup class="footnote"><b>7</b></sup></td>
             <td>{{ costos_autoempleo_totales }}</td>
             <td>{{ costos_autoempleo_totales_porcent_total }}</td>
             <td>{{ costos_autoempleo_totales_porcent_total_sin }}</td>
         </tr>
         <tr>
-            <td>Laborales actividades<sup class="footnote"><b>4</b></sup></td>
+            <td>Laborales actividades<sup class="footnote"><b>8</b></sup></td>
             <td>{{ costos_laborales_actividades_totales }}</td>
             <td>{{ costos_laborales_actividades_totales_porcent_total }}</td>
             <td>{{ costos_laborales_actividades_totales_porcent_total_sin }}</td>
         </tr>
         <tr>
-            <td>Empleo actividades<sup class="footnote"><b>5</b></sup></td>
+            <td>Empleo actividades<sup class="footnote"><b>9</b></sup></td>
             <td>{{ costos_empleo_actividades_totales }}</td>
             <td>{{ costos_empleo_actividades_totales_porcent_total }}</td>
             <td>{{ costos_empleo_actividades_totales_porcent_total_sin }}</td>
         </tr>
         <tr>
-            <td>Autoempleo actividades<sup class="footnote"><b>6</b></sup></td>
+            <td>Autoempleo actividades<sup class="footnote"><b>10</b></sup></td>
             <td>{{ costos_autoempleo_actividades_totales }}</td>
             <td>{{ costos_autoempleo_actividades_totales_porcent_total }}</td>
             <td>{{ costos_autoempleo_actividades_totales_porcent_total_sin }}</td>
         </tr>
         <tr>
-            <td>Laborales fijos<sup class="footnote"><b>7</b></sup></td>
+            <td>Laborales fijos<sup class="footnote"><b>11</b></sup></td>
             <td>{{ sueldos_fijos_totales }}</td>
             <td>{{ sueldos_fijos_totales_porcent_total }}</td>
             <td>{{ sueldos_fijos_totales_porcent_total_sin }}</td>
         </tr>
         <tr>
-            <td>Empleo fijo<sup class="footnote"><b>8</b></sup></td>
+            <td>Empleo fijo<sup class="footnote"><b>12</b></sup></td>
             <td>{{ sueldos_fijos_totales_sin_autoempleo }}</td>
             <td>{{ sueldos_fijos_totales_sin_autoempleo_porcent_total }}</td>
             <td>{{ sueldos_fijos_totales_sin_autoempleo_porcent_total_sin }}</td>
         </tr>
         <tr>
-            <td>Autoempleo fijo<sup class="footnote"><b>9</b></sup></td>
+            <td>Autoempleo fijo<sup class="footnote"><b>13</b></sup></td>
             <td>{{ sueldos_fijos_autoempleo }}</td>
             <td>{{ sueldos_fijos_autoempleo_porcent_total }}</td>
             <td>{{ sueldos_fijos_autoempleo_porcent_total_sin }}</td>
         </tr>
         <tr>
-            <td>Insumos<sup class="footnote"><b>10</b></sup></td>
+            <td>Insumos<sup class="footnote"><b>14</b></sup></td>
             <td>{{ costos_insumos_totales }}</td>
             <td>{{ costos_insumos_totales_porcent_total }}</td>
             <td>{{ costos_insumos_totales_porcent_total_sin }}</td>
         </tr>
         <tr>
-            <td>Insumos actividades<sup class="footnote"><b>11</b></sup></td>
+            <td>Insumos actividades<sup class="footnote"><b>15</b></sup></td>
             <td>{{ costos_insumos_actividades_totales }}</td>
             <td>{{ costos_insumos_actividades_totales_porcent_total }}</td>
             <td>{{ costos_insumos_actividades_totales_porcent_total_sin }}</td>
         </tr>
         <tr>
-            <td>Insumos fijos<sup class="footnote"><b>12</b></sup></td>
+            <td>Insumos fijos<sup class="footnote"><b>16</b></sup></td>
             <td>{{ costos_insumos_fijos_totales }}</td>
             <td>{{ costos_insumos_fijos_totales_porcent_total }}</td>
             <td>{{ costos_insumos_fijos_totales_porcent_total_sin }}</td>
@@ -108,52 +133,66 @@
             <td>{{ costos_exportacion_totales_porcent_total_sin }}</td>
         </tr>
     </table>
-    <p><b class="footnote">1</b>: Los costos laborales incluyen los costos de empleo y autoempleo, tanto de los sueldos fijos como de los costos de mano de obra de las actividades del proceso productivo.</p>
-    <p><b class="footnote">2</b>: Esta categoría incluye todos los sueldos pagados, tanto los sueldos fijos como los costos de mano de obra de las actividades del proceso productivo, excluyendo costos de autoempleo.</p> 
-    <p><b class="footnote">3</b>: Incluye todos los costos de autoempleo, tanto los fijos como los que forman parte de las actividades del proceso productivo.</p> 
-    <p><b class="footnote">4</b>: Incluye todos los costos de mano de obra de las actividades del proceso productivo, tanto las remuneraciones pagadas como el autoempleo.</p> 
-    <p><b class="footnote">5</b>: Incluye únicamente las remuneraciones pagadas como parte de las actividades del proceso productivo, excluyendo el autoempleo.</p> 
-    <p><b class="footnote">6</b>: Incluye únicamente los costos de autoempleo de las actividades del proceso productivo.</p>
-    <p><b class="footnote">7</b>: Inlcuye todos los costos laborales fijos, tanto los sueldos pagados como el autoempleo.</p>
-    <p><b class="footnote">8</b>: Incluye únicamente los sueldos fijos pagados, excluyendo el autoempleo.</p> 
-    <p><b class="footnote">9</b>: Incluye únicamente los costos de autoempleo fijos.</p> 
-    <p><b class="footnote">10</b>: Incluye tanto los costos de insumos fijos como los costos de insumos de las actividades del proceso productivo.</p>
-    <p><b class="footnote">11</b>: Incluye únicamente los costos de insumos de las actividades del proceso productivo.</p> 
-    <p><b class="footnote">12</b>: Incluye únicamente los costos de insumos fijos.</p> 
+    <p><b class="footnote">1</b>: Los costos variables son aquellos que aumentan si la cantidad producida aumenta. Incluyen los costos de las actividades del proceso productivo, los costos de certificación y los costos de exportación.</p>
+    <p><b class="footnote">2</b>: Los costos fijos son aquellos que se mantienen constantes sin importar la cantidad producida. Incluyen los costos indicados por el usuario en las páginas de costos fijos e impuestos fijos.</p>
+    <p><b class="footnote">3</b>: Esta categoría sólo incluye los costos variables que implican un gasto monetario, excluyendo los costos de autoempleo.</p>
+    <p><b class="footnote">4</b>: Esta categoría sólo incluye los costos fijos que implican un gasto monetario, excluyendo los costos de autoempleo.</p>
+    <p><b class="footnote">5</b>: Los costos laborales incluyen los costos de empleo y autoempleo, tanto de los sueldos fijos como de los costos de mano de obra de las actividades del proceso productivo.</p>
+    <p><b class="footnote">6</b>: Esta categoría incluye todos los sueldos pagados, tanto los sueldos fijos como los costos de mano de obra de las actividades del proceso productivo, excluyendo costos de autoempleo.</p> 
+    <p><b class="footnote">7</b>: Incluye todos los costos de autoempleo, tanto los fijos como los que forman parte de las actividades del proceso productivo.</p> 
+    <p><b class="footnote">8</b>: Incluye todos los costos de mano de obra de las actividades del proceso productivo, tanto las remuneraciones pagadas como el autoempleo.</p> 
+    <p><b class="footnote">9</b>: Incluye únicamente las remuneraciones pagadas como parte de las actividades del proceso productivo, excluyendo el autoempleo.</p> 
+    <p><b class="footnote">10</b>: Incluye únicamente los costos de autoempleo de las actividades del proceso productivo.</p>
+    <p><b class="footnote">11</b>: Inlcuye todos los costos laborales fijos, tanto los sueldos pagados como el autoempleo.</p>
+    <p><b class="footnote">12</b>: Incluye únicamente los sueldos fijos pagados, excluyendo el autoempleo.</p> 
+    <p><b class="footnote">13</b>: Incluye únicamente los costos de autoempleo fijos.</p> 
+    <p><b class="footnote">14</b>: Incluye tanto los costos de insumos fijos como los costos de insumos de las actividades del proceso productivo.</p>
+    <p><b class="footnote">15</b>: Incluye únicamente los costos de insumos de las actividades del proceso productivo.</p> 
+    <p><b class="footnote">16</b>: Incluye únicamente los costos de insumos fijos.</p> 
     {% else %}
     <table>
         <tr>
             <th>Categoría de costos</th>
             <th>Total de la categoría</th>
-            <th>Porcentaje del total</th>
+            <th>% de los costos totales</th>
         </tr>
         <tr>
-            <td>Laborales<sup class="footnote"><b>1</b></sup></td>
+            <td>Variables<sup class="footnote"><b>1</b></sup></td>
+            <td>{{ costos_variables_totales }}</td>
+            <td>{{ costos_variables_totales_porcent_total }}</td>
+        </tr>
+        <tr>
+            <td>Fijos<sup class="footnote"><b>2</b></sup></td>
+            <td>{{ costos_fijos_totales }}</td>
+            <td>{{ costos_fijos_totales_porcent_total }}</td>
+        </tr>
+        <tr>
+            <td>Laborales<sup class="footnote"><b>3</b></sup></td>
             <td>{{ costos_laborales_totales }}</td>
             <td>{{ costos_laborales_totales_porcent_total }}</td>
         </tr>
         <tr>
-            <td>Mano de obra actividades<sup class="footnote"><b>2</b></sup></td>
+            <td>Mano de obra actividades<sup class="footnote"><b>4</b></sup></td>
             <td>{{ costos_laborales_actividades_totales }}</td>
             <td>{{ costos_laborales_actividades_totales_porcent_total }}</td>
         </tr>
         <tr>
-            <td>Sueldos fijos<sup class="footnote"><b>3</b></sup></td>
+            <td>Sueldos fijos<sup class="footnote"><b>5</b></sup></td>
             <td>{{ sueldos_fijos_totales }}</td>
             <td>{{ sueldos_fijos_totales_porcent_total }}</td>
         </tr>
         <tr>
-            <td>Insumos<sup class="footnote"><b>4</b></sup></td>
+            <td>Insumos<sup class="footnote"><b>6</b></sup></td>
             <td>{{ costos_insumos_totales }}</td>
             <td>{{ costos_insumos_totales_porcent_total }}</td>
         </tr>
         <tr>
-            <td>Insumos actividades<sup class="footnote"><b>5</b></sup></td>
+            <td>Insumos actividades<sup class="footnote"><b>7</b></sup></td>
             <td>{{ costos_insumos_actividades_totales }}</td>
             <td>{{ costos_insumos_actividades_totales_porcent_total }}</td>
         </tr>
         <tr>
-            <td>Insumos fijos<sup class="footnote"><b>6</b></sup></td>
+            <td>Insumos fijos<sup class="footnote"><b>8</b></sup></td>
             <td>{{ costos_insumos_fijos_totales }}</td>
             <td>{{ costos_insumos_fijos_totales_porcent_total }}</td>
         </tr>
@@ -173,13 +212,64 @@
             <td>{{ costos_exportacion_totales_porcent_total }}</td>
         </tr>
     </table>
-    <p><b class="footnote">1</b>: Los costos laborales incluyen tanto los sueldos fijos como los costos de mano de obra de las actividades del proceso productivo.</p>
-    <p><b class="footnote">2</b>: Esta categoría sólo incluye los costos de mano de obra de las actividades del proceso productivo.</p> 
-    <p><b class="footnote">3</b>: Incluye únicamente las remuneraciones o sueldos fijos.</p> 
-    <p><b class="footnote">4</b>: Incluye tanto los costos de insumos fijos como los costos de insumos de las actividades del proceso productivo.</p> 
-    <p><b class="footnote">5</b>: Incluye únicamente los costos de insumos de las actividades del proceso productivo.</p> 
-    <p><b class="footnote">6</b>: Incluye únicamente los costos de insumos fijos.</p> 
+    <p><b class="footnote">1</b>: Los costos variables son aquellos que aumentan si la cantidad producida aumenta. Incluyen los costos de las actividades del proceso productivo, los costos de certificación y los costos de exportación.</p>
+    <p><b class="footnote">2</b>: Los costos fijos son aquellos que se mantienen constantes sin importar la cantidad producida. Incluyen los costos indicados por el usuario en las páginas de costos fijos e impuestos fijos.</p>
+    <p><b class="footnote">3</b>: Los costos laborales incluyen tanto los sueldos fijos como los costos de mano de obra de las actividades del proceso productivo.</p>
+    <p><b class="footnote">4</b>: Esta categoría sólo incluye los costos de mano de obra de las actividades del proceso productivo.</p> 
+    <p><b class="footnote">5</b>: Incluye únicamente las remuneraciones o sueldos fijos.</p> 
+    <p><b class="footnote">6</b>: Incluye tanto los costos de insumos fijos como los costos de insumos de las actividades del proceso productivo.</p> 
+    <p><b class="footnote">7</b>: Incluye únicamente los costos de insumos de las actividades del proceso productivo.</p> 
+    <p><b class="footnote">8</b>: Incluye únicamente los costos de insumos fijos.</p> 
     {% endif %}
+
+
+    <h1>Slider Example</h1>
+    <div class="interactive">
+    <input type="range" class="interactive" min="0" max="{{ costos_totales_por_unidad * 10 }}" value="0" step="1" id="slider">
+    </div>
+    <table>
+        <tr>
+            <th>Indicadores financieros</th>
+            <th>Valores</th>
+        </tr>
+        <tr>
+            <td>Núm. de unidades producidas ({{ unidad }})</td>
+            <td>{{ cantidad_vendida }}</td>
+        </tr>
+        <tr>
+            <td>Precio por unidad</td>
+            <td id="precioCell">0</td>
+        </tr>
+        <tr>
+            <td>Ingresos totales</td>
+            <td><!-- Enter value for Ingresos totales --></td>
+        </tr>
+        <tr>
+            <td>Ganancias brutas (sin considerar costos de autoempleo)</td>
+            <td><!-- Enter value for Ganancias brutas (sin considerar costos de autoempleo) --></td>
+        </tr>
+        <tr>
+            <td>Ganancias netas (consideran costos de autoempleo)</td>
+            <td><!-- Enter value for Ganancias netas (consideran costos de autoempleo) --></td>
+        </tr>
+        <tr>
+            <td>Ganancias brutas por unidad</td>
+            <td><!-- Enter value for Ganancias brutas por unidad --></td>
+        </tr>
+        <tr>
+            <td>Ganancias netas por unidad</td>
+            <td><!-- Enter value for Ganancias netas por unidad --></td>
+        </tr>
+        <tr>
+            <td>Margen de rentabilidad</td>
+            <td><!-- Enter value for Margen de rentabilidad --></td>
+        </tr>
+        <tr>
+            <td>Punto de equilibrio</td>
+            <td><!-- Enter value for Punto de equilibrio --></td>
+        </tr>
+    </table>
+
 
     <div class="center-aligned">
     {% if trabajo_actividades %}
@@ -339,6 +429,18 @@
 
     </div>
 
- 
+    <script>
+        let precio = 0;
+        let cantidadVendida = {{ cantidad_vendida }}
+        let costosTotales = {{ costos_totales }}
+        let costosTotalesSinAutoempleo = {{ costos_totales_sin_autoempleo }}
+        let costosFijosTotales = {{ sueldos_fijos_totales + costos_insumos_fijos_totales }}
+
+        // Update the value in the table cell and the variable when the slider is moved
+        document.getElementById("slider").addEventListener("input", function() {
+            precio = parseInt(this.value);
+            document.getElementById("precioCell").textContent = precio;
+        });
+    </script>
 </body>
 </html>
