@@ -3,6 +3,7 @@
 <head>
     <title>Análisis final</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
 </head>
 <body>
     <h1>Costos totales: {{ costos_totales }}</h1>
@@ -237,11 +238,11 @@
             <td>{{ cantidad_vendida }}</td>
         </tr>
         <tr>
-            <td>Precio por unidad</td>
+            <td>Precio de venta por unidad</td>
             <td id="precioCell">0</td>
         </tr>
         <tr>
-            <td>Ingresos totales</td>
+            <td>Ingresos totales{% if impuestos_venta %}<sup class="footnote"><b>✱</b>{% endif %}</td>
             <td id="ingresosTotalesValue">0</td>
         </tr>
         <tr>
@@ -261,15 +262,30 @@
             <td id="gananciasNetasValuePorUnidadValue">{{ '%.2f'|format((costos_totales * (-1)) / cantidad_vendida) }}</td>
         </tr>
         <tr>
-            <td>Margen de rentabilidad</td>
+            <td>Margen de rentabilidad<sup class="footnote"><b>a</b></td>
             <td id="margenDeRentabilidadValue"></td>
         </tr>
         <tr>
-            <td>Punto de equilibrio</td>
+            <td>Punto de equilibrio<sup class="footnote"><b>b</b></td>
             <td id="puntoDeEquilibrioValue"></td>
         </tr>
+        {% if impuestos_venta %}
+        <tr>
+            <td>Impuestos sobre la venta</td>
+            <td id="costosImpuestosValue">0</td>
+        </tr>
+        {% endif %}
     </table>
-
+    {% if impuestos_venta %}
+    <p>
+    <b class="footnote">✱</b> Este indicador y todos los siguientes indicadores consideran los siguientes impuestos:
+    {% for impuesto in impuestos_venta %}
+        {{ impuesto[0] }}{% if not loop.last %}, {% else %}.{% endif %}
+    {% endfor %}
+    </p>
+    {% endif %}
+    <p><b class="footnote">a</b>: El margen de rentabilidad indica qué porcentaje de los ingresos son ganancias. Se calcula dividiendo las ganancias netas entre los ingresos totales.</p>
+    <p><b class="footnote">b</b>: El punto de equilibrio es la cantidad mínima de unidades que usted debe vender para cubrir todos sus costos y no tener ganancias ni pérdidas.</p>
 
     <div class="center-aligned">
     {% if trabajo_actividades %}
@@ -424,63 +440,79 @@
     </table>
     {% endif %}
     </div>
-
-<p>{{ cantidad_vendida }}</p>
-<p>{{ costos_totales }}</p>
-<p>{{ costos_totales_sin_autoempleo }}</p>
-<p>{{ costos_variables_totales_por_unidad }}</p>
-<p>{{ costos_fijos_totales }}</p>
-
-
-
-
+    <button id="printToPDF">Print to PDF</button>
 
     <script>
+      document.getElementById("printToPDF").addEventListener("click", function () {
+        // Create a new jsPDF instance
+        const pdf = new jsPDF();
+
+        // Calculate the height of the HTML content
+        const htmlElement = document.querySelector("html");
+        const height = htmlElement.clientHeight;
+
+        // Set the PDF page size based on the height of the HTML content
+        pdf.internal.pageSize.height = height;
+
+        // Add the HTML content of the page to the PDF
+        pdf.html(htmlElement, {
+          callback: function (pdf) {
+            // Save the PDF to a file
+            pdf.save("analysis.pdf");
+          },
+        });
+      });
+    </script>
+    <script>
+        let impuestosVenta = {{ impuestos_venta|tojson }};
         let cantidadVendida = {{ cantidad_vendida }}
         let costosTotales = {{ costos_totales }}
         let costosTotalesSinAutoempleo = {{ costos_totales_sin_autoempleo }}
         let costosVariablesTotalesPorUnidad = {{ costos_variables_totales_por_unidad }}
         let costosFijosTotales = {{ costos_fijos_totales }}
-        
+        let costosImpuestos = 0;
+        let precio = 0;
+
         function updatePrecioCell() {
             document.getElementById("precioCell").textContent = precio;
         }
 
         function updateIngresosTotales() {
             let ingresosTotales = precio * cantidadVendida;
+            ingresosTotales -= costosImpuestos;
             document.getElementById("ingresosTotalesValue").textContent = ingresosTotales;
         }
         
         function updateGananciasBrutas() {
-            let gananciasBrutas = (precio * cantidadVendida) - costosTotalesSinAutoempleo;
+            let gananciasBrutas = (precio * cantidadVendida) - costosTotalesSinAutoempleo - costosImpuestos;
             document.getElementById("gananciasBrutasValue").textContent = gananciasBrutas;
         }
 
         function updateGananciasNetas() {
-            let gananciasNetas = (precio * cantidadVendida) - costosTotales;
+            let gananciasNetas = (precio * cantidadVendida) - costosTotales - costosImpuestos;
             document.getElementById("gananciasNetasValue").textContent = gananciasNetas;
         }
 
         function updateGananciasBrutasPorUnidad() {
-            let gananciasBrutasPorUnidad = ((precio * cantidadVendida) - costosTotalesSinAutoempleo) / cantidadVendida;
+            let gananciasBrutasPorUnidad = ((precio * cantidadVendida) - costosTotalesSinAutoempleo - costosImpuestos) / cantidadVendida;
             let formattedGananciasBrutasPorUnidad = gananciasBrutasPorUnidad.toFixed(2)
             document.getElementById("gananciasBrutasPorUnidadValue").textContent = formattedGananciasBrutasPorUnidad;
         }
 
         function updateGananciasNetasPorUnidad() {
-            let gananciasNetasPorUnidad = ((precio * cantidadVendida) - costosTotales) / cantidadVendida;
+            let gananciasNetasPorUnidad = ((precio * cantidadVendida) - costosTotales - costosImpuestos) / cantidadVendida;
             let formattedGananciasNetasPorUnidad = gananciasNetasPorUnidad.toFixed(2);
             document.getElementById("gananciasNetasValuePorUnidadValue").textContent = formattedGananciasNetasPorUnidad;
         }
 
         function updateMargenDeRentabilidad() {
-            let margenDeRentabilidad = (((precio * cantidadVendida) - costosTotales) / (precio * cantidadVendida)) * 100;
+            let margenDeRentabilidad = (((precio * cantidadVendida) - costosTotales - costosImpuestos) / (precio * cantidadVendida)) * 100;
             let formattedMargenDeRentabilidad = margenDeRentabilidad.toFixed(2);
             document.getElementById("margenDeRentabilidadValue").textContent = formattedMargenDeRentabilidad + "%";
         }
 
         function updatePuntoDeEquilibrio() {
-            let puntoDeEquilibrio = costosFijosTotales / (precio - costosVariablesTotalesPorUnidad);
+            let puntoDeEquilibrio = costosFijosTotales / (precio - costosVariablesTotalesPorUnidad - (costosImpuestos/cantidadVendida));
             let formattedPuntoDeEquilibrio = puntoDeEquilibrio.toFixed(2)
             document.getElementById("puntoDeEquilibrioValue").textContent = formattedPuntoDeEquilibrio;
         }
@@ -488,6 +520,17 @@
         // Update the value of "precio" inside the table cell and the variable when the slider is moved
         document.getElementById("slider").addEventListener("input", function() {
             precio = parseInt(this.value);
+
+            costosImpuestos = 0;
+            if (impuestosVenta.length > 0) {
+                // Iterate through each sublist in impuestosVenta and calculate the sum of the last element in each sublist
+                for (let i = 0; i < impuestosVenta.length; i++) {
+                    let sublist = impuestosVenta[i];
+                    let precioMultiplication = precio * sublist[1] * sublist[2];
+                    costosImpuestos += precioMultiplication;
+                }
+            }
+
             updateIngresosTotales();
             updatePrecioCell();
             updateGananciasBrutas();
