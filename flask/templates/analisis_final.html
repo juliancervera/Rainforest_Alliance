@@ -242,31 +242,31 @@
         </tr>
         <tr>
             <td>Ingresos totales</td>
-            <td><!-- Enter value for Ingresos totales --></td>
+            <td id="ingresosTotalesValue">0</td>
         </tr>
         <tr>
             <td>Ganancias brutas (sin considerar costos de autoempleo)</td>
-            <td><!-- Enter value for Ganancias brutas (sin considerar costos de autoempleo) --></td>
+            <td id="gananciasBrutasValue">{{ costos_totales_sin_autoempleo * (-1) }}</td>
         </tr>
         <tr>
             <td>Ganancias netas (consideran costos de autoempleo)</td>
-            <td><!-- Enter value for Ganancias netas (consideran costos de autoempleo) --></td>
+            <td id="gananciasNetasValue">{{ costos_totales * (-1) }}</td>
         </tr>
         <tr>
             <td>Ganancias brutas por unidad</td>
-            <td><!-- Enter value for Ganancias brutas por unidad --></td>
+            <td id="gananciasBrutasPorUnidadValue">{{ '%.2f'|format((costos_totales_sin_autoempleo * (-1)) / cantidad_vendida) }}</td>
         </tr>
         <tr>
             <td>Ganancias netas por unidad</td>
-            <td><!-- Enter value for Ganancias netas por unidad --></td>
+            <td id="gananciasNetasValuePorUnidadValue">{{ '%.2f'|format((costos_totales * (-1)) / cantidad_vendida) }}</td>
         </tr>
         <tr>
             <td>Margen de rentabilidad</td>
-            <td><!-- Enter value for Margen de rentabilidad --></td>
+            <td id="margenDeRentabilidadValue"></td>
         </tr>
         <tr>
             <td>Punto de equilibrio</td>
-            <td><!-- Enter value for Punto de equilibrio --></td>
+            <td id="puntoDeEquilibrioValue"></td>
         </tr>
     </table>
 
@@ -423,24 +423,90 @@
         {% endfor %}
     </table>
     {% endif %}
-
-
-
-
     </div>
 
+<p>{{ cantidad_vendida }}</p>
+<p>{{ costos_totales }}</p>
+<p>{{ costos_totales_sin_autoempleo }}</p>
+<p>{{ costos_variables_totales_por_unidad }}</p>
+<p>{{ costos_fijos_totales }}</p>
+
+
+
+
+
     <script>
-        let precio = 0;
         let cantidadVendida = {{ cantidad_vendida }}
         let costosTotales = {{ costos_totales }}
         let costosTotalesSinAutoempleo = {{ costos_totales_sin_autoempleo }}
-        let costosFijosTotales = {{ sueldos_fijos_totales + costos_insumos_fijos_totales }}
+        let costosVariablesTotalesPorUnidad = {{ costos_variables_totales_por_unidad }}
+        let costosFijosTotales = {{ costos_fijos_totales }}
+        
+        function updatePrecioCell() {
+            document.getElementById("precioCell").textContent = precio;
+        }
 
-        // Update the value in the table cell and the variable when the slider is moved
+        function updateIngresosTotales() {
+            let ingresosTotales = precio * cantidadVendida;
+            document.getElementById("ingresosTotalesValue").textContent = ingresosTotales;
+        }
+        
+        function updateGananciasBrutas() {
+            let gananciasBrutas = (precio * cantidadVendida) - costosTotalesSinAutoempleo;
+            document.getElementById("gananciasBrutasValue").textContent = gananciasBrutas;
+        }
+
+        function updateGananciasNetas() {
+            let gananciasNetas = (precio * cantidadVendida) - costosTotales;
+            document.getElementById("gananciasNetasValue").textContent = gananciasNetas;
+        }
+
+        function updateGananciasBrutasPorUnidad() {
+            let gananciasBrutasPorUnidad = ((precio * cantidadVendida) - costosTotalesSinAutoempleo) / cantidadVendida;
+            let formattedGananciasBrutasPorUnidad = gananciasBrutasPorUnidad.toFixed(2)
+            document.getElementById("gananciasBrutasPorUnidadValue").textContent = formattedGananciasBrutasPorUnidad;
+        }
+
+        function updateGananciasNetasPorUnidad() {
+            let gananciasNetasPorUnidad = ((precio * cantidadVendida) - costosTotales) / cantidadVendida;
+            let formattedGananciasNetasPorUnidad = gananciasNetasPorUnidad.toFixed(2);
+            document.getElementById("gananciasNetasValuePorUnidadValue").textContent = formattedGananciasNetasPorUnidad;
+        }
+
+        function updateMargenDeRentabilidad() {
+            let margenDeRentabilidad = (((precio * cantidadVendida) - costosTotales) / (precio * cantidadVendida)) * 100;
+            let formattedMargenDeRentabilidad = margenDeRentabilidad.toFixed(2);
+            document.getElementById("margenDeRentabilidadValue").textContent = formattedMargenDeRentabilidad + "%";
+        }
+
+        function updatePuntoDeEquilibrio() {
+            let puntoDeEquilibrio = costosFijosTotales / (precio - costosVariablesTotalesPorUnidad);
+            let formattedPuntoDeEquilibrio = puntoDeEquilibrio.toFixed(2)
+            document.getElementById("puntoDeEquilibrioValue").textContent = formattedPuntoDeEquilibrio;
+        }
+
+        // Update the value of "precio" inside the table cell and the variable when the slider is moved
         document.getElementById("slider").addEventListener("input", function() {
             precio = parseInt(this.value);
-            document.getElementById("precioCell").textContent = precio;
+            updateIngresosTotales();
+            updatePrecioCell();
+            updateGananciasBrutas();
+            updateGananciasNetas()
+            updateGananciasBrutasPorUnidad()
+            updateGananciasNetasPorUnidad()
+            updateMargenDeRentabilidad()
+            updatePuntoDeEquilibrio()
         });
+
+        // Initial calculations on page load
+        updateGananciasBrutas();
+        updateIngresosTotales();
+        updatePrecioCell();
+        updateGananciasNetas()
+        updateGananciasBrutasPorUnidad()
+        updateGananciasNetasPorUnidad()
+        updateMargenDeRentabilidad()
+        updatePuntoDeEquilibrio()
     </script>
 </body>
 </html>
