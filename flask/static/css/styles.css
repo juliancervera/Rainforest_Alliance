@@ -12,6 +12,21 @@ p {
   font-size: 3vw;
 }
 
+p.special_header {
+  margin-bottom: 8px; /* Adjust the value as needed */
+  font-size: 3.4vw;
+}
+
+p.special_sub_header {
+  margin-bottom: 1px;
+  margin-top: 1px;
+}
+
+.footnote_paragraph {
+  font-size: 1.8vw;
+  line-height: 1.2;
+}
+
 ul {
     margin-top: 0; /* Remove the default top margin of the ul */
 }
@@ -26,6 +41,28 @@ table {
   border-collapse: collapse;
   width: 100%;
   margin-top: 0px;
+}
+
+table.final_analysis {
+  background-color: #ececec;
+  border-collapse: collapse;
+}
+
+/* CSS for the table cells (td) in the "final_analysis" table */
+table.final_analysis td {
+  border: none;
+  background-color: #ececec;
+}
+
+td.left-align {
+  border: none;
+  text-align: left;
+}
+
+/* CSS for the right-aligned table cells (td) in any table */
+td.right-align {
+  border: none;
+  text-align: right;
 }
 
 h1 {
@@ -182,10 +219,6 @@ img {
   color: #F72119;
 }
 
-.interactive {
-  width: 100%;
-}
-
 .financial_metrics {
   text-align: right;
 }
@@ -193,3 +226,4 @@ img {
 div.avoid-page-break {
   page-break-inside: avoid;
 }
+

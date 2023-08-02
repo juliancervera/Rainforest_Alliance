@@ -3,14 +3,82 @@
 <head>
     <title>Análisis final</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='cdnjs.cloudflare.com_ajax_libs_html2pdf.js_0.9.3_html2pdf.bundle.min.js') }}"></script>
+    <style>
+    .slidecontainer {
+      width: 100%;
+      margin-top: 20px;
+      margin-bottom: 15px;
+    }
+
+    .slider {
+      -webkit-appearance: none;
+      width: 100%;
+      height: 25px;
+      background: #d3d3d3;
+      outline: none;
+      opacity: 0.7;
+      -webkit-transition: .2s;
+      transition: opacity .2s;
+    }
+
+    .slider:hover {
+      opacity: 1;
+    }
+
+    .slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 25px;
+      height: 25px;
+      background: #04AA6D;
+      cursor: pointer;
+    }
+
+    .slider::-moz-range-thumb {
+      width: 25px;
+      height: 25px;
+      background: #04AA6D;
+      cursor: pointer;
+    }
+    </style>
 </head>
-<body id="body">
-    <h1>Costos totales: {{ costos_totales }}</h1>
-    <h1>Costos totales por unidad: {{ costos_totales_por_unidad }}</h1>
-    <br>
-    <h2>Resumen de costos</h2>
-    <p>(No considera impuestos sobre la venta)</p>
+<body>
+<div id='content_of_report'>
+<h1>Análisis final de ingresos, egresos y ganancias</h1>
+<table class="final_analysis">
+  <tr>
+    <td class="right-align"><b>Producto:</b></td>
+    <td class="left-align">{{ producto }}</td>
+  </tr>
+  <tr>
+    <td class="right-align"><b>Cantidad producida:</b></td>
+    <td class="left-align">{{ cantidad_vendida }} {{ unidad }}</td>
+  </tr>
+  <tr>
+    <td class="right-align"><b>Costos totales:</b></td>
+    <td class="left-align">{{ costos_totales }}</td>
+  </tr>
+  {% if costos_totales_sin_autoempleo != costos_totales %}
+  <tr>
+    <td class="right-align"><b>Costos totales (sin autoempleo):</b></td>
+    <td class="left-align">{{ costos_totales_sin_autoempleo }}</td>
+  </tr>
+  {% endif %}
+  <tr>
+    <td class="right-align"><b>Costos por unidad:</b></td>
+    <td class="left-align">{{ costos_totales_por_unidad }}</td>
+  </tr>
+  {% if costos_totales_sin_autoempleo != costos_totales %}
+  <tr>
+    <td class="right-align"><b>Costos por unidad (sin autoempleo):</b></td>
+    <td class="left-align">{{ costos_totales_por_unidad_sin_autoempleo }}</td>
+  </tr>
+  {% endif %}
+  </table>
+  <br>
+  <br>
+    <p class="special_header"><b>Resumen de costos</b>{% if impuestos_venta %} (no incluye impuestos sobre la venta){% endif %}:</p>
     {% if costos_autoempleo_totales > 0.001 %}
     <table>
         <tr>
@@ -134,22 +202,22 @@
             <td>{{ costos_exportacion_totales_porcent_total_sin }}</td>
         </tr>
     </table>
-    <p><b class="footnote">1</b>: Los costos variables son aquellos que aumentan si la cantidad producida aumenta. Incluyen los costos de las actividades del proceso productivo, los costos de certificación y los costos de exportación.</p>
-    <p><b class="footnote">2</b>: Los costos fijos son aquellos que se mantienen constantes sin importar la cantidad producida. Incluyen los costos indicados por el usuario en las páginas de costos fijos e impuestos fijos.</p>
-    <p><b class="footnote">3</b>: Esta categoría sólo incluye los costos variables que implican un gasto monetario, excluyendo los costos de autoempleo.</p>
-    <p><b class="footnote">4</b>: Esta categoría sólo incluye los costos fijos que implican un gasto monetario, excluyendo los costos de autoempleo.</p>
-    <p><b class="footnote">5</b>: Los costos laborales incluyen los costos de empleo y autoempleo, tanto de los sueldos fijos como de los costos de mano de obra de las actividades del proceso productivo.</p>
-    <p><b class="footnote">6</b>: Esta categoría incluye todos los sueldos pagados, tanto los sueldos fijos como los costos de mano de obra de las actividades del proceso productivo, excluyendo costos de autoempleo.</p> 
-    <p><b class="footnote">7</b>: Incluye todos los costos de autoempleo, tanto los fijos como los que forman parte de las actividades del proceso productivo.</p> 
-    <p><b class="footnote">8</b>: Incluye todos los costos de mano de obra de las actividades del proceso productivo, tanto las remuneraciones pagadas como el autoempleo.</p> 
-    <p><b class="footnote">9</b>: Incluye únicamente las remuneraciones pagadas como parte de las actividades del proceso productivo, excluyendo el autoempleo.</p> 
-    <p><b class="footnote">10</b>: Incluye únicamente los costos de autoempleo de las actividades del proceso productivo.</p>
-    <p><b class="footnote">11</b>: Inlcuye todos los costos laborales fijos, tanto los sueldos pagados como el autoempleo.</p>
-    <p><b class="footnote">12</b>: Incluye únicamente los sueldos fijos pagados, excluyendo el autoempleo.</p> 
-    <p><b class="footnote">13</b>: Incluye únicamente los costos de autoempleo fijos.</p> 
-    <p><b class="footnote">14</b>: Incluye tanto los costos de insumos fijos como los costos de insumos de las actividades del proceso productivo.</p>
-    <p><b class="footnote">15</b>: Incluye únicamente los costos de insumos de las actividades del proceso productivo.</p> 
-    <p><b class="footnote">16</b>: Incluye únicamente los costos de insumos fijos.</p> 
+    <p class="footnote_paragraph"><b class="footnote">1</b>: Los costos variables son aquellos que aumentan si la cantidad producida aumenta. Incluyen los costos de las actividades del proceso productivo, los costos de certificación y los costos de exportación.</p>
+    <p class="footnote_paragraph"><b class="footnote">2</b>: Los costos fijos son aquellos que se mantienen constantes sin importar la cantidad producida. Incluyen los costos indicados por el usuario en las páginas de costos fijos e impuestos fijos.</p>
+    <p class="footnote_paragraph"><b class="footnote">3</b>: Esta categoría sólo incluye los costos variables que implican un gasto monetario, excluyendo los costos de autoempleo.</p>
+    <p class="footnote_paragraph"><b class="footnote">4</b>: Esta categoría sólo incluye los costos fijos que implican un gasto monetario, excluyendo los costos de autoempleo.</p>
+    <p class="footnote_paragraph"><b class="footnote">5</b>: Los costos laborales incluyen los costos de empleo y autoempleo, tanto de los sueldos fijos como de los costos de mano de obra de las actividades del proceso productivo.</p>
+    <p class="footnote_paragraph"><b class="footnote">6</b>: Esta categoría incluye todos los sueldos pagados, tanto los sueldos fijos como los costos de mano de obra de las actividades del proceso productivo, excluyendo costos de autoempleo.</p> 
+    <p class="footnote_paragraph"><b class="footnote">7</b>: Incluye todos los costos de autoempleo, tanto los fijos como los que forman parte de las actividades del proceso productivo.</p> 
+    <p class="footnote_paragraph"><b class="footnote">8</b>: Incluye todos los costos de mano de obra de las actividades del proceso productivo, tanto las remuneraciones pagadas como el autoempleo.</p> 
+    <p class="footnote_paragraph"><b class="footnote">9</b>: Incluye únicamente las remuneraciones pagadas como parte de las actividades del proceso productivo, excluyendo el autoempleo.</p> 
+    <p class="footnote_paragraph"><b class="footnote">10</b>: Incluye únicamente los costos de autoempleo de las actividades del proceso productivo.</p>
+    <p class="footnote_paragraph"><b class="footnote">11</b>: Inlcuye todos los costos laborales fijos, tanto los sueldos pagados como el autoempleo.</p>
+    <p class="footnote_paragraph"><b class="footnote">12</b>: Incluye únicamente los sueldos fijos pagados, excluyendo el autoempleo.</p> 
+    <p class="footnote_paragraph"><b class="footnote">13</b>: Incluye únicamente los costos de autoempleo fijos.</p> 
+    <p class="footnote_paragraph"><b class="footnote">14</b>: Incluye tanto los costos de insumos fijos como los costos de insumos de las actividades del proceso productivo.</p>
+    <p class="footnote_paragraph"><b class="footnote">15</b>: Incluye únicamente los costos de insumos de las actividades del proceso productivo.</p> 
+    <p class="footnote_paragraph"><b class="footnote">16</b>: Incluye únicamente los costos de insumos fijos.</p> 
     {% else %}
     <table>
         <tr>
@@ -213,20 +281,20 @@
             <td>{{ costos_exportacion_totales_porcent_total }}</td>
         </tr>
     </table>
-    <p><b class="footnote">1</b>: Los costos variables son aquellos que aumentan si la cantidad producida aumenta. Incluyen los costos de las actividades del proceso productivo, los costos de certificación y los costos de exportación.</p>
-    <p><b class="footnote">2</b>: Los costos fijos son aquellos que se mantienen constantes sin importar la cantidad producida. Incluyen los costos indicados por el usuario en las páginas de costos fijos e impuestos fijos.</p>
-    <p><b class="footnote">3</b>: Los costos laborales incluyen tanto los sueldos fijos como los costos de mano de obra de las actividades del proceso productivo.</p>
-    <p><b class="footnote">4</b>: Esta categoría sólo incluye los costos de mano de obra de las actividades del proceso productivo.</p> 
-    <p><b class="footnote">5</b>: Incluye únicamente las remuneraciones o sueldos fijos.</p> 
-    <p><b class="footnote">6</b>: Incluye tanto los costos de insumos fijos como los costos de insumos de las actividades del proceso productivo.</p> 
-    <p><b class="footnote">7</b>: Incluye únicamente los costos de insumos de las actividades del proceso productivo.</p> 
-    <p><b class="footnote">8</b>: Incluye únicamente los costos de insumos fijos.</p> 
+    <p class="footnote_paragraph"><b class="footnote">1</b>: Los costos variables son aquellos que aumentan si la cantidad producida aumenta. Incluyen los costos de las actividades del proceso productivo, los costos de certificación y los costos de exportación.</p>
+    <p class="footnote_paragraph"><b class="footnote">2</b>: Los costos fijos son aquellos que se mantienen constantes sin importar la cantidad producida. Incluyen los costos indicados por el usuario en las páginas de costos fijos e impuestos fijos.</p>
+    <p class="footnote_paragraph"><b class="footnote">3</b>: Los costos laborales incluyen tanto los sueldos fijos como los costos de mano de obra de las actividades del proceso productivo.</p>
+    <p class="footnote_paragraph"><b class="footnote">4</b>: Esta categoría sólo incluye los costos de mano de obra de las actividades del proceso productivo.</p> 
+    <p class="footnote_paragraph"><b class="footnote">5</b>: Incluye únicamente las remuneraciones o sueldos fijos.</p> 
+    <p class="footnote_paragraph"><b class="footnote">6</b>: Incluye tanto los costos de insumos fijos como los costos de insumos de las actividades del proceso productivo.</p> 
+    <p class="footnote_paragraph"><b class="footnote">7</b>: Incluye únicamente los costos de insumos de las actividades del proceso productivo.</p> 
+    <p class="footnote_paragraph"><b class="footnote">8</b>: Incluye únicamente los costos de insumos fijos.</p> 
     {% endif %}
-
-
-    <h1>Slider Example</h1>
-    <div class="interactive">
-    <input type="range" class="interactive" min="0" max="{{ costos_totales_por_unidad * 10 }}" value="0" step="1" id="slider">
+    <br>
+    <p class="special_header"><b>Calculadora interactiva de ganancias</b></p>
+    <p class="special_sub_header">Haga clic en el cubo verde y deslícelo hacia la derecha para cambiar el precio de venta por unidad.</p>
+    <div class="slidecontainer">
+    <input type="range" class="slider" min="0" max="{{ costos_totales_por_unidad * 10 }}" value="0" step="1" id="slider">
     </div>
     <table>
         <tr>
@@ -265,10 +333,12 @@
             <td>Margen de rentabilidad<sup class="footnote"><b>a</b></td>
             <td id="margenDeRentabilidadValue"></td>
         </tr>
+        {% if costos_fijos_totales %}
         <tr>
             <td>Punto de equilibrio<sup class="footnote"><b>b</b></td>
             <td id="puntoDeEquilibrioValue"></td>
         </tr>
+        {% endif %}
         {% if impuestos_venta %}
         <tr>
             <td>Impuestos sobre la venta</td>
@@ -277,16 +347,17 @@
         {% endif %}
     </table>
     {% if impuestos_venta %}
-    <p>
+    <p class="footnote_paragraph">
     <b class="footnote">✱</b> Este indicador y todos los demás indicadores de la tabla consideran los siguientes impuestos:
     {% for impuesto in impuestos_venta %}
         {{ impuesto[0] }} ({{ impuesto[1]*100 }}% sobre la venta de {{ impuesto[2] }} {{ unidad }}){% if not loop.last %}, {% else %}.{% endif %}
     {% endfor %}
     </p>
     {% endif %}
-    <p><b class="footnote">a</b>: El margen de rentabilidad indica qué porcentaje de los ingresos son ganancias. Se calcula dividiendo las ganancias netas entre los ingresos totales.</p>
-    <p><b class="footnote">b</b>: El punto de equilibrio es la cantidad mínima de unidades que usted debe vender para cubrir todos sus costos y no tener ganancias ni pérdidas.</p>
-
+    <p class="footnote_paragraph"><b class="footnote">a</b>: El margen de rentabilidad indica qué porcentaje de los ingresos son ganancias. Se calcula dividiendo las ganancias netas entre los ingresos totales.</p>
+    {% if costos_fijos_totales %}
+    <p class="footnote_paragraph"><b class="footnote">b</b>: El punto de equilibrio es la cantidad mínima de unidades que usted debe vender para cubrir todos sus costos y no tener ganancias ni pérdidas.</p>
+    {% endif %}
     <div class="center-aligned">
     {% if trabajo_actividades %}
     <p>Costos laborales actividades</p>
@@ -442,13 +513,14 @@
     </table>
     {% endif %}
     </div>
+    </div>
     <button id="button">Click me!</button>
 
     <script>
       const btn = document.getElementById("button");
 
       btn.addEventListener("click", function() {
-        var element = document.getElementById('body');
+        var element = document.getElementById('content_of_report');
         var opt = {
           margin: 2.7,
           filename: 'analisis_costos_produccion.pdf',
