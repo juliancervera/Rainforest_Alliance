@@ -189,3 +189,7 @@ img {
 .financial_metrics {
   text-align: right;
 }
+
+div.avoid-page-break {
+  page-break-inside: avoid;
+}

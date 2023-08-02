@@ -3,9 +3,9 @@
 <head>
     <title>Análisis final</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
 </head>
-<body>
+<body id="body">
     <h1>Costos totales: {{ costos_totales }}</h1>
     <h1>Costos totales por unidad: {{ costos_totales_por_unidad }}</h1>
     <br>
@@ -278,9 +278,9 @@
     </table>
     {% if impuestos_venta %}
     <p>
-    <b class="footnote">✱</b> Este indicador y todos los siguientes indicadores consideran los siguientes impuestos:
+    <b class="footnote">✱</b> Este indicador y todos los demás indicadores de la tabla consideran los siguientes impuestos:
     {% for impuesto in impuestos_venta %}
-        {{ impuesto[0] }}{% if not loop.last %}, {% else %}.{% endif %}
+        {{ impuesto[0] }} ({{ impuesto[1]*100 }}% sobre la venta de {{ impuesto[2] }} {{ unidad }}){% if not loop.last %}, {% else %}.{% endif %}
     {% endfor %}
     </p>
     {% endif %}
@@ -402,6 +402,7 @@
     </table>
     {% endif %}     
     {% if costos_certificacion %}
+    <div class="avoid-page-break">
     <p>Costos de certificación</p>
     <table>
         <tr>
@@ -419,6 +420,7 @@
         </tr>
         {% endfor %}
     </table>
+    </div>
     {% endif %}
     {% if costos_exportacion %}
     <p>Costos de exportación</p>
@@ -440,29 +442,26 @@
     </table>
     {% endif %}
     </div>
-    <button id="printToPDF">Print to PDF</button>
+    <button id="button">Click me!</button>
 
     <script>
-      document.getElementById("printToPDF").addEventListener("click", function () {
-        // Create a new jsPDF instance
-        const pdf = new jsPDF();
+      const btn = document.getElementById("button");
 
-        // Calculate the height of the HTML content
-        const htmlElement = document.querySelector("html");
-        const height = htmlElement.clientHeight;
+      btn.addEventListener("click", function() {
+        var element = document.getElementById('body');
+        var opt = {
+          margin: 2.7,
+          filename: 'analisis_costos_produccion.pdf',
+        };
 
-        // Set the PDF page size based on the height of the HTML content
-        pdf.internal.pageSize.height = height;
-
-        // Add the HTML content of the page to the PDF
-        pdf.html(htmlElement, {
-          callback: function (pdf) {
-            // Save the PDF to a file
-            pdf.save("analysis.pdf");
-          },
-        });
+        // Set the configuration options before calling the .from().save() function
+        html2pdf().set({
+          pagebreak: { mode: 'avoid-all' }
+        }).from(element).set(opt).save();
       });
     </script>
+
+
     <script>
         let impuestosVenta = {{ impuestos_venta|tojson }};
         let cantidadVendida = {{ cantidad_vendida }}
