@@ -69,7 +69,8 @@
 <body>
     <h1>Registro de costos fijos*</h1>
     <div class="center-aligned">
-    <p><b><span class="text-highlight">*</span>se mantienen iguales sin importar la cantidad producida</b><br>(vigilancia, administración, almacenamiento, rentas, electricidad, telefonía, etcétera)</p>
+    <p class="color-emphasis"><b><span class="text-highlight">*</span>se mantienen iguales sin importar la cantidad producida</b></p>
+    <p>(<b><em>por ejemplo:</b></em> vigilancia, administración, almacenamiento, rentas, electricidad, telefonía, <b><em>etcétera</b></em>)</p>
     </div>
     {% if sueldos_fijos %}
     <p>Éstos son los sueldos fijos que usted registró:</p>
@@ -123,6 +124,18 @@
     </div>
     <br>
     <img src="{{ url_for('static', filename='images/costos_fijos.png') }}" alt="Mapa de las páginas de la herramienta">
+    <div class="center-aligned">
+    <button id="deleteButton" class="send_form" style="background-color: #FF4F4B;"><b>BORRAR TODO Y<br>REGRESAR A INICIO</b></button>
+    <div id="confirmationModal" class="modal-reset">
+      <div class="modal-reset-content">
+        <p>¿Está seguro/a de querer borrar todo y regresar a la página de inicio?</p>
+        <div>
+          <button class="send_form" id="confirmYes" style="background-color: #FF4F4B;">Sí</button>
+          <button class="send_form" id="confirmNo" style="background-color: #99EE90;">No</button>
+        </div>
+      </div>
+    </div>
+    </div>
     {% else %}
     <p>Registre los <span class="text-highlight">sueldos fijos</span> necesarios para producir <span class="text-highlight">{{ cantidad_vendida }} {{ unidad }} de {{ producto }}:</span></p>
     <form action="{{ url_for('cuestionario_costos_fijos') }}" method="post">
@@ -132,8 +145,8 @@
                 <th>Núm de<br><span>hrs., días,<br>meses</span></th>
                 <th>Sueldo<span><br>por hora,<br>día o mes</span></th>
                 <th>
-                  Porcent.<br>
-                  <button class="tutorial" type="button" onclick="displayText('modal1')">INFO</button>
+                  Porcentaje<br>
+                  <button class="tutorial" type="button" onclick="displayText('modal1')">INFORMACIÓN</button>
                   <div id="modal1" class="modal">
                     <div class="modal-content">
                       <span class="close" onclick="closeModal('modal1')">&times;</span>
@@ -157,7 +170,7 @@
                         <option value="No" selected>No</option>
                     </select>
                 </td>
-                <td class="input-lightgrey"><input type="number" name="costo_total_trabajo_fijo_1" step="0.1" value="" style="background-color: lightgrey; max-width: 12px;" readonly></td>
+                <td class="input-lightgrey"><input type="number" name="costo_total_trabajo_fijo_1" step="0.1" style="background-color: transparent; max-width: 12px;" readonly></td>
             </tr>
         </table>
         <input type="hidden" id="rowCounterInput_trabajo" name="rowCounter_trabajo" value="1">
@@ -191,9 +204,46 @@
             <input type="hidden" id="rowCounterInput_insumos" name="rowCounter_insumos" value="1">
             <button type="button" class="add_row" onclick="addRow_insumos()">Agregar fila</button>
             <br>
-            <br>
+        <div class="center-aligned">
         <button type="submit" class="send_form">REGISTRAR COSTOS</button>
+        </div>
+        <br>
+        <br>
     </form>
+    <div class="center-aligned">
+    <a href="{{ url_for('pregunta_impuestos_venta') }}"><button class="send_form" style="background-color: #FF6865">OMITIR PÁGINA Y CONTINUAR</button></a>
+    </div>
     {% endif %}
 </body>
+<script>
+        // Function to show the confirmation modal
+        function showConfirmationModal() {
+          const modal = document.getElementById("confirmationModal");
+          modal.style.display = "block";
+        }
+
+        // Function to close the confirmation modal
+        function closeConfirmationModal() {
+          const modal = document.getElementById("confirmationModal");
+          modal.style.display = "none";
+        }
+
+        // Function to redirect to the index page
+        function redirectToIndexPage() {
+          window.location.href = "/";
+        }
+
+        // Event listener for the "Borrar todo y regresar a inicio" button
+        document.getElementById("deleteButton").addEventListener("click", showConfirmationModal);
+
+        // Event listener for the "Sí" button in the confirmation modal
+        document.getElementById("confirmYes").addEventListener("click", function() {
+          redirectToIndexPage();
+        });
+
+        // Event listener for the "No" button in the confirmation modal
+        document.getElementById("confirmNo").addEventListener("click", function() {
+          closeConfirmationModal();
+        });
+</script>
 </html>

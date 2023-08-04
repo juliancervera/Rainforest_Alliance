@@ -49,38 +49,38 @@
 <table class="final_analysis">
   <tr>
     <td class="right-align"><b>Producto:</b></td>
-    <td class="left-align">{{ producto }}</td>
+    <td class="left-align"><em>{{ producto }}</em></td>
   </tr>
   <tr>
     <td class="right-align"><b>Cantidad producida:</b></td>
-    <td class="left-align">{{ cantidad_vendida }} {{ unidad }}</td>
+    <td class="left-align"><em>{{ cantidad_vendida }} {{ unidad }}</em></td>
   </tr>
   <tr>
     <td class="right-align"><b>Costos totales:</b></td>
-    <td class="left-align">{{ costos_totales }}</td>
+    <td class="left-align"><em>{{ costos_totales }}</em></td>
   </tr>
   {% if costos_totales_sin_autoempleo != costos_totales %}
   <tr>
     <td class="right-align"><b>Costos totales (sin autoempleo):</b></td>
-    <td class="left-align">{{ costos_totales_sin_autoempleo }}</td>
+    <td class="left-align"><em>{{ costos_totales_sin_autoempleo }}</em></td>
   </tr>
   {% endif %}
   <tr>
     <td class="right-align"><b>Costos por unidad:</b></td>
-    <td class="left-align">{{ costos_totales_por_unidad }}</td>
+    <td class="left-align"><em>{{ costos_totales_por_unidad }}</em></td>
   </tr>
   {% if costos_totales_sin_autoempleo != costos_totales %}
   <tr>
     <td class="right-align"><b>Costos por unidad (sin autoempleo):</b></td>
-    <td class="left-align">{{ costos_totales_por_unidad_sin_autoempleo }}</td>
+    <td class="left-align"><em>{{ costos_totales_por_unidad_sin_autoempleo }}</em></td>
   </tr>
   {% endif %}
   </table>
   <br>
-  <br>
-    <p class="special_header"><b>Resumen de costos</b>{% if impuestos_venta %} (no incluye impuestos sobre la venta){% endif %}:</p>
+  <div class="avoid-page-break">
+  <table>
+        <p class="special_header"><b>Resumen de costos</b>{% if impuestos_venta %} (no incluye impuestos sobre la venta){% endif %}:</p>
     {% if costos_autoempleo_totales > 0.001 %}
-    <table>
         <tr>
             <th>Categoría <span>de</span> costos</th>
             <th>Total <span>de la</span><br>categoría</th>
@@ -202,6 +202,7 @@
             <td>{{ costos_exportacion_totales_porcent_total_sin }}</td>
         </tr>
     </table>
+    </div>
     <p class="footnote_paragraph"><b class="footnote">1</b>: Los costos variables son aquellos que aumentan si la cantidad producida aumenta. Incluyen los costos de las actividades del proceso productivo, los costos de certificación y los costos de exportación.</p>
     <p class="footnote_paragraph"><b class="footnote">2</b>: Los costos fijos son aquellos que se mantienen constantes sin importar la cantidad producida. Incluyen los costos indicados por el usuario en las páginas de costos fijos e impuestos fijos.</p>
     <p class="footnote_paragraph"><b class="footnote">3</b>: Esta categoría sólo incluye los costos variables que implican un gasto monetario, excluyendo los costos de autoempleo.</p>
@@ -281,6 +282,7 @@
             <td>{{ costos_exportacion_totales_porcent_total }}</td>
         </tr>
     </table>
+    </div>
     <p class="footnote_paragraph"><b class="footnote">1</b>: Los costos variables son aquellos que aumentan si la cantidad producida aumenta. Incluyen los costos de las actividades del proceso productivo, los costos de certificación y los costos de exportación.</p>
     <p class="footnote_paragraph"><b class="footnote">2</b>: Los costos fijos son aquellos que se mantienen constantes sin importar la cantidad producida. Incluyen los costos indicados por el usuario en las páginas de costos fijos e impuestos fijos.</p>
     <p class="footnote_paragraph"><b class="footnote">3</b>: Los costos laborales incluyen tanto los sueldos fijos como los costos de mano de obra de las actividades del proceso productivo.</p>
@@ -291,12 +293,15 @@
     <p class="footnote_paragraph"><b class="footnote">8</b>: Incluye únicamente los costos de insumos fijos.</p> 
     {% endif %}
     <br>
+    
+    <div class="avoid-page-break">
+    <table>
     <p class="special_header"><b>Calculadora interactiva de ganancias</b></p>
-    <p class="special_sub_header">Haga clic en el cubo verde y deslícelo hacia la derecha para cambiar el precio de venta por unidad.</p>
+    <p class="slider_instructions">Haga clic en el cubo verde y deslícelo hacia la derecha para cambiar el precio de venta por unidad.</p>
     <div class="slidecontainer">
     <input type="range" class="slider" min="0" max="{{ costos_totales_por_unidad * 10 }}" value="0" step="1" id="slider">
     </div>
-    <table>
+
         <tr>
             <th>Indicadores financieros</th>
             <th>Valores</th>
@@ -310,7 +315,7 @@
             <td id="precioCell">0</td>
         </tr>
         <tr>
-            <td>Ingresos totales{% if impuestos_venta %}<sup class="footnote"><b>✱</b>{% endif %}</td>
+            <td>Ingresos totales{% if impuestos_venta %}<sup class="footnote"><b>✱</b></sup>{% endif %}</td>
             <td id="ingresosTotalesValue">0</td>
         </tr>
         <tr>
@@ -330,12 +335,12 @@
             <td id="gananciasNetasValuePorUnidadValue">{{ '%.2f'|format((costos_totales * (-1)) / cantidad_vendida) }}</td>
         </tr>
         <tr>
-            <td>Margen de rentabilidad<sup class="footnote"><b>a</b></td>
+            <td>Margen de rentabilidad<sup class="footnote"><b>a</b></sup></td>
             <td id="margenDeRentabilidadValue"></td>
         </tr>
         {% if costos_fijos_totales %}
         <tr>
-            <td>Punto de equilibrio<sup class="footnote"><b>b</b></td>
+            <td>Punto de equilibrio<sup class="footnote"><b>b</b></sup></td>
             <td id="puntoDeEquilibrioValue"></td>
         </tr>
         {% endif %}
@@ -346,6 +351,7 @@
         </tr>
         {% endif %}
     </table>
+</div>
     {% if impuestos_venta %}
     <p class="footnote_paragraph">
     <b class="footnote">✱</b> Este indicador y todos los demás indicadores de la tabla consideran los siguientes impuestos:
@@ -358,9 +364,15 @@
     {% if costos_fijos_totales %}
     <p class="footnote_paragraph"><b class="footnote">b</b>: El punto de equilibrio es la cantidad mínima de unidades que usted debe vender para cubrir todos sus costos y no tener ganancias ni pérdidas.</p>
     {% endif %}
+    <br>
+
+    <div class="avoid-page-break">
+
+    <p class="special_header" style="margin-bottom: 1px;"><b>Desglose completo de costos</b></p>
     <div class="center-aligned">
     {% if trabajo_actividades %}
-    <p>Costos laborales actividades</p>
+    <div class="avoid-page-break">
+    <p class="special_sub_header">Costos laborales actividades</p>
     <table>
         <tr>
             <th>Actividad</th>
@@ -385,9 +397,11 @@
             {% endfor %}
         {% endfor %}
     </table>
+    </div>
     {% endif %}
     {% if insumos_actividades %}
-    <p>Costos insumos actividades</p>
+    <div class="avoid-page-break">
+    <p class="special_sub_header">Costos insumos actividades</p>
     <table>
         <tr>
             <th>Actividad</th>
@@ -410,9 +424,11 @@
             {% endfor %}
         {% endfor %}
     </table>
+    </div>
     {% endif %}
     {% if sueldos_fijos %}
-    <p>Sueldos fijos</p>
+    <div class="avoid-page-break">
+    <p class="special_sub_header">Sueldos fijos</p>
     <table>
         <tr>
             <th>Trabajo</th>
@@ -433,9 +449,11 @@
         </tr>
         {% endfor %}
     </table>
+    </div>
     {% endif %}
     {% if costos_fijos %}
-    <p>Costos fijos no salariales</p>
+    <div class="avoid-page-break">
+    <p class="special_sub_header">Costos fijos no salariales</p>
     <table>
         <tr>
             <th>Descrip.<br><span>del</span> costo</th>
@@ -452,9 +470,11 @@
         </tr>
         {% endfor %}
     </table>
+    </div>
     {% endif %}     
     {% if impuestos_fijos %}
-    <p>Impuestos fijos</p>
+    <div class="avoid-page-break">
+    <p class="special_sub_header">Impuestos fijos</p>
     <table>
         <tr>
             <th>Nombre<br><span>del</span> impuesto</th>
@@ -471,10 +491,11 @@
         </tr>
         {% endfor %}
     </table>
+    </div>
     {% endif %}     
     {% if costos_certificacion %}
     <div class="avoid-page-break">
-    <p>Costos de certificación</p>
+    <p class="special_sub_header">Costos de certificación</p>
     <table>
         <tr>
             <th>Certificación</th>
@@ -494,7 +515,8 @@
     </div>
     {% endif %}
     {% if costos_exportacion %}
-    <p>Costos de exportación</p>
+    <div class="avoid-page-break">
+    <p class="special_sub_header">Costos de exportación</p>
     <table>
         <tr>
             <th>Descr. <span>del</span><br>costo/impuesto</th>
@@ -511,11 +533,59 @@
         </tr>
         {% endfor %}
     </table>
+    </div>
     {% endif %}
-    </div>
-    </div>
-    <button id="button">Click me!</button>
 
+    </div>
+    </div>
+    </div>
+    <div class="center-aligned">
+    <br>
+    <button id="button" class="send_form">IMPRIMIR REPORTE FINAL<br>EN FORMATO PDF</button>
+    <br>
+    <br>
+    <button id="deleteButton" class="send_form" style="background-color: #FF4F4B;"><b>BORRAR TODO Y<br>REGRESAR A INICIO</b></button>
+    <div id="confirmationModal" class="modal-reset">
+      <div class="modal-reset-content">
+        <p>¿Está seguro/a de querer borrar todo y regresar a la página de inicio?</p>
+        <div>
+          <button class="send_form" id="confirmYes" style="background-color: #FF4F4B;">Sí</button>
+          <button class="send_form" id="confirmNo" style="background-color: #99EE90;">No</button>
+        </div>
+      </div>
+    </div>
+    </div>
+    <script>
+        // Function to show the confirmation modal
+        function showConfirmationModal() {
+          const modal = document.getElementById("confirmationModal");
+          modal.style.display = "block";
+        }
+
+        // Function to close the confirmation modal
+        function closeConfirmationModal() {
+          const modal = document.getElementById("confirmationModal");
+          modal.style.display = "none";
+        }
+
+        // Function to redirect to the index page
+        function redirectToIndexPage() {
+          window.location.href = "/";
+        }
+
+        // Event listener for the "Borrar todo y regresar a inicio" button
+        document.getElementById("deleteButton").addEventListener("click", showConfirmationModal);
+
+        // Event listener for the "Sí" button in the confirmation modal
+        document.getElementById("confirmYes").addEventListener("click", function() {
+          redirectToIndexPage();
+        });
+
+        // Event listener for the "No" button in the confirmation modal
+        document.getElementById("confirmNo").addEventListener("click", function() {
+          closeConfirmationModal();
+        });
+    </script>
     <script>
       const btn = document.getElementById("button");
 
@@ -532,15 +602,13 @@
         }).from(element).set(opt).save();
       });
     </script>
-
-
     <script>
         let impuestosVenta = {{ impuestos_venta|tojson }};
-        let cantidadVendida = {{ cantidad_vendida }}
-        let costosTotales = {{ costos_totales }}
-        let costosTotalesSinAutoempleo = {{ costos_totales_sin_autoempleo }}
-        let costosVariablesTotalesPorUnidad = {{ costos_variables_totales_por_unidad }}
-        let costosFijosTotales = {{ costos_fijos_totales }}
+        let cantidadVendida = {{ cantidad_vendida }};
+        let costosTotales = {{ costos_totales }};
+        let costosTotalesSinAutoempleo = {{ costos_totales_sin_autoempleo }};
+        let costosVariablesTotalesPorUnidad = {{ costos_variables_totales_por_unidad }};
+        let costosFijosTotales = {{ costos_fijos_totales }};
         let costosImpuestos = 0;
         let precio = 0;
 

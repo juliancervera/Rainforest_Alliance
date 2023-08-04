@@ -29,7 +29,7 @@
                         <option value="No" selected>No</option>
                     </select>
                 </td>
-                <td class="input-lightgrey"><input style="background-color: lightgrey; max-width: 12px;" type="number" name="costo_total_trabajo_${rowCounter_trabajo}" step="0.01" value="" min="0" max="999" readonly></td>
+                <td class="input-lightgrey"></td>
             `;
             document.getElementById("rowCounterInput_trabajo").value = rowCounter_trabajo;
         }
@@ -46,7 +46,7 @@
                 <td><input type="number" name="cantidad_${rowCounter_insumos}" value="" min="0"></td>
                 <td><input type="text" name="unidad_${rowCounter_insumos}" value="" maxlength="15"></td>
                 <td><input type="number" name="costo_unidad_${rowCounter_insumos}" step="0.01" value="" min="0.01" maxlength="23"></td>
-                <td class="input-lightgrey"><input style="background-color: lightgrey; max-width: 12px;" type="number" name="costo_total_${rowCounter_insumos}" step="0.01" value="" min="0" max="999" readonly></td>
+                <td class="input-lightgrey"></td>
             `;
             document.getElementById("rowCounterInput_insumos").value = rowCounter_insumos;
         }
@@ -80,7 +80,7 @@
             <th>Trabajo</th>
             <th>Cantidad</th>
             <th>Unidad</th>
-            <th>Costo por<br>unidad</th>
+            <th>Costo <span>por</span><br>unidad</th>
             <th>Auto-<br>empleo</th>
             <th>Costo<br>total</th>
         </tr>
@@ -104,8 +104,8 @@
             <th>Insumo</th>
             <th>Cantidad</th>
             <th>Unidad</th>
-            <th>Costo por unidad</th>
-            <th>Costo total por insumo</th>
+            <th>Costo <span>por</span><br>unidad</th>
+            <th>Costo<br>total</th>
         </tr>
         {% for sublist in lista_insumos %}
         <tr>
@@ -134,7 +134,7 @@
             </tr>
             <tr>
                 <td><input type="text" name="trabajo_1" value="" maxlength="20"></td>
-                <td><input type="number" name="cantidad_trabajo_1" value="" min="1"></td>
+                <td><input type="number" name="cantidad_trabajo_1" value="" min="0"></td>
                 <td><input type="text" name="unidad_trabajo_1" value="" maxlength="15"></td>
                 <td><input type="number" name="costo_trabajo_unidad_1" step="0.01" value="" min="0.01"></td>
                 <td>
@@ -143,7 +143,7 @@
                         <option value="No" selected>No</option>
                     </select>
                 </td>
-                <td class="input-lightgrey"><input type="number" style="background-color: lightgrey; max-width: 12px;" name="costo_total_trabajo_1" step="0.01" value="" min="1" max="999" readonly></td>
+                <td class="input-lightgrey"></td>
             </tr>
         </table>
         <input type="hidden" id="rowCounterInput_trabajo" name="rowCounter_trabajo" value="1">
@@ -154,10 +154,10 @@
         <form action="{{ url_for('cuestionario_costos_fijos') }}" method="post">
             <table id="tabla_insumos_fijos"> 
                 <tr>
-                    <th>Insumo</th>
-                    <th>Cantidad</th>
+                    <th>Insumo<br><span>¿Qué<br>compraste?</span></th>
+                    <th>Cantidad<br><span>¿Cuánto<br>compraste?</span></th>
                     <th>Unidad<br><span>(ej.: kilos, litros,<br>piezas...)</span></th>
-                    <th>Costo por<br>unidad</th>
+                    <th>Costo <span>por</span><br>unidad</th>
                     <th>Costo<br>total</th>
                 </tr>
                 <tr>
@@ -165,7 +165,7 @@
                     <td><input type="number" name="cantidad_1" value="" min="0"></td>
                     <td><input type="text" name="unidad_1" value="" maxlength="15"></td>
                     <td><input type="number" name="costo_unidad_1" step="0.01" value="" min="0.01"></td>
-                    <td class="input-lightgrey"><input type="number" style="background-color: lightgrey; max-width: 12px;" name="costo_total_1" step="0.01" value="" min="1" max="999" readonly></td>
+                    <td class="input-lightgrey"></td>
                 </tr>
             </table>
             <br>
@@ -184,6 +184,51 @@
     </div>
     <br>
     <img src="{{ url_for('static', filename='images/actividades.png') }}" alt="Mapa de las páginas de la herramienta">
+    <br>
+    <br>
+    <div class="center-aligned">
+    <button id="deleteButton" class="send_form" style="background-color: #FF4F4B;"><b>BORRAR TODO Y<br>REGRESAR A INICIO</b></button>
+    <div id="confirmationModal" class="modal-reset">
+      <div class="modal-reset-content">
+        <p>¿Está seguro/a de querer borrar todo y regresar a la página de inicio?</p>
+        <div>
+          <button class="send_form" id="confirmYes" style="background-color: #FF4F4B;">Sí</button>
+          <button class="send_form" id="confirmNo" style="background-color: #99EE90;">No</button>
+        </div>
+      </div>
+    </div>
+    </div>
     {% endif %}
-</body>
+    </body>
+    <script>
+        // Function to show the confirmation modal
+        function showConfirmationModal() {
+          const modal = document.getElementById("confirmationModal");
+          modal.style.display = "block";
+        }
+
+        // Function to close the confirmation modal
+        function closeConfirmationModal() {
+          const modal = document.getElementById("confirmationModal");
+          modal.style.display = "none";
+        }
+
+        // Function to redirect to the index page
+        function redirectToIndexPage() {
+          window.location.href = "/";
+        }
+
+        // Event listener for the "Borrar todo y regresar a inicio" button
+        document.getElementById("deleteButton").addEventListener("click", showConfirmationModal);
+
+        // Event listener for the "Sí" button in the confirmation modal
+        document.getElementById("confirmYes").addEventListener("click", function() {
+          redirectToIndexPage();
+        });
+
+        // Event listener for the "No" button in the confirmation modal
+        document.getElementById("confirmNo").addEventListener("click", function() {
+          closeConfirmationModal();
+        });
+    </script>
 </html>

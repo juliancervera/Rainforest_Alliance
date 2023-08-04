@@ -59,6 +59,20 @@
         <a href="{{ url_for('cuestionario_impuestos_fijos') }}"><button class="button">Deshacer y repetir registro</button></a>
         <a href="{{ url_for('pregunta_costos_certificacion') }}"><button class="button">Continuar</button></a>
             <br>
+
+    <br>
+    <div class="center-aligned">
+    <button id="deleteButton" class="send_form" style="background-color: #FF4F4B;"><b>BORRAR TODO Y<br>REGRESAR A INICIO</b></button>
+    <div id="confirmationModal" class="modal-reset">
+      <div class="modal-reset-content">
+        <p>¿Está seguro/a de querer borrar todo y regresar a la página de inicio?</p>
+        <div>
+          <button class="send_form" id="confirmYes" style="background-color: #FF4F4B;">Sí</button>
+          <button class="send_form" id="confirmNo" style="background-color: #99EE90;">No</button>
+        </div>
+      </div>
+    </div>
+    </div>
     {% else %}
     <p>A continuación, registre los impuestos fijos:</p>
     <form action="{{ url_for('cuestionario_impuestos_fijos') }}" method="post">
@@ -77,11 +91,48 @@
             </tr>
         </table>
         <input type="hidden" id="rowCounterInput" name="rowCounter" value="1">
-        <button type="button" onclick="addRow()">Agregar fila</button>
+        <button type="button" class="add_row" onclick="addRow()">Agregar fila</button>
+        <br>
+        <div class="center-aligned">
+        <button type="submit" class="send_form">REGISTRAR COSTOS</button>
+        </div>
         <br>
         <br>
-        <button type="submit">Enviar</button>
     </form>
+    <div class="center-aligned">
+    <a href="{{ url_for('pregunta_costos_certificacion') }}"><button class="send_form" style="background-color: #FF6865">OMITIR PÁGINA Y CONTINUAR</button></a>
+    </div>
     {% endif %}
 </body>
+<script>
+        // Function to show the confirmation modal
+        function showConfirmationModal() {
+          const modal = document.getElementById("confirmationModal");
+          modal.style.display = "block";
+        }
+
+        // Function to close the confirmation modal
+        function closeConfirmationModal() {
+          const modal = document.getElementById("confirmationModal");
+          modal.style.display = "none";
+        }
+
+        // Function to redirect to the index page
+        function redirectToIndexPage() {
+          window.location.href = "/";
+        }
+
+        // Event listener for the "Borrar todo y regresar a inicio" button
+        document.getElementById("deleteButton").addEventListener("click", showConfirmationModal);
+
+        // Event listener for the "Sí" button in the confirmation modal
+        document.getElementById("confirmYes").addEventListener("click", function() {
+          redirectToIndexPage();
+        });
+
+        // Event listener for the "No" button in the confirmation modal
+        document.getElementById("confirmNo").addEventListener("click", function() {
+          closeConfirmationModal();
+        });
+</script>
 </html>
