@@ -362,7 +362,7 @@
     {% endif %}
     <p class="footnote_paragraph"><b class="footnote">a</b>: El margen de rentabilidad indica qué porcentaje de los ingresos son ganancias. Se calcula dividiendo las ganancias netas entre los ingresos totales.</p>
     {% if costos_fijos_totales %}
-    <p class="footnote_paragraph"><b class="footnote">b</b>: El punto de equilibrio es la cantidad mínima de unidades que usted debe vender para cubrir todos sus costos y no tener ganancias ni pérdidas.</p>
+    <p class="footnote_paragraph"><b class="footnote">b</b>: El punto de equilibrio es la cantidad mínima de unidades que usted debe producir y vender para cubrir todos sus costos y no tener ganancias ni pérdidas.</p>
     {% endif %}
     <br>
 
@@ -457,7 +457,9 @@
     <table>
         <tr>
             <th>Descrip.<br><span>del</span> costo</th>
-            <th>Monto</th>
+            <th>Cantidad</th>
+            <th>Unidad</th>
+            <th>Costo <span>por</span><br>unidad</th>
             <th>Porcen-<br>taje</th>
             <th>Costo<br>total</th>
         </tr>
@@ -465,8 +467,10 @@
         <tr>
             <td>{{ sublist[0] }}</td>
             <td>{{ sublist[1] }}</td>
-            <td>{{ sublist[2] }}%</td>
-            <td>{{ sublist[3] }}</td>          
+            <td>{{ sublist[2] }}</td>
+            <td>{{ sublist[3] }}</td>
+            <td>{{ sublist[4] }}%</td>
+            <td>{{ sublist[5] }}</td>          
         </tr>
         {% endfor %}
     </table>
@@ -616,20 +620,30 @@
             document.getElementById("precioCell").textContent = precio;
         }
 
+        function updateImpuestosVenta() {
+            if (costosImpuestos !== null) {
+                let formattedCostosImpuestos = costosImpuestos.toFixed(2);
+                document.getElementById("costosImpuestosValue").textContent = formattedCostosImpuestos;
+            }
+        }
+
         function updateIngresosTotales() {
             let ingresosTotales = precio * cantidadVendida;
             ingresosTotales -= costosImpuestos;
-            document.getElementById("ingresosTotalesValue").textContent = ingresosTotales;
+            let formattedIngresosTotales = ingresosTotales.toFixed(2);
+            document.getElementById("ingresosTotalesValue").textContent = formattedIngresosTotales;
         }
         
         function updateGananciasBrutas() {
             let gananciasBrutas = (precio * cantidadVendida) - costosTotalesSinAutoempleo - costosImpuestos;
-            document.getElementById("gananciasBrutasValue").textContent = gananciasBrutas;
+            let formattedGananciasBrutas = gananciasBrutas.toFixed(2);
+            document.getElementById("gananciasBrutasValue").textContent = formattedGananciasBrutas;
         }
 
         function updateGananciasNetas() {
             let gananciasNetas = (precio * cantidadVendida) - costosTotales - costosImpuestos;
-            document.getElementById("gananciasNetasValue").textContent = gananciasNetas;
+            let formattedGananciasNetas = gananciasNetas.toFixed(2);
+            document.getElementById("gananciasNetasValue").textContent = formattedGananciasNetas;
         }
 
         function updateGananciasBrutasPorUnidad() {
@@ -661,7 +675,7 @@
             precio = parseInt(this.value);
 
             costosImpuestos = 0;
-            if (impuestosVenta.length > 0) {
+            if (impuestosVenta !== null && impuestosVenta.length > 0) {
                 // Iterate through each sublist in impuestosVenta and calculate the sum of the last element in each sublist
                 for (let i = 0; i < impuestosVenta.length; i++) {
                     let sublist = impuestosVenta[i];
@@ -673,22 +687,24 @@
             updateIngresosTotales();
             updatePrecioCell();
             updateGananciasBrutas();
-            updateGananciasNetas()
-            updateGananciasBrutasPorUnidad()
-            updateGananciasNetasPorUnidad()
-            updateMargenDeRentabilidad()
-            updatePuntoDeEquilibrio()
+            updateGananciasNetas();
+            updateGananciasBrutasPorUnidad();
+            updateGananciasNetasPorUnidad();
+            updateMargenDeRentabilidad();
+            updatePuntoDeEquilibrio();
+            updateImpuestosVenta();
         });
 
         // Initial calculations on page load
         updateGananciasBrutas();
         updateIngresosTotales();
         updatePrecioCell();
-        updateGananciasNetas()
-        updateGananciasBrutasPorUnidad()
-        updateGananciasNetasPorUnidad()
-        updateMargenDeRentabilidad()
-        updatePuntoDeEquilibrio()
+        updateGananciasNetas();
+        updateGananciasBrutasPorUnidad();
+        updateGananciasNetasPorUnidad();
+        updateMargenDeRentabilidad();
+        updatePuntoDeEquilibrio();
+        updateImpuestosVenta();
     </script>
 </body>
 </html>

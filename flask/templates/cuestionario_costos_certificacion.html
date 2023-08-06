@@ -13,6 +13,17 @@
         });
     </script>
     <script>
+        function displayText(modalId) {
+          var modal = document.getElementById(modalId);
+          modal.style.display = "block";
+        }
+
+        function closeModal(modalId) {
+          var modal = document.getElementById(modalId);
+          modal.style.display = "none";
+        }
+    </script>
+    <script>
         var rowCounter = 1;
 
         function addRow() {
@@ -20,26 +31,25 @@
             var newRow = table.insertRow();
             rowCounter++;
             newRow.innerHTML = `
-                <td><input type="text" name="certificacion_${rowCounter}" value="" maxlength="23"></td>
-                <td><input type="number" name="costo_${rowCounter}" value="">
-                <td><input type="number" name="porcentaje_${rowCounter}" value="100" min="0" max="100"></td>
-                <td><input type="number" name="costo_total_${rowCounter}" value="" readonly></td>
+                <td><input type="text" name="certificacion_${rowCounter}" value="" maxlength="20"></td>
+                <td><input type="number" name="costo_${rowCounter}" value="" min="0" step="0.01">
+                <td><input type="number" name="porcentaje_${rowCounter}" value="100" min="0" max="100" step="0.01"></td>
+                <td class="input-lightgrey"></td>
             `;
             document.getElementById("rowCounterInput").value = rowCounter;
         }
     </script>
 </head>
 <body>
-    <h1>Costos de certificación del producto {{ producto }}</h1>
-    <p>INSERTAR AQUÍ EXPLICACIÓN E INSTRUCCIONES</p>
+    <h1>Costos de certificación</h1>
     {% if costos_certificacion %}
     <p>Éstos son los costos de certificación que usted registró:</p>
     <table>
         <tr>
-            <th>Certificación</th>
+            <th>Nombre<span> de la</span><br>certificación</th>
             <th>Costo</th>
-            <th>Porcentaje correspondiente al producto {{ producto }}</th>
-            <th>Costo total</th>
+            <th>Porcen-<br>taje</th>
+            <th>Costo<br>total</th>
         </tr>
         {% for sublist in costos_certificacion %}
         <tr>
@@ -70,20 +80,26 @@
     </div>
     </div>
     {% else %}
-    <p>A continuación, registre los costos de certificación:</p>
+    <p>A continuación, registre los costos de certificación del producto "<b>{{ producto }}</b>":</p>
     <form action="{{ url_for('cuestionario_costos_certificacion') }}" method="post">
         <table id="costos-certificacion-table"> 
             <tr>
-                <th>Certificación</th>
+                <th>Nombre<span> de la</span><br>certificación</th>
                 <th>Costo</th>
-                <th>Porcentaje correspondiente al producto {{ producto }}</th>
-                <th>Costo total</th>
+                <th>Porcentaje<br>
+                  <button class="tutorial" type="button" onclick="displayText('modal1')">CLIC AQUÍ</button>
+                  <div id="modal1" class="modal">
+                    <div class="modal-content">
+                      <span class="close" onclick="closeModal('modal1')">&times;</span>
+                      <p class="pop-up">Si la certificación abarca a más de un producto o se renueva en un periodo más largo que el tiempo que toma producir el producto "{{ producto }}", considere qué porcentaje del costo de certificación corresponde al producto "{{ producto }}". Por ejemplo, si la certificación cubre dos productos en partes iguales, escriba 50.</p>
+                </th>
+                <th>Costo<br>total</th>
             </tr>
             <tr>
-                <td><input type="text" name="certificacion_1" value="" maxlength="23"></td>
-                <td><input type="number" name="costo_1" value="">
-                <td><input type="number" name="porcentaje_1" value="100" min="0" max="100"></td>
-                <td><input type="number" name="costo_total_1" value="" readonly></td>
+                <td><input type="text" name="certificacion_1" value="" maxlength="20"></td>
+                <td><input type="number" name="costo_1" value="" min="0" step="0.01">
+                <td><input type="number" name="porcentaje_1" value="100" min="0" max="100" step="0.01"></td>
+                <td class="input-lightgrey"></td>
             </tr>
         </table>
         <input type="hidden" id="rowCounterInput" name="rowCounter" value="1">

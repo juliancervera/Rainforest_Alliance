@@ -5,13 +5,16 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
 </head>
 <body>
-    <h1>¿Quiere incluir costos de exportación en el cálculo de costos?</h1>
+    <h1>¿Quiere incluir costos de exportación del producto "{{ producto }}"?</h1>
+    <div class="center-aligned">
+    <p><b>Definición:</b> Son los gastos adicionales que usted debe pagar al vender el producto "{{ producto }}" en otro país.<br>
+    (<em>ejemplos:</em> tarifas arancelarias, costos de embalaje y transporte, seguros, etcétera)</p>
     <form>
         <label>
-            <button type="button" onclick="window.location.href='/cuestionario_costos_exportacion'">Sí</button>
+            <button type="button" class="send_form" onclick="window.location.href='/cuestionario_costos_exportacion'" style="background-color: #99EE90;">Sí</button>
         </label>
         <label>
-            <button type="button" onclick="window.location.href='/analisis_final'">No</button>
+            <button type="button" class="send_form" onclick="window.location.href='/analisis_final'" style="background-color: #FF4F4B;">No</button>
         </label>
         <br><br>
     </form>

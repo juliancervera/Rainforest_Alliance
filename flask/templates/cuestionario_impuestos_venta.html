@@ -13,6 +13,18 @@
         });
     </script>
     <script>
+        function displayText(modalId) {
+          var modal = document.getElementById(modalId);
+          modal.style.display = "block";
+        }
+
+        function closeModal(modalId) {
+          var modal = document.getElementById(modalId);
+          modal.style.display = "none";
+        }
+
+    </script>
+    <script>
         var rowCounter = 1;
 
         function addRow() {
@@ -20,29 +32,28 @@
             var newRow = table.insertRow();
             rowCounter++;
             newRow.innerHTML = `
-                <td><input type="text" name="impuesto_venta_${rowCounter}" value="" maxlength="23" ></td>
-                <td><input type="number" name="porcentaje_${rowCounter}" value="" min="0" max="100" ></td>
-                <td><input type="number" name="unidades_consideradas_${rowCounter}" value="{{ cantidad_vendida }}" min="1" ></td>
+                <td><input type="text" name="impuesto_venta_${rowCounter}" value="" maxlength="20"></td>
+                <td><input type="number" name="porcentaje_${rowCounter}" value="" min="0" max="100" step="0.01"></td>
+                <td><input type="number" name="unidades_consideradas_${rowCounter}" value="{{ cantidad_vendida }}" min="0" max="{{ cantidad_vendida }}" step="0.01"></td>
             `;
             document.getElementById("rowCounterInput").value = rowCounter;
         }
     </script>
 </head>
 <body>
-    <h1>Impuestos sobre la venta del producto {{ producto }}</h1>
-    <p>INSERTAR AQUÍ EXPLICACIÓN E INSTRUCCIONES</p>
+    <h1>Impuestos sobre la venta</h1>
     {% if impuestos_venta %}
     <p>Éstos son los impuestos que usted registró:</p>
     <table>
         <tr>
-            <th>Nombre del impuesto</th>
+            <th>Nombre <span>del</span><br>impuesto</th>
             <th>Porcentaje</th>
-            <th>Unidades consideradas</th>
+            <th>Unidades<br>consideradas</th>
         </tr>
         {% for sublist in impuestos_venta %}
         <tr>
             <td>{{ sublist[0] }}</td>
-            <td>{{ sublist[1] }}</td>
+            <td>{{ sublist[1] }}%</td>
             <td>{{ sublist[2] }}</td>
         </tr>
         {% endfor %}
@@ -50,7 +61,7 @@
     <div class="center-aligned">
             <br>
         <a href="{{ url_for('cuestionario_impuestos_venta') }}"><button class="send_form" style="background-color: #f5b224;">DESHACER<br>REGISTRO</button></a>
-        <a href="{{ url_for('pregunta_impuestos_venta') }}"><button class="send_form" style="background-color: #ccde82;">CONTINUAR A<br>IMPUESTOS FIJOS</button></a>
+        <a href="{{ url_for('pregunta_impuestos_fijos') }}"><button class="send_form" style="background-color: #ccde82;">CONTINUAR A<br>IMPUESTOS FIJOS</button></a>
     </div>
     <br>
     <img src="{{ url_for('static', filename='images/impuestos_venta.png') }}" alt="Mapa de las páginas de la herramienta">
@@ -67,18 +78,26 @@
     </div>
     </div>
     {% else %}
-    <p>A continuación, registre los impuestos sobre la venta:</p>
+    <p>A continuación, registre los impuestos aplicados a las ventas del producto <b>"{{ producto }}"</b>:</p>
     <form action="{{ url_for('cuestionario_impuestos_venta') }}" method="post">
         <table id="impuestos_venta_table"> 
             <tr>
-                <th>Nombre del impuesto</th>
-                <th>Porcentaje</th>
-                <th>Unidades consideradas</th>
+                <th>Nombre <span>del</span><br>impuesto</th>
+                <th>Porcentaje<br>
+                  <button class="tutorial" type="button" onclick="displayText('modal1')">CLIC AQUÍ</button>
+                  <div id="modal1" class="modal">
+                    <div class="modal-content">
+                      <span class="close" onclick="closeModal('modal1')">&times;</span>
+                      <p class="pop-up">Se refiere al porcentaje del precio de venta gravado o retenido por las autoridades tributarias.</p>
+                    </div>
+                  </div>
+                </th>
+                <th>Núm. <span>de</span> unidades<br>consideradas ({{ unidad }})</th>
             </tr>
             <tr>
-                <td><input type="text" name="impuesto_venta_1" value="" maxlength="23" ></td>
-                <td><input type="number" name="porcentaje_1" value="" min="0" max="100" ></td>
-                <td><input type="number" name="unidades_consideradas_1" value="{{ cantidad_vendida }}" min="1" ></td>
+                <td><input type="text" name="impuesto_venta_1" value="" maxlength="20"></td>
+                <td><input type="number" name="porcentaje_1" value="" min="0" max="100" step="0.01"></td>
+                <td><input type="number" name="unidades_consideradas_1" value="{{ cantidad_vendida }}" min="0" max="{{ cantidad_vendida }}" step="0.01"></td>
             </tr>
         </table>
         <input type="hidden" id="rowCounterInput" name="rowCounter" value="1">

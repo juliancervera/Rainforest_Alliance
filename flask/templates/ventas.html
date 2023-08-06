@@ -15,7 +15,12 @@
 </head>
 <body>
     <h1>Registro de producción</h1>
-    <p><em><b>IMPORTANTE:</em></b> todos los costos que usted registre en las siguientes páginas deberán ser en función de la <span class="text-highlight">cantidad producida</span>.</p>
+    <p class="pre_bullet_list" style="color: darkcyan"><b>IMPORTANTE:</b></p>
+        <ul>
+            <li>Todos los costos que usted registre en las siguientes páginas deberán ser en función de la <span class="text-highlight">cantidad producida</span> que usted indique aquí.</li>
+            <li>Se recomienda apuntar la cantidad producida en un <span class="text-highlight">ciclo de producción</span> (por ejemplo, una cosecha anual) o en un <span class="text-highlight">lote de producción</span> específico.</li>
+            <li>Si no está seguro/a de la cantidad producida, apunte su mejor estimación.</li>
+        </ul>
     <form action="{{ url_for('ventas') }}" method="POST">
         <table>
             <tr>

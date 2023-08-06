@@ -8,6 +8,13 @@ body {
   line-height: 2.7em;
 }
 
+@media screen and (min-width: 1000px) {
+  body {
+    margin-left: 20%;
+    margin-right: 20%;
+  }
+}
+
 p {
   font-size: 3vw;
 }

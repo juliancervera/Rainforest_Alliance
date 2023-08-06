@@ -6,13 +6,15 @@
 </head>
 <body>
     <h1>¿Quiere incluir impuestos fijos en el cálculo de costos?</h1>
-    <h2>Ejemplo: impuesto predial</h2>
+    <div class="center-aligned">
+    <p><b>Definición:</b> aquellos impuestos que deben pagarse sin importar qué cantidad de {{ producto }} se produzca<br>
+    (<em>ejemplos:</em> impuesto sobre bienes inmuebles, impuesto predial, impuesto sobre licencias comerciales, etc.)</p>
     <form>
         <label>
-            <button type="button" onclick="window.location.href='/cuestionario_impuestos_fijos'">Sí</button>
+            <button type="button" class="send_form" onclick="window.location.href='/cuestionario_impuestos_fijos'" style="background-color: #99EE90;">Sí</button>
         </label>
         <label>
-            <button type="button" onclick="window.location.href='/pregunta_costos_certificacion'">No</button>
+            <button type="button" class="send_form" onclick="window.location.href='/pregunta_costos_certificacion'" style="background-color: #FF4F4B;">No</button>
         </label>
         <br><br>
     </form>

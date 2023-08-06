@@ -259,13 +259,20 @@ def cuestionario_costos_fijos():
         for i in range(1, num_rows_costos + 1):
             try:
                 locals()[f"costo_fijo_{i}"] = request.form.get(f"costo_fijo_{i}")
-                locals()[f"monto_fijo_{i}"] = float(request.form.get(f"monto_fijo_{i}"))
+                locals()[f"cantidad_fijo_{i}"] = float(request.form.get(f"cantidad_fijo_{i}"))
+                locals()[f"unidad_fijo_{i}"] = request.form.get(f"unidad_fijo_{i}")
+                locals()[f"costo_por_unidad_fijo_{i}"] = float(request.form.get(f"costo_por_unidad_fijo_{i}"))
                 locals()[f"porcentaje_costo_fijo_{i}"] = float(request.form.get(f"porcentaje_costo_fijo_{i}"))
-                locals()[f"costo_fijo_total_{i}"] = round(locals()[f"monto_fijo_{i}"] * (locals()[f"porcentaje_costo_fijo_{i}"] / 100), 2)
+                locals()[f"costo_fijo_total_{i}"] = round(
+                    locals()[f"cantidad_fijo_{i}"] * locals()[f"costo_por_unidad_fijo_{i}"] * (
+                                locals()[f"porcentaje_costo_fijo_{i}"] / 100), 2
+                )
 
                 sublista_insumos = [
                     locals()[f"costo_fijo_{i}"],
-                    locals()[f"monto_fijo_{i}"],
+                    locals()[f"cantidad_fijo_{i}"],
+                    locals()[f"unidad_fijo_{i}"],
+                    locals()[f"costo_por_unidad_fijo_{i}"],
                     locals()[f"porcentaje_costo_fijo_{i}"],
                     locals()[f"costo_fijo_total_{i}"]
                 ]
@@ -312,15 +319,21 @@ def pregunta_impuestos_venta():
 
 @app.route("/pregunta_impuestos_fijos")
 def pregunta_impuestos_fijos():
-    return render_template("pregunta_impuestos_fijos.html")
+    producto = session.get("producto")
+    return render_template("pregunta_impuestos_fijos.html",
+                           producto=producto)
 
 @app.route("/pregunta_costos_certificacion")
 def pregunta_costos_certificacion():
-    return render_template("pregunta_costos_certificacion.html")
+    producto = session.get("producto")
+    return render_template("pregunta_costos_certificacion.html",
+                           producto=producto)
 
 @app.route("/pregunta_costos_exportacion")
 def pregunta_costos_exportacion():
-    return render_template("pregunta_costos_exportacion.html")
+    producto = session.get("producto")
+    return render_template("pregunta_costos_exportacion.html",
+                           producto=producto)
 
 @app.route("/cuestionario_impuestos_venta", methods=["GET", "POST"])
 def cuestionario_impuestos_venta():
@@ -334,9 +347,9 @@ def cuestionario_impuestos_venta():
 
         for i in range(1, num_rows + 1):
             locals()[f"impuesto_venta_{i}"] = request.form.get(f"impuesto_venta_{i}")
-            locals()[f"unidades_consideradas_{i}"] = float(request.form.get(f"unidades_consideradas_{i}"))
 
             try:
+                locals()[f"unidades_consideradas_{i}"] = float(request.form.get(f"unidades_consideradas_{i}"))
                 locals()[f"porcentaje_{i}"] = float(request.form.get(f"porcentaje_{i}"))
 
                 sublista_impuestos = [
@@ -361,6 +374,7 @@ def cuestionario_impuestos_venta():
     else:
         producto = session.get("producto")
         cantidad_vendida = session.get("cantidad_vendida")
+        unidad = session.get("unidad")
 
         impuestos_venta = []
 
@@ -371,6 +385,7 @@ def cuestionario_impuestos_venta():
             producto=producto,
             cantidad_vendida=cantidad_vendida,
             impuestos_venta=impuestos_venta,
+            unidad=unidad,
         )
 
 @app.route("/cuestionario_impuestos_fijos", methods=["GET", "POST"])
@@ -518,6 +533,7 @@ def cuestionario_costos_exportacion():
 
     else:
         producto = session.get("producto")
+        cantidad_vendida = session.get("cantidad_vendida")
 
         costos_exportacion = []
 
@@ -526,7 +542,8 @@ def cuestionario_costos_exportacion():
         return render_template(
             "cuestionario_costos_exportacion.html",
             producto=producto,
-            costos_exportacion=costos_exportacion
+            costos_exportacion=costos_exportacion,
+            cantidad_vendida=cantidad_vendida,
         )
 
 
@@ -537,8 +554,8 @@ def analisis_final():
         "trabajo_actividades": "trabajo_actividades",
         "sueldos_fijos": "sueldos_fijos",
         "costos_fijos": "costos_fijos",
-        "impuestos_venta": "impuestos_venta",
         "impuestos_fijos": "impuestos_fijos",
+        "impuestos_venta": "impuestos_venta",
         "costos_certificacion": "costos_certificacion",
         "costos_exportacion": "costos_exportacion"
     }
