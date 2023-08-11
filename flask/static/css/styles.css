@@ -77,6 +77,11 @@ td.right-align {
   text-align: right;
 }
 
+.separator {
+  background-color: rgba(4, 170, 109, 0.6);
+  height: 3px;
+}
+
 h1 {
   font-size: 46px;
   text-align: center;
@@ -90,6 +95,9 @@ td {
   font-size: 24px;
   background-color: white;
   max-width: 100px;
+  white-space: normal;
+  word-break: break-word;
+  line-height: 1;
 }
 
 th {

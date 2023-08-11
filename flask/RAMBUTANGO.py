@@ -1,30 +1,3 @@
-# ToDo: Mantener separadas las variables de costos por categoría hasta sumarlas al último
-# ToDo: Add a character limit to every input cell.
-# ToDo: Find a more elegant way to write all the table rows in the HTML templates
-# ToDo: Añadir un botón de DESHACER, que elimine el elemento más recientemente guardado en las listas
-# ToDo: Hacer que las formas sólo puedan submit al dar clic en el botón Enter del final
-# ToDo: en los valores numéricos, más que maxlength, debo poner un valor minimo y valor máximo. Maxlength es para texto
-# ToDo: añadir columna adicional con un signo de porcentaje pegado a la celda de porcentaje donde aplique
-# ToDo: En los htmls de costos, asegurarme de que el step sea 0.00 donde aplique
-# ToDo: Add min wherever it wouldn't make sense to have less than 1
-# ToDo: Abrir directamente el html de cuestionario_exportacion para ver por qué sólo aparecen ciertos valores default
-# ToDo: Añadir cuarta columna de costos de exportación
-# ToDo: Añadir una opción para indicar cuántas veces se realiza una misma actividad
-# ToDo: Check to see if it makes sense to round certain numbers
-
-# Subdominio cálculo de costos.
-
-# Instalación de sistemas de riego.
-
-# Precios varían según el momento de la cosecha.
-
-# En instrucciones: indicar que se debe tomar en cuenta cuántas veces se repite al año la actividad.
-
-
-# 1-5 <-- pequeño
-# 5-15 <-- mediano
-# 15 < <--grande
-
 from flask import Flask, render_template, request, redirect, url_for, session
 import sys
 
@@ -39,7 +12,7 @@ def inicio():
 
 @app.route("/ventas", methods=["GET", "POST"])
 def ventas():
-    session.clear()  #ToDo: check if this line should really go here
+    session.clear()
     if request.method == "POST":
         producto = request.form["producto"]
         cantidad_vendida = float(request.form["cantidad_vendida"])
@@ -87,7 +60,6 @@ def pregunta_actividades():
                                cantidad_vendida=cantidad_vendida)
 
 
-# ToDo: Cambiar para que cheque si la lista de nombres_actividades está vacía <--???
 @app.route("/cuestionario_actividades", methods=["GET", "POST"])
 def cuestionario_actividades():
     if request.method == "POST":
@@ -470,7 +442,7 @@ def cuestionario_costos_certificacion():
                 pass
 
         session['costos_certificacion'] = costos_certificacion
-        print(costos_certificacion)
+
         return render_template(
             "cuestionario_costos_certificacion.html",
             producto=producto,
@@ -490,11 +462,7 @@ def cuestionario_costos_certificacion():
             costos_certificacion=costos_certificacion
         )
 
-# ToDo: Hipótesis: Puedo agregar un if statement at html que cheque si la lista de costos_exportacion tiene contenido.
-# Si sí tiene contenido, debe crear una tabla cuyo largo de filas corresponda con el largo de la lista
-# Y que tenga creación dinámica de nombres de variables
-# ToDo: Para que lo de arriba sirva: Poner la condición de que sólo se pueda añadir fila si la persona ya llenó todas las
-# casillas de la fila de arriba
+
 @app.route("/cuestionario_costos_exportacion", methods=["GET", "POST"])
 def cuestionario_costos_exportacion():
     if request.method == "POST":
@@ -522,9 +490,9 @@ def cuestionario_costos_exportacion():
                 pass
 
         session['costos_exportacion'] = costos_exportacion
-        print(costos_exportacion)
+
         costos_certificacion = session.get("costos_certificacion")
-        print(costos_certificacion)
+
         return render_template(
             "cuestionario_costos_exportacion.html",
             producto=producto,

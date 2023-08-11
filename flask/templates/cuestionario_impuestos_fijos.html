@@ -75,8 +75,8 @@
       <div class="modal-reset-content">
         <p>¿Está seguro/a de querer borrar todo y regresar a la página de inicio?</p>
         <div>
-          <button class="send_form" id="confirmYes" style="background-color: #FF4F4B;">Sí</button>
-          <button class="send_form" id="confirmNo" style="background-color: #99EE90;">No</button>
+          <button class="send_form" id="confirmYes">Sí</button>
+          <button class="send_form" id="confirmNo">No</button>
         </div>
       </div>
     </div>
@@ -87,13 +87,21 @@
         <table id="impuestos_fijos_table"> 
             <tr>
                 <th>Nombre <span>del</span><br>impuesto</th>
-                <th>Monto</th>
+                <th>Monto<br>
+                  <button class="tutorial" type="button" onclick="displayText('modal2')">CLIC AQUÍ</button>
+                  <div id="modal2" class="modal">
+                    <div class="modal-content">
+                      <span class="close" onclick="closeModal('modal1')">&times;</span>
+                      <p class="pop-up">Si incluye un impuesto sobre bienes inmuebles o sobre la tenencia de la tierra, apunte la cantidad total que usted paga y, en la siguiente columna, indique qué porcentaje de dicho impuesto corresponde al producto "{{ producto }}".</p>
+                    </div>
+                  </div>
+                </th>
                 <th>Porcentaje<br>
                   <button class="tutorial" type="button" onclick="displayText('modal1')">CLIC AQUÍ</button>
                   <div id="modal1" class="modal">
                     <div class="modal-content">
                       <span class="close" onclick="closeModal('modal1')">&times;</span>
-                      <p class="pop-up">Si el impuesto pagado involucra más de un producto o si el periodo cubierto por el pago del impuesto es mayor al tiempo de producción del producto en cuestión, indique qué porcentaje del impuesto corresponde al producto en cuestión. Por ejemplo, si usted paga impuestos por la posesión de un predio donde cultiva cuatro productos diferentes en cantidades iguales, escriba 25 en la columna "Porcentaje".</p>
+                      <p class="pop-up">Si el impuesto pagado involucra más de un producto o si el periodo cubierto por el pago del impuesto es mayor al tiempo de producción del producto "{{ producto }}", indique qué porcentaje del impuesto corresponde al producto "{{ producto }}". Por ejemplo, si usted paga impuestos por la posesión de un predio donde cultiva cuatro productos diferentes en cantidades iguales, escriba 25 en la columna "Porcentaje".</p>
                     </div>
                   </div>
                 </th>
