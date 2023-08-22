@@ -1,7 +1,7 @@
 <h1>Cost and Revenue Calculation Tool for Agricultural Producers</h1>
 
 <h2>Description:</h2>
-The tool was developed as part of a summer internship for the Rainforest Alliance in Gautemala and Honduras. Created within the context of the Master of Development Practice program at the University of Minnesota, this tool is designed to assist agricultural producers in managing their expenses and revenues efficiently. The main Python file, RAMBUTANGO.py, is named after the rambután producers with whom we worked closely during our fieldwork.
+The tool was developed as part of a summer internship for the Rainforest Alliance in Guatemala and Honduras. Created within the context of the Master of Development Practice program at the University of Minnesota, this tool is designed to assist agricultural producers in managing their expenses and revenues efficiently. The main Python file, RAMBUTANGO.py, is named after the rambután producers with whom we worked closely during our fieldwork.
 
 <h2>Features:</h2>
 <b>Comprehensive Ethnographically Validated System of Categories:</b>
@@ -27,7 +27,7 @@ The tool was developed as part of a summer internship for the Rainforest Allianc
 <ul>
   <li>HTML (located in the "templates" folder) and CSS (found within the "css" folder in the "static" directory)</li>
   <li>Python Flask web framework</li>
-  <li>JavaScript</li>
+  <li>JavaScript for real-time functionality</li>
 </ul>
 
 <b>Mobile Accessibility and User-Friendliness:</b> The tool is designed to be accessible and user-friendly, particularly for Spanish speakers using mobile devices.
